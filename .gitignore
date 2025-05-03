@@ -36,5 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-# .gitignore
+#MongoDB 개인 username, password 보안
 application-secret.properties
