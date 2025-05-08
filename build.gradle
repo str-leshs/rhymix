@@ -35,7 +35,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.mongodb:mongodb-driver-sync:5.2.1'	//몽고디비 의존성 주입
-<<<<<<< HEAD
+
+
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 

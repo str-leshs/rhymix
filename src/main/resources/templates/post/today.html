@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘의 추천곡</title>
+  <link rel="stylesheet" href="/css/today.css">
+  <script defer src="/js/today.js"></script>
+</head>
+<body>
+<div class="today-container">
+  <h1>오늘의 추천곡</h1>
+
+  <!--검색창 -->
+  <div class="search-section">
+    <input type="text" id="searchInput" placeholder="노래 또는 아티스트 검색">
+    <button id="searchBtn">검색</button>
+  </div>
+
+  <!--선택된 곡 정보 -->
+  <div class="track-info">
+    <p id="trackTitle">곡 제목</p>
+    <p id="trackArtist">아티스트</p>
+    <img id="trackCover" src="" alt="앨범커버">
+  </div>
+
+  <!--코멘트 작성 -->
+  <textarea id="comment" maxlength="50" placeholder="오늘의 기분을 간단히 써보세요 (최대 50자)"></textarea>
+
+  <!--날씨 /기분 선택 -->
+  <div class="select-box">
+    <select id="weather">
+      <option value="">날씨 선택 (선택사항)</option>
+      <option value="맑음">☀ 맑음</option>
+      <option value="흐림">☁ 흐림</option>
+      <option value="비">🌧 비</option>
+    </select>
+
+    <select id="mood">
+      <option value="">기분 선택 (선택사항)</option>
+      <option value="행복">😊 행복</option>
+      <option value="피곤">😩 피곤</option>
+      <option value="신남">😆 신남</option>
+    </select>
+  </div>
+
+  <!-- 저장 버튼 -->
+  <button id="saveBtn">저장</button>
+</div>
+
+<!-- 모달 (검색 결과 표시용) -->
+<div id="searchModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <ul id="searchResults"></ul>
+  </div>
+</div>
+</body>
+</html>
