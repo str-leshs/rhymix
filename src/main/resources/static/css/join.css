@@ -1,0 +1,223 @@
+/* 전체 페이지 배경 및 폰트 */
+body {
+    background-color: #FFF4C3;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+}
+
+/* 최상위 컨테이너 */
+.join-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 가운데 정렬 추가 */
+    min-height: 100vh;
+    background-color: #fff9e6;
+    padding: 40px 0;
+}
+
+
+/* 상단 타이틀 박스 */
+.title-box {
+    width: 600px;
+    height: 110px;
+    margin-bottom: 30px;
+    background-color: #ffe07c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 타이틀 글자 */
+.join-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+}
+
+/* 카드형 입력/약관 박스 */
+.agreement-box {
+    background-color: #ffe07c;
+    border-radius: 10px;
+    text-align: left;
+    width: 520px;
+    padding: 60px 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.form-box {
+    background-color: #ffe07c;
+    border-radius: 10px;
+    width: 520px;
+    padding: 60px 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-height: 900px;
+}
+
+
+/* 회원정보 입력용 - 높이 긴 박스 */
+.agreement-box.tall {
+    min-height: 900px;
+}
+
+/* 약관 동의용 - 높이 짧은 박스 */
+.agreement-box.short {
+    min-height: 500px;
+}
+
+/* 로고 스타일 */
+.logo {
+    display: block;
+    margin: 0 auto 60px;
+    width: 100px;
+}
+
+/* 입력 필드 공통 */
+.form-input {
+    box-sizing: border-box;
+    height: 48px;
+    padding: 12px;
+    margin: 10px 0 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #fff7e1;
+    font-size: 16px;
+}
+
+/* 아이디 입력 + 버튼 묶음 */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+.input-group input {
+    flex-grow: 1;
+    margin: 0;
+    width: auto;
+}
+/* 아이디 입력 필드 길이 제한 */
+.input-group .form-input {
+    width: 100%;
+    flex-grow: 1;
+    margin-left: 23px; /* 왼쪽 여백 살짝 늘림 */
+}
+
+/* 입력 항목 행 구조 */
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.form-row .form-input {
+    flex-grow: 1;
+    width: 0; /* 필수! flex-grow와 함께 있어야 너비 자동 맞춰짐 */
+}
+
+/* 라벨 고정 폭 */
+.form-label {
+    width: 100px;
+    font-weight: bold;
+}
+
+/* 중복확인 버튼 */
+.check-button {
+    box-sizing: border-box;
+    height: 52px;
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #ffb72b;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 에러 메시지 */
+.error-text {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+/* 약관 동의 항목 라벨 전체 줄 */
+.hover-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 24px 0;
+    font-weight: bold;
+}
+
+/* 약관 동의 줄 간격 넓힘 */
+.hover-link.spaced {
+    margin: 30px 0;
+}
+
+/* 체크박스 */
+.required-check {
+    width: 24px;
+    height: 24px;
+    accent-color: black;
+    cursor: pointer;
+}
+
+/* 링크 텍스트 구성 */
+.link-text {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: black;
+    text-decoration: none;
+    gap: 4px;
+}
+
+/* hover 효과 */
+.link-text:hover .term-text,
+.link-text:hover .required {
+    color: royalblue;
+    text-decoration: underline;
+}
+
+/* (필수) 텍스트 스타일 */
+.required {
+    font-weight: bold;
+    color: black;
+}
+
+/* 가입 / 다음 버튼 */
+.next-button {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    padding: 12px 28px;
+    background-color: #ffb72b;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+/* 라벨 넓이 조정 */
+.field-row > label,
+.form-label {
+    width: 120px; /* 기존 100px에서 확장 */
+}
+
+/*아이디 중복 확인*/
+input.valid {
+    border: 2px solid green;
+}
+input.invalid {
+    border: 2px solid red;
+}
+
