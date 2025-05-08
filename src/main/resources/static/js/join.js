@@ -1,12 +1,11 @@
-// 약관 동의 페이지에만 작동하도록 body id 확인
-if (document.getElementById("agreement-page")) {
+document.addEventListener("DOMContentLoaded", function () {
+    // 약관 동의 페이지 확인
+    const agreementPage = document.getElementById("agreement-page");
 
-    // DOM 로드 후 실행
-    document.addEventListener("DOMContentLoaded", function () {
+    if (agreementPage) {
         const requiredChecks = document.querySelectorAll(".required-check");
         const nextBtn = document.getElementById("nextButton");
 
-        // 체크박스 상태 변화 감지
         requiredChecks.forEach((checkbox) => {
             checkbox.addEventListener("change", updateButtonState);
         });
@@ -16,25 +15,43 @@ if (document.getElementById("agreement-page")) {
             nextBtn.disabled = !allChecked;
         }
 
-        // 초기 상태 설정
         updateButtonState();
-    });
-}
+    }
 
-//TODO 비밀번호와 비밀번호 입력이 다른 경우 경고 문구 출력
-document.addEventListener("DOMContentLoaded", function () {
-    const password = document.querySelector('input[name="password"]');
-    const passwordConfirm = document.querySelector('input[name="passwordConfirm"]');
+    // 정보 입력 페이지 로직
+    const form = document.querySelector("form");
+    if (!form) return;
+
+    const usernameInput = document.getElementById("username"); // 로그인용 아이디
+    const checkButton = document.querySelector(".check-button");
+    const password = document.getElementById("password");
+    const passwordConfirm = document.getElementById("passwordConfirm");
     const errorText = document.getElementById("passwordError");
 
-    function checkPasswordMatch() {
-        // 둘 다 입력되었을 때만 검사
-        if (password.value.trim() && passwordConfirm.value.trim()) {
-            if (password.value !== passwordConfirm.value) {
-                errorText.style.display = "block";
+    // 아이디 중복 확인
+    checkButton.addEventListener("click", async function () {
+        const nickname = usernameInput.value.trim(); // nickname = 로그인용 ID
+        if (!nickname) return alert("아이디를 입력해주세요.");
+
+        try {
+            const res = await fetch(`/api/users/${nickname}`);
+            if (res.ok) {
+                alert("이미 존재하는 아이디입니다.");
+                usernameInput.value = "";
+                usernameInput.classList.remove("valid");
             } else {
-                errorText.style.display = "none";
+                usernameInput.classList.add("valid");
             }
+        } catch (err) {
+            console.error("중복 확인 실패:", err);
+            alert("중복 확인 중 오류가 발생했습니다.");
+        }
+    });
+
+    // 비밀번호 일치 여부 확인
+    function checkPasswordMatch() {
+        if (password.value && passwordConfirm.value) {
+            errorText.style.display = (password.value !== passwordConfirm.value) ? "block" : "none";
         } else {
             errorText.style.display = "none";
         }
@@ -42,5 +59,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
     password.addEventListener("input", checkPasswordMatch);
     passwordConfirm.addEventListener("input", checkPasswordMatch);
-});
 
+    // 폼 제출 시 회원가입 처리
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        if (!usernameInput.classList.contains("valid")) {
+            alert("아이디 중복 확인을 해주세요.");
+            return;
+        }
+
+        if (password.value !== passwordConfirm.value) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        const data = {
+            username: document.getElementById("name").value,   // 사용자 실명
+            nickname: usernameInput.value,                     // 로그인용 ID
+            email: document.getElementById("email").value,
+            password: password.value,
+            confirmPassword: passwordConfirm.value
+        };
+
+        try {
+            const res = await fetch("/api/users/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                alert("환영합니다! 블로그 기본세팅을 위해 마이페이지로 이동합니다.");
+                window.location.href = "/mypage/customize";
+            } else {
+                const message = await res.text();
+                alert(`회원가입 실패: ${message}`);
+            }
+        } catch (err) {
+            console.error("회원가입 오류:", err);
+            alert("회원가입 중 오류가 발생했습니다.");
+        }
+    });
+});

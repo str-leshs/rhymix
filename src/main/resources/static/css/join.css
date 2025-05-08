@@ -1,6 +1,6 @@
 /* 전체 페이지 배경 및 폰트 */
 body {
-    background-color: #fff7e1;
+    background-color: #FFF4C3;
     font-family: 'Noto Sans KR', sans-serif;
     margin: 0;
 }
@@ -211,5 +211,13 @@ body {
 .field-row > label,
 .form-label {
     width: 120px; /* 기존 100px에서 확장 */
+}
+
+/*아이디 중복 확인*/
+input.valid {
+    border: 2px solid green;
+}
+input.invalid {
+    border: 2px solid red;
 }
 
