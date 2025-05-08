@@ -14,13 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "users")
 public class User {
-
     @Id
-    private String id;
-    private String username;
+    private String id; // MongoDB 고유 식별자
+    private String username; // 사용자 이름 (예: 홍길동)
     private String email;
     private String password;
-    private String nickname;
+    private String nickname; // 로그인 및 블로그용 아이디 (예: gildong2)
     private String bio;
     private String profileImage;
     private Date joinedAt;

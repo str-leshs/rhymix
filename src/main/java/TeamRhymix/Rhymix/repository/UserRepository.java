@@ -24,8 +24,8 @@ public class UserRepository {
         return mongoTemplate.findAll(User.class);
     }
 
-    public User findByUsername(String username) {
-        Query query = new Query(Criteria.where("username").is(username));
+    public User findByNickname(String nickname) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
         return mongoTemplate.findOne(query, User.class);
     }
 
