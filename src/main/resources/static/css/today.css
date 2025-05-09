@@ -1,107 +1,228 @@
 /* 전체 배경 및 기본 폰트 */
 body {
-    background-color: #fff7e1;
+    background-color: #ffe07c;
     font-family: 'Noto Sans KR', sans-serif;
     margin: 0;
     padding: 40px 0;
     display: flex;
     justify-content: center;
 }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+}
+
+.page-title {
+    font-size: 23px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.logo-image {
+    height: 80px;
+    width: auto;
+}
+
 
 /* 최상위 컨테이너 */
 .today-container {
-    background-color: #ffe07c;
+    background-color: #fff7e1;
     padding: 40px;
     width: 520px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     text-align: center;
 }
+/* 섹션 제목 */
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 12px;
+    padding-left: 6px;
+    color: #222;
+}
 
 /* 제목 */
 .today-container h1 {
-    font-size: 32px;
+    font-size: 35px;
     font-weight: bold;
     margin-bottom: 30px;
 }
 
-/* 검색 섹션 */
-.search-section {
+/* 검색창 상자 정렬 */
+.search-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffe07c;
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    height: 48px;
+}
+
+/* 검색 인풋 */
+#searchInput {
+    flex-grow: 1;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    outline: none;
+    padding-left: 6px;
+}
+
+/* 돋보기 버튼 */
+#searchBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    margin-left: 10px;
+}
+
+#searchBtn i:hover {
+    color: #000;
+}
+
+/* 트랙 정보 박스 전체 */
+.track-display-box {
+    background-color: #ffe07c;
+    border-radius: 16px;
+    padding: 30px 20px;
+    margin-bottom: 30px;
+}
+
+/* 행별 정렬 */
+.track-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+    padding: 0 20px;
+}
+
+/* 라벨 */
+.track-label {
+    background-color: #FFD77A;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 4px;
+    width: 100px;
+    text-align: center;
+}
+
+/* 값 */
+.track-value {
+    background-color: #fff7e1;
+    padding: 10px 16px;
+    border-radius: 4px;
+    flex-grow: 1;
+    margin-left: 10px;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* 앨범 커버 */
+.cover-wrapper {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    margin-top: 24px;
 }
 
-#searchInput {
-    width: 70%;
-    height: 40px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
+.cover-wrapper img {
+    width: 220px;
+    height: 220px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 6px solid #fff7e1;
+}
+
+/* Comment 박스 스타일 */
+.comment-box {
+    background-color: #ffe07c;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    position: relative;
+
+    /* 너비 기준 정렬 */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 텍스트 입력창 */
+#comment {
+    width: 100%;
+    height: 100px;
+    padding: 12px;
     font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #fffdf2;
+    resize: none;
+    line-height: 1.6;
+
+    /* 좌우 정렬 균형 맞춤 */
+    display: block;
+    margin: 0 auto;  /* 수평 가운데 정렬 */
+    box-sizing: border-box;
 }
 
-#searchBtn {
-    padding: 8px 16px;
-    background-color: #ffb72b;
+/* 글자 수 카운터 */
+.char-counter {
+    font-size: 14px;
+    color: #888;
+    text-align: right;
+    margin-top: 8px;
+}
+
+
+
+/* 선택박스 */
+.select-section {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.select-section h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    padding-left: 10px;
+}
+
+.select-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* 카드 간 간격 증가 */
+}
+
+.select-card {
+    background-color: #ffe07c;
+    padding: 20px 14px;
+    border-radius: 12px;
+    width: 180px; /* 살짝 확대 */
+    text-align: center;
+}
+
+.select-card select {
+    width: 100%;
+    height: 52px; /* 높이 확대 */
+    font-size: 17px;
+    border-radius: 10px;
     border: none;
-    border-radius: 6px;
-    font-weight: bold;
+    background-color: #fffdf2;
+    text-align: center;
     cursor: pointer;
 }
 
-/* 곡 정보 */
-.track-info {
-    margin: 30px 0;
-}
-
-.track-info p {
-    font-size: 18px;
-    margin: 5px 0;
-}
-
-#trackCover {
-    width: 200px;
-    height: 200px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-top: 10px;
-}
-
-/* 코멘트 작성 */
-#comment {
-    width: 100%;
-    height: 80px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: none;
-    background-color: #fff7e1;
-    resize: none;
-    margin-bottom: 20px;
-}
-
-/* 선택박스 */
-.select-box {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 30px;
-}
-
-.select-box select {
-    flex: 1;
-    height: 48px;
-    font-size: 16px;
-    padding: 0 10px;
-    border-radius: 6px;
-    border: none;
-    background-color: #fff7e1;
-}
-
-/* 저장 버튼 */
+/* 저장 버튼 위치 조정 */
 #saveBtn {
+    margin-top: 24px;
     padding: 12px 28px;
     background-color: #ffb72b;
     border: none;
@@ -109,7 +230,9 @@ body {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    float: right; /* 오른쪽 정렬 */
 }
+
 
 /* 모달 스타일 */
 .modal {
