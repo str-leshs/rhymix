@@ -2,6 +2,7 @@ package TeamRhymix.Rhymix.service;
 
 import TeamRhymix.Rhymix.domain.User;
 import java.util.List;
+import TeamRhymix.Rhymix.domain.User;
 
 public interface UserService {
     List<User> getAllUsers();
