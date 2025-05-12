@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,6 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // 회원가입
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         if (user.getUsername() == null || user.getEmail() == null) {
@@ -24,16 +27,19 @@ public class UserController {
         return ResponseEntity.ok(saved);
     }
 
+    // 전체 유저 조회
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    // 이메일 존재 확인
     @GetMapping("/exists/email")
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.emailExists(email));
     }
 
+    // username으로 유저 조회
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
@@ -41,6 +47,31 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    // 비밀번호 찾기: 아이디, 이메일로 인증
+    @PostMapping("/find-password")
+    public ResponseEntity<?> findPassword(@RequestBody Map<String, String> req) {
+        String username = req.get("username");
+        String email = req.get("email");
 
+        User user = userService.getUserByUsername(username);
+        if (user == null || !email.equals(user.getEmail())) {
+            return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+        }
+
+        return ResponseEntity.ok("인증 성공");
+    }
+
+    // 비밀번호 재설정
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> req) {
+        String username = req.get("username");
+        String newPassword = req.get("newPassword");
+
+        boolean updated = userService.updatePassword(username, newPassword);
+        if (!updated) {
+            return ResponseEntity.status(404).body("비밀번호 변경 실패");
+        }
+
+        return ResponseEntity.ok("비밀번호 변경 완료");
+    }
 }
-
