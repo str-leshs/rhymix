@@ -1,7 +1,7 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.domain.User;
-import TeamRhymix.Rhymix.service.UserService;
+import TeamRhymix.Rhymix.servicek.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users") // ✅ 팀 규칙에 맞춘 base URI
+@RequestMapping("/api/users")
 public class AuthController {
 
     private final UserService userService;
