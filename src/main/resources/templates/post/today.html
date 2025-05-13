@@ -18,13 +18,10 @@
   <!-- Music 섹션 제목 -->
   <h2 class="section-title">Music</h2>
 
-  <!-- 검색창 -->
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="검색어 입력">
-    <button id="searchBtn">
-      <i class="fas fa-search"></i> <!-- 아이콘 -->
-    </button>
-  </div>
+  <!-- 음악 정보 수동 입력 버튼 -->
+  <button id="openModalBtn" class="right-float-btn">
+    <i class="fas fa-plus"></i> 곡 정보 입력
+  </button>
 
   <!-- 선택된 곡 정보 -->
   <div class="track-display-box">
@@ -91,12 +88,19 @@
   <button id="saveBtn">저장</button>
 </div>
 
-<!-- 모달 (검색 결과 표시용) -->
-<div id="searchModal" class="modal" style="display: none;">
+<!-- 모달창 -->
+<div id="manualInputModal" class="modal" style="display: none;">
   <div class="modal-content">
-    <ul id="searchResults"></ul>
+    <h2>곡 정보 입력</h2>
+
+    <input type="text" id="modalTrackTitle" placeholder="곡 제목">
+    <input type="text" id="modalTrackArtist" placeholder="아티스트명">
+    <input type="url" id="modalTrackCover" placeholder="앨범 커버 이미지 URL">
+
+    <div class="modal-buttons">
+      <button id="cancelTrackBtn">취소</button>
+      <button id="confirmTrackBtn">확인</button>
+    </div>
   </div>
 </div>
-</body>
-</html>
 
