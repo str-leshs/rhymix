@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>RHYMIX</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Subrayada:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,13 +23,15 @@
     </header>
 
     <section class="banner">
-        <div class="content banner-content"> <!-- NEW -->
+        <div class="content banner-content">
             <div class="banner-text">
                 <h1>음악으로 추억을<br>기록해보세요.</h1>
-                <button>with us?</button>
+                <a th:href="@{/join/agreement}">
+                    <button>with us?</button>
+                </a>
             </div>
             <div class="banner-image">
-                <img src="/info.png.gif" alt="앨범 썸네일">
+                <img src="/image/info.png.gif" alt="앨범 썸네일">
             </div>
         </div> <!-- /content -->
     </section>
@@ -70,19 +72,20 @@
     <footer>
         <div class="content">
             <div class="footer-logo">
-                <img src="/rhymix_logo.png" alt="로고"><br>
+                <img src="image/logo.png" alt="로고"><br>
             </div>
 
             <div class="footer-column">
-                    <div>회사</div>
-                    <div>상세정보</div>
-                    <div>For the ReCord</div>
+                    <a href="#"><div>회사</div></a>
+                    <a href="#"><div>상세정보</div></a>
+                    <a href="#"><div>For the ReCord</div></a>
             </div>
 
             <div class="footer-column">
-                    <div>멤버</div>
-                    <div>개인정보 처리방침</div>
-                    <div>안전 및 개인정보 보호센터</div>
+                    <a href="#"><div>멤버</div></a>
+                    <a href="#"><div>개인정보 처리방침</div></a>
+                    <a href="#"><div>안전 및 개인정보 보호센터</div></a>
+
             </div>
         </div>
     </footer>

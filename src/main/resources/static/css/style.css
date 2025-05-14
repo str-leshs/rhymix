@@ -226,6 +226,15 @@ footer .content {
     text-align: left;
     line-height: 1.8;
 }
+.footer-column a {
+    display: block;
+    color: black;
+    text-decoration: none;
+    margin: 5px 0;
+}
+.footer-column a:hover {
+    text-decoration: underline;
+}
 
 
 
