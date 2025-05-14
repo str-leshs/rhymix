@@ -1,7 +1,4 @@
 // 모달 열기
-// document.getElementById("searchBtn").addEventListener("click", () => {
-//     document.getElementById("manualInputModal").style.display = "flex";
-// });
 document.getElementById("openModalBtn").addEventListener("click", () => {
     document.getElementById("manualInputModal").style.display = "flex";
 });
@@ -27,7 +24,7 @@ document.getElementById("cancelTrackBtn").addEventListener("click", () => {
 
 document.getElementById("saveBtn").addEventListener("click", async () => {
     const postData = {
-        userId: "lion01",
+        userId: "lion01",   //TODO 로그인과 연동 후 수정할 것.
         title: document.getElementById("trackTitle").textContent,
         artist: document.getElementById("trackArtist").textContent,
         cover: document.getElementById("trackCover").src,
@@ -37,6 +34,15 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
     };
 
     try {
+        // 먼저 오늘 등록된 추천곡이 있는지 확인
+        const checkRes = await fetch("/api/posts/today");
+
+        if (checkRes.ok) {
+            const confirmUpdate = confirm("오늘의 추천곡이 이미 등록되어 있습니다. 수정하시겠습니까?");
+            if (!confirmUpdate) return;
+        }
+
+        // 저장 또는 수정 요청
         const response = await fetch("/api/posts", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -50,7 +56,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
             alert("저장에 실패했습니다.");
         }
     } catch (error) {
-        console.error("요청 실패:", error);
-        alert("요청 중 오류가 발생했습니다.");
+        console.error("에러 발생:", error);
+        alert("오류가 발생했습니다.");
     }
 });

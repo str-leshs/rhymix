@@ -3,7 +3,7 @@ package TeamRhymix.Rhymix.controller;
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
-import TeamRhymix.Rhymix.service.impl.PostService;
+import TeamRhymix.Rhymix.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
