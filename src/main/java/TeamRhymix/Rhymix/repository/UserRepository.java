@@ -45,6 +45,11 @@ public class UserRepository {
         return Optional.ofNullable(findByUsername(username));
     }
 
+    public User findByNickname(String nickname) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
+        return mongoTemplate.findOne(query, User.class);
+    }
+
     public User save(User user) {
         return mongoTemplate.save(user);
     }
@@ -53,5 +58,4 @@ public class UserRepository {
         Query query = new Query(Criteria.where("email").is(email));
         return mongoTemplate.exists(query, User.class);
     }
-
 }

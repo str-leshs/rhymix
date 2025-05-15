@@ -6,7 +6,7 @@ import TeamRhymix.Rhymix.domain.User;
 
 public interface UserService {
     List<User> getAllUsers();
-    User getUserByUsername(String username);
+    User getUserByNickname(String nickname);
     User createUser(User user);
     boolean emailExists(String email);
     User authenticate(String username, String password);
