@@ -78,4 +78,10 @@ public class UserServiceImpl implements UserService {
         System.out.println(" 로그인 성공: " + user.getUsername());
         return user;
     }
+
+    // ✅ 추가된 메서드: 이름 + 이메일로 유저 찾기 (아이디 찾기용)
+    @Override
+    public User findByNameAndEmail(String name, String email) {
+        return userRepository.findByNameAndEmail(name, email);
+    }
 }

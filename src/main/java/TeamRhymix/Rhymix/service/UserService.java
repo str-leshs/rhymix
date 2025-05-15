@@ -11,5 +11,6 @@ public interface UserService {
     boolean emailExists(String email);
     User authenticate(String username, String password);
     boolean updatePassword(String username, String newPassword);
+    User findByNameAndEmail(String name, String email);
 
 }

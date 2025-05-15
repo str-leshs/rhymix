@@ -46,6 +46,19 @@ public class UserController {
         if (user == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(user);
     }
+    // 아이디 찾기: 이름 + 이메일로 조회
+    @PostMapping("/find-id")
+    public ResponseEntity<?> findUsername(@RequestBody Map<String, String> req) {
+        String name = req.get("name");
+        String email = req.get("email");
+
+        User user = userService .findByNameAndEmail(name, email);
+        if (user == null) {
+            return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+        }
+
+        return ResponseEntity.ok(user.getUsername()); // 사용자 아이디 반환
+    }
 
     // 비밀번호 찾기: 아이디, 이메일로 인증
     @PostMapping("/find-password")
