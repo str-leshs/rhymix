@@ -1,7 +1,7 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.domain.User;
-import TeamRhymix.Rhymix.servicek.UserService;
+import TeamRhymix.Rhymix.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>MyPage | Rhymix</title>
+
+
+<!--  <link rel="stylesheet" th:href="@{/css/mypage.css}">-->
+  <link rel="stylesheet" th:href="@{/mypage.css}">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat+Subrayada:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="content header-content">
+      <div class="logo">
+        <img src="/image/image.png" alt="Rhymix 로고" class="logo"/>
+      </div>
+    </div>
+  </header>
+
+  <!-- MYPAGE MAIN -->
+  <section class="mypage-section">
+
+    <!-- Profile -->
+    <aside class="profile-card">
+      <img src="/image/Hamster_Circle_Cropped.png" alt="프로필 이미지">
+      <h2 th:text="'@' + ${user.nickname}">@nickname</h2>
+      <p th:text="${user.bio}">한 줄 소개입니다.</p>
+      <div class="tags">
+        <span th:each="genre : ${user.preferredGenres}" th:text="'#' + ${genre}" style="background: none; color: #222; font-weight: bold;">#HIPHOP</span>
+      </div>
+      <div style="margin-top: 1rem;">
+        <a href="/mypage" class="btn">📘 마이페이지</a><br><br>
+        <a href="/logout" class="btn">🔒 로그아웃</a>
+      </div>
+    </aside>
+
+    <!-- Manage area -->
+    <main class="manage-area">
+      <div class="manage-card" style="height: 200px;">
+        <h3 style="font-size: 1.8rem;">계정 관리</h3>
+        <a href="/edit-profile" style="font-size: 1.5rem;">✏️ 프로필 편집하기</a>
+      </div>
+      <div class="manage-card" style="height: 200px;">
+        <h3 style="font-size: 1.8rem;">블로그 관리</h3>
+        <a href="/customize-blog" style="font-size: 1.5rem;">🗂 블로그 꾸미기</a>
+      </div>
+    </main>
+
+    <!-- Side menu -->
+    <aside class="side-menu">
+      <h4>📁 MENU📁</h4>
+      <ul>
+        <li><a href="/post">🎵 POST</a></li>
+        <li><a href="/playlist">🎧 PLAYLIST</a></li>
+        <li><a href="/neighbor">👥 NEIGHBOR</a></li>
+      </ul>
+      <input type="text" placeholder="검색">
+    </aside>
+
+  </section>
+
+  <!-- Footer -->
+  <div class="footer-separator"></div>
+  <footer>
+    <div class="content" style="display: flex; align-items: center; justify-content: space-between; background-color: #fff3c4; border-radius: 20px; padding: 2vw 3vw;">
+      <div class="footer-logo">
+        <img src="/image/image.png" alt="로고"><br>
+      </div>
+      <div class="footer-column">
+        <div style="font-weight: bold; font-size: 1.1rem;">회사</div>
+        <div>상세정보</div>
+        <div>For the ReCord</div>
+      </div>
+      <div class="footer-column">
+        <div style="font-weight: bold; font-size: 1.1rem;">멤버</div>
+        <div>개인정보 처리방침</div>
+        <div>안전 및 개인정보 보호센터</div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

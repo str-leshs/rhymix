@@ -1,0 +1,181 @@
+/* mypage.css */
+
+/* 기본 설정 */
+body {
+    font-family: 'Montserrat Subrayada', sans-serif;
+    background-color: #fffbea;
+    margin: 0;
+    padding: 0;
+    color: #222;
+}
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* HEADER */
+header {
+    background-color: #ffe066;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header .logo img {
+    height: 60px;
+}
+header .header-content {
+    display: flex;
+    align-items: center;
+}
+header .profile-section {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* MYPAGE SECTION */
+.mypage-section {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* PROFILE CARD */
+.profile-card {
+    width: 250px;
+    background-color: #ffe066;
+    padding: 1rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.profile-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.profile-card h2 {
+    font-size: 1rem;
+    margin: 1rem 0 0.5rem;
+}
+.profile-card p {
+    font-size: 0.9rem;
+    background-color: #fff7b1;
+    border-radius: 10px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+.tags span {
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.profile-card .btn {
+    display: inline-block;
+    background-color: #fff7b1;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 0.8rem;
+    margin: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* MANAGE AREA */
+.manage-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.manage-card {
+    background-color: #ffe066;
+    border-radius: 20px;
+    padding: 1.5rem;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.manage-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+}
+.manage-card a {
+    font-size: 1.3rem;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+}
+
+/* SIDE MENU */
+.side-menu {
+    width: 180px;
+    background-color: #fff7b1;
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+.side-menu h4 {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+.side-menu li {
+    margin-bottom: 0.8rem;
+}
+.side-menu a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+    font-size: 0.95rem;
+}
+.side-menu input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+/* FOOTER */
+footer {
+    background-color: #ffe8a1;
+    padding: 2rem 3rem;
+    margin-top: 3rem;
+    border-radius: 20px;
+}
+footer .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.footer-logo img {
+    height: 60px;
+}
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+}
+.footer-column div:first-child {
+    font-weight: bold;
+    font-size: 1.1rem;
+}

@@ -82,8 +82,8 @@ function showToast(message) {
             toast.classList.remove('show');
             setTimeout(() => {
                 toast.classList.add('hidden');
-            }, 300); // 애니메이션 끝나고 숨김
-        }, 2000); // 2초간 표시
+            }, 300);
+        }, 2000);
     }
     document.getElementById("findIdBtn").addEventListener("click", function () {
         const name = document.getElementById("name").value;
@@ -91,8 +91,8 @@ function showToast(message) {
 
         axios.post("/api/find-id", { name, email })
             .then(res => {
-                const userId = res.data.username; // ex: rhymix_user
-                showToast(`✨ 입력한 정보로 가입된 아이디는 ${userId}입니다!`);
+                const userId = res.data.username;
+                showToast(` 입력한 정보로 가입된 아이디는 ${userId}입니다!`);
             })
             .catch(err => {
                 showToast("❌ 입력한 정보와 일치하는 계정을 찾을 수 없어요.");
