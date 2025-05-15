@@ -1,0 +1,114 @@
+body {
+    font-family: 'Noto Sans KR', 'Segoe UI', sans-serif;
+    background-color: #FFF4C3;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: linear-gradient(180deg, #FFFDF5, #FFFBEA);
+    border: 1px solid #FFDF9F;
+    border-radius: 18px;
+    padding: 40px 50px;
+    box-shadow: 0 12px 25px rgba(255, 215, 100, 0.25);
+    width: 460px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+.login-container:hover {
+    box-shadow: 0 14px 30px rgba(255, 195, 50, 0.35);
+}
+
+.logo-img {
+    width: 60px;
+    height: auto;
+    margin-bottom: 10px;
+    margin-top: -10px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.login-container h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #3D2E1E;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #FFD77A;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.login-btn {
+    background-color: #FFD77A;
+    border:1px solid #FFD77A;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #3D2E1E;
+    width: 100%;
+    margin-top: 18px;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+.login-btn:hover {
+    background-color: #FFC94C;
+}
+
+/* 하단 텍스트 링크들 */
+.text-links {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #7B6E5D;
+    font-weight: 500;
+}
+
+.text-links a {
+    text-decoration: none;
+    color: #7B6E5D;
+    margin: 0 6px;
+    transition: color 0.2s ease;
+}
+
+.text-links a:hover {
+    color: #3D2E1E;
+}
+
+.text-links span {
+    color: #DDD0B5;
+    margin: 0 4px;
+}
+.toast {
+    position: fixed;
+    top: 30%; /* 화면 위쪽에 표시 */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FFD77A;
+    color: #3D2E1E;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 15px;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
