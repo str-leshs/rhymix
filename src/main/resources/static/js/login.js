@@ -9,20 +9,20 @@ loginForm.addEventListener('submit', function (e) {
 
 // 2. 로그인 함수 정의
 function login() {
-    const username = document.getElementById('username').value.trim();
+    const nickname = document.getElementById('nickname').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    console.log("보내는 값:", username, password);
+    console.log("보내는 값:", nickname, password);
 
     // 3. 입력값 검사
-    if (!username || !password) {
+    if (!nickname || !password) {
         showToast('아이디와 비밀번호를 모두 입력해주세요.');
         return;
     }
 
-    // 4. 서버로 로그인 요청 보내기 (예: /api/login)
-    axios.post('/api/login', {
-        username: username,
+    // 4. 서버로 로그인 요청 보내기
+    axios.post('/api/users/login', {
+        nickname: nickname,
         password: password
     })
         .then(function (response) {
@@ -36,7 +36,7 @@ function login() {
 }
 
 // 5. 엔터 키로도 로그인 되도록 (input 안에서 엔터 눌렀을 때도 실행되게)
-['username', 'password'].forEach(id => {
+['nickname', 'password'].forEach(id => {
     document.getElementById(id).addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             login();

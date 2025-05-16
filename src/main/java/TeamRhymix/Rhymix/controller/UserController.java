@@ -66,6 +66,19 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
+    @PostMapping("/find-id")
+    public ResponseEntity<?> findId(@RequestBody Map<String, String> req) {
+        String username = req.get("username"); // 사용자 이름
+        String email = req.get("email");       // 이메일
+
+        User user = userService.getUserByUsername(username);
+        if (user == null || !user.getEmail().equals(email)) {
+            return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+        }
+
+        return ResponseEntity.ok(Map.of("nickname", user.getNickname())); // 아이디 반환
+    }
+
     @PostMapping("/find-password")
     public ResponseEntity<?> findPassword(@RequestBody Map<String, String> req) {
         String username = req.get("username");
