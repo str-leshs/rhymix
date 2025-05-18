@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -54,4 +55,12 @@ public class PostServiceImpl implements PostService {
         LocalDateTime end = start.plusDays(1).minusSeconds(1);
         return postRepository.findTodayPostByUserId(userId, start, end);
     }
+
+
+    @Override
+    public List<Post> getPostsByUserId(String userId) {
+        return postRepository.findByUserId(userId);
+    }
+
+
 }
