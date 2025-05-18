@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,6 +48,17 @@ public class PostRepository {
         query.addCriteria(Criteria.where("userId").is(userId));
         return mongoTemplate.find(query, Post.class);
     }
+
+    public Post findByUserIdAndDate(String userId, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = start.plusDays(1).minusSeconds(1);
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("userId").is(userId)
+                .and("createdAt").gte(start).lte(end));
+        return mongoTemplate.findOne(query, Post.class);
+    }
+
 
 
 }

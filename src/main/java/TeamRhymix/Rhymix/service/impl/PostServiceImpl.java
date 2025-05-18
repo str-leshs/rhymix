@@ -20,7 +20,7 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     /**
-     * 오늘 날짜 기준으로 추천곡이 이미 등록되어 있으면 수정, 없으면 새로 저장합니다.
+     * 오늘 날짜 기준으로 추천곡이 이미 등록되어 있으면 수정, 없으면 새로 저장
      */
     @Override
     public Post savePost(PostDto dto) {
@@ -47,7 +47,7 @@ public class PostServiceImpl implements PostService {
     }
 
     /**
-     * 오늘 날짜 기준으로 특정 사용자의 추천곡을 조회합니다.
+     * 오늘 날짜 기준으로 특정 사용자의 추천곡을 조회
      */
     @Override
     public Post getTodayPost(String userId) {
@@ -60,6 +60,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getPostsByUserId(String userId) {
         return postRepository.findByUserId(userId);
+    }
+
+    /**
+     * 특정 날짜 기준으로 추천곡을 조회
+     */
+    @Override
+    public Post getPostByDate(String userId, LocalDate date) {
+        return postRepository.findByUserIdAndDate(userId, date);
     }
 
 

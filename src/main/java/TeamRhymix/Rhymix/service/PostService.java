@@ -23,4 +23,9 @@ public interface PostService {
      */
     List<Post> getPostsByUserId(String userId);
 
+    /**
+     * 특정 사용자가 등록한 특정 추천곡 포스트 조회
+     */
+    Post getPostByDate(String userId, LocalDate date);
+
 }
