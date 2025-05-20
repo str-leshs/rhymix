@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RHYMIX</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Modak&family=Jua&family=Inter&family=Itim&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <div class="yellow-box">
+            <div class="logo">RHYMIX</div>
+        </div>
+        <img src="/image/LP_image.png" alt="LP 디스크" class="lp-img">
+    </header>
+
+    <div class="main-content">
+        <aside class="sidebar left">
+            <div class="profile-card">
+                <div class="nickname-box" id="nickname-box">@사용자닉네임</div>
+                <img src="" class="avatar" alt="프로필" id="profile-image">
+                <!-- ✅ 이 두 개를 감싸는 상위 박스 .profile-meta 추가 -->
+                <div class="profile-meta" id="profile-meta">
+                    <div class="tag-list" id="tag-list">
+                        <!-- JS로 해시태그 삽입됨 -->
+                    </div>
+                    <div class="bio-message" id="bio-message">
+                        소개 메시지
+                    </div>
+                </div>
+
+
+                <div class="profile-buttons">
+                    <button>📂 마이페이지</button>
+                    <button>🔓 로그아웃</button>
+                </div>
+            </div>
+
+
+
+            <div class="music-pick" id="music-pick">
+                <!-- 자바스크립트로 동적으로 삽입될 자리 -->
+            </div>
+
+
+            <div class="mood-buttons">
+                <button>🌞 맑음</button>
+                <button>😑 피곤</button>
+            </div>
+            <p class="mood-caption">비트가 계속 바뀌는 게 포인트 >.<</p>
+        </aside>
+
+        <main class="center">
+            <div class="calendar-section">
+                <div id="calendar-container"></div>
+            </div>
+
+            <div class="diary-section" id="diary-container"></div>
+            <script>
+                const diaryData = {
+                    date: '2025-04-10',
+                    title: '4월 10일 내 하루',
+                    content: `오늘은 우경콩이랑 은서콩이랑 카페에 와씀
+무화과크림치즈스콘 먹을라 했는데 왜 품절????
+그래서 녹차 마카다미아 어쩌구 쿠키 먹었는데 넘 맛있어서
+이거 먹을라고 품절시켰나보네..
+다들 벚꽃도 피고 날도 좋은데 나들이는 가셨는지..
+글고 방문했으면 양심적으로 좋아하는 노래 하나씩 추천하고 가 -.-`,
+                    image: '/image/diary_image.png'
+                };
+
+                const diaryContainer = document.getElementById('diary-container');
+
+                const diaryHTML = `
+        <h3>${diaryData.title}</h3>
+        <p>${diaryData.content.replace(/\n/g, '<br>')}</p>
+        ${diaryData.image ? `<img src="${diaryData.image}" alt="diary image" style="width:100%; max-width:500px; margin-top:1vw; border-radius:1vw;">` : ''}
+    `;
+
+                diaryContainer.innerHTML = diaryHTML;
+            </script>
+
+        </main>
+
+        <aside class="sidebar right">
+            <div class="menu-box">
+                <nav class="menu">
+                    <h3>🗂️MENU🗂️</h3>
+                    <button>🎵 POST</button>
+                    <button>🎼 PLAYLIST</button>
+                    <button>🧑‍🤝‍🧑 NEIGHBOR</button>
+                </nav>
+
+                <!-- 검색창 -->
+                <div class="search-wrapper">
+                    <input type="text" placeholder="검색어를 입력하세요..." />
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+            <div class="playlist-preview" id="playlist-box">
+                <h4 id="playlist-title"></h4>
+                <ul id="playlist-items">
+                    <!-- JS로 목록 삽입 -->
+                </ul>
+            </div>
+
+
+        </aside>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="/image/logo2.png" alt="logo">
+            </div>
+            <div class="footer-links">
+                <div>
+                    <h4>회사</h4>
+                    <p>상세정보</p>
+                    <p>For the ReCord</p>
+                </div>
+                <div>
+                    <h4>멤버</h4>
+                    <p>개인정보 처리방침</p>
+                    <p>안전 및 개인정보 보호센터</p>
+                </div>
+            </div>
+        </div>
+        <p class="credit">DESIGNED BY RHYMIX</p>
+    </footer>
+</div>
+
+<script>
+    const calendarData = [
+        {
+            date: '2025-05-10',
+            title: 'Whiplash',
+            artist: 'aespa',
+            image: '/image/Aespa_-_Whiplash 2.png'
+        }
+    ];
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-based
+
+    const container = document.getElementById("calendar-container");
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    let table = '<table>';
+    table += `<thead>
+            <tr class="calendar-header">
+              <th colspan="7">${year}.${String(month + 1).padStart(2, '0')}</th>
+            </tr>
+            <tr class="calendar-weekdays">
+              <th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th>
+            </tr>
+          </thead>`;
+    table += '<tbody><tr>';
+
+    for (let i = 0; i < firstDay; i++) table += '<td></td>';
+
+    for (let d = 1; d <= lastDate; d++) {
+        const fullDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const match = calendarData.find(item => item.date === fullDate);
+        table += '<td>';
+        table += `<small>${d}</small>`;
+        if (match) {
+            table += `<div class="album-tooltip">
+            <img src="${match.image}" alt="앨범" />
+            <div class="tooltip-content">
+                <img src="${match.image}" alt="앨범커버" class="tooltip-album-img" />
+                <strong>${match.title}</strong><br />
+                <em>${match.artist}</em>
+            </div>
+
+          </div>`;
+        }
+        table += '</td>';
+        if ((firstDay + d) % 7 === 0) table += '</tr><tr>';
+    }
+
+    table += '</tr></tbody></table>';
+    container.innerHTML = table;
+</script>
+
+<script>
+    const monthNames = [
+        "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+        "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+    ];
+
+    const now = new Date();
+    const currentMonth = now.getMonth(); // 0~11
+    const previousMonth = (currentMonth + 11) % 12; // 전 달 (1월이면 12월)
+
+    const playlistTitle = document.getElementById("playlist-title");
+    playlistTitle.textContent = `${monthNames[previousMonth]}.mix`;
+</script>
+
+<script>
+    const dummyPlaylist = [];  // ← 실제 데이터 들어올 자리에 임시로 비워둠
+
+    const playlistContainer = document.getElementById("playlist-items");
+
+    if (dummyPlaylist.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "플레이리스트가 비어있습니다.";
+        li.style.color = "#888";
+        li.style.fontStyle = "italic";
+        li.style.textAlign = "center";
+        li.style.padding = "1vw 0";
+        playlistContainer.appendChild(li);
+    } else {
+        dummyPlaylist.forEach(title => {
+            const li = document.createElement("li");
+            li.textContent = title;
+            playlistContainer.appendChild(li);
+        });
+    }
+</script>
+
+<script>
+    const user = {
+        nickname: "@HIPHOP_HAMSTER",
+        profileImageUrl: "/image/Hamster_Circle_Cropped 1.png",
+        tags: ["K-POP", "HIP-HOP"],
+        bio: "인생을 나따라 힙합따라"
+    };
+
+    // 닉네임
+    document.getElementById("nickname-box").textContent = user.nickname;
+
+    // 프로필 이미지
+    document.getElementById("profile-image").src = user.profileImageUrl;
+
+    // 해시태그
+    const tagList = document.getElementById("tag-list");
+    tagList.innerHTML = "";
+    user.tags.forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = `# ${tag}`;
+        tagList.appendChild(span);
+    });
+
+    // 소개 메시지
+    document.getElementById("bio-message").textContent = user.bio;
+</script>
+
+<script>
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayMusic = calendarData.find(item => item.date === todayStr);
+
+    const musicPickDiv = document.getElementById('music-pick');
+
+    if (todayMusic) {
+        musicPickDiv.innerHTML = `
+        <img src="${todayMusic.image}" alt="앨범커버">
+        <p class="title">📌 ${todayMusic.title}<br>${todayMusic.artist}</p>
+    `;
+    } else {
+        musicPickDiv.innerHTML = `
+        <img src="/image/default_album.png" alt="앨범커버 없음" style="opacity: 0.3;">
+        <p class="title" style="font-weight: bold;">오늘은 등록된 곡이 없습니다</p>
+    `;
+    }
+
+
+</script>
+
+
+</body>
+</html>
+
+
+

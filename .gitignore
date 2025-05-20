@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+#MongoDB 개인 username, password 보안
+application-secret.properties

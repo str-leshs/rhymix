@@ -1,0 +1,144 @@
+/* 전체 배경 및 기본 폰트 */
+body {
+    background-color: #fff7e1;
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* 최상위 컨테이너 */
+.today-container {
+    background-color: #ffe07c;
+    padding: 40px;
+    width: 520px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* 제목 */
+.today-container h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* 검색 섹션 */
+.search-section {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    width: 70%;
+    height: 40px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+#searchBtn {
+    padding: 8px 16px;
+    background-color: #ffb72b;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 곡 정보 */
+.track-info {
+    margin: 30px 0;
+}
+
+.track-info p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+#trackCover {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+/* 코멘트 작성 */
+#comment {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #fff7e1;
+    resize: none;
+    margin-bottom: 20px;
+}
+
+/* 선택박스 */
+.select-box {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.select-box select {
+    flex: 1;
+    height: 48px;
+    font-size: 16px;
+    padding: 0 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: #fff7e1;
+}
+
+/* 저장 버튼 */
+#saveBtn {
+    padding: 12px 28px;
+    background-color: #ffb72b;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 모달 스타일 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#searchResults li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+#searchResults li:hover {
+    background-color: #f4f4f4;
+}
