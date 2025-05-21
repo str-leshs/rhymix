@@ -10,4 +10,10 @@ public class TodayPostController {
     public String showTodayPage() {
         return "post/today";
     }
+
+    @GetMapping("/calendar")
+    public String calendarPage() {
+        return "calendar";
+    }
 }
+
