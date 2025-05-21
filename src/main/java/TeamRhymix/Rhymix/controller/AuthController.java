@@ -5,9 +5,15 @@ import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -22,47 +28,27 @@ public class AuthController {
     private final UserMapper userMapper;
 
     /**
-     * 로그인 API
-     * POST /api/auth/login
-     */
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest, HttpSession session) {
-        String nickname = loginRequest.get("nickname");
-        String password = loginRequest.get("password");
-
-        if (nickname == null || password == null) {
-            return ResponseEntity.badRequest().body("입력값이 누락되었습니다.");
-        }
-
-        try {
-            User user = userService.authenticate(nickname, password);
-            session.setAttribute("user", user);  // 세션에 유저 정보 저장
-            return ResponseEntity.ok(userMapper.toDto(user)); // 안전한 DTO 응답
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401).body("아이디 또는 비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    /**
-     * 로그아웃 API
-     * POST /api/auth/logout
-     */
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok("로그아웃 완료");
-    }
-
-    /**
      * 로그인된 사용자 정보 조회
      * GET /api/auth/me
+     * - Spring Security의 인증 객체에서 사용자 식별
      */
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication.getPrincipal().equals("anonymousUser")) {
             return ResponseEntity.status(401).body("로그인 정보가 없습니다.");
         }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.getUserByNickname(userDetails.getUsername());
+
+        if (user == null) {
+            return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+        }
+
         return ResponseEntity.ok(userMapper.toDto(user));
     }
+
 }

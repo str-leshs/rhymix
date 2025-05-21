@@ -1,23 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("/api/auth/me")
-        .then(res => {
-            if (!res.ok) throw new Error("로그인 정보 없음");
-            return res.json();
-        })
-        .then(user => {
-            const userId = user.nickname;
-            loadUserProfile();
-            loadTodayMusic(userId);
-            loadPlaylist(userId);
-            loadComments(userId);
-            setupCommentSubmit(userId);
-            setupPostModal();
-            setupCalendar(userId);
-        })
-        .catch(err => {
-            alert("로그인이 필요합니다.");
-            window.location.href = "/login";
-        });
+    const nickname = document.getElementById('hidden-nickname')?.value;
+
+    if (!nickname) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/login";
+        return;
+    }
+
+    loadUserProfile();
+    loadTodayMusic(nickname);
+    loadPlaylist(nickname);
+    loadComments(nickname);
+    setupCommentSubmit(nickname);
+    setupPostModal();
+    setupCalendar(nickname);
 });
 
 // 1. 사용자 프로필
@@ -25,35 +21,18 @@ function loadUserProfile() {
     fetch('/api/auth/me')
         .then(res => res.json())
         .then(user => {
-            const nickname = user.nickname?.trim();
-            document.getElementById('nickname-box').textContent =
-                nickname && nickname.length > 0 ? nickname : '@...';
-
-            const profileImage = user.profileImage?.trim();
-            document.getElementById('profile-image').src =
-                profileImage ? profileImage : 'image/placeholder_circle.png';
-
-            const bioMessage = user.bio?.trim();
-            document.getElementById('bio-message').textContent =
-                bioMessage ? bioMessage : '블로그 방문을 환영합니다!';
+            document.getElementById('nickname-box').textContent = user.nickname || '@...';
+            document.getElementById('profile-image').src = user.profileImage || '/image/placeholder_circle.png';
+            document.getElementById('bio-message').textContent = user.bio || '블로그 방문을 환영합니다!';
 
             const tagList = document.getElementById('tag-list');
             tagList.innerHTML = '';
-
-            const genres = user.preferredGenres || [];
-            if (genres.length === 0) {
+            (user.preferredGenres || []).forEach(tag => {
                 const span = document.createElement('span');
                 span.className = 'tag';
-                span.textContent = '#,,,';
+                span.textContent = `#${tag}`;
                 tagList.appendChild(span);
-            } else {
-                genres.forEach(tag => {
-                    const span = document.createElement('span');
-                    span.className = 'tag';
-                    span.textContent = `#${tag}`;
-                    tagList.appendChild(span);
-                });
-            }
+            });
         });
 }
 
@@ -65,7 +44,6 @@ function loadTodayMusic(userId) {
             return res.json();
         })
         .then(post => {
-            // 추천곡이 존재할 경우
             const musicCard = document.querySelector('.music-card');
             const placeholder = document.getElementById('no-post-placeholder');
             musicCard.style.display = "block";
@@ -80,13 +58,12 @@ function loadTodayMusic(userId) {
             document.querySelector('.music-artist-box').textContent =
                 post.artist ? `🎤 ${post.artist}` : '🎤 artist';
 
-            document.getElementById('mood-btn-1').textContent =
-                post.mood ? `🌈 ${post.mood}` : '🌈 mood';
+            // ✅ mood와 weather는 이모지+텍스트로 저장되어 있으므로 그대로 출력
+            document.getElementById('weather-btn').textContent = post.weather || '';
+            document.getElementById('mood-btn').textContent = post.mood || '';
 
-            document.getElementById('mood-btn-2').textContent = '';
         })
         .catch(err => {
-            // 추천곡이 없을 경우 안내 문구 표시
             const musicCard = document.querySelector('.music-card');
             const container = document.getElementById('music-pick');
 
@@ -106,6 +83,7 @@ function loadTodayMusic(userId) {
             }
         });
 }
+
 
 
 // 3. 플레이리스트
@@ -247,21 +225,8 @@ function closeDetailModal() {
 }
 
 //10. 로그아웃
-document.getElementById("logout-btn").addEventListener("click", async () => {
-    try {
-        const res = await fetch("/api/auth/logout", {
-            method: "POST"
-        });
-
-        if (res.ok) {
-            alert("로그아웃 되었습니다.");
-            window.location.href = "/";
-        } else {
-            alert("로그아웃에 실패했습니다.");
-        }
-    } catch (err) {
-        console.error("로그아웃 오류:", err);
-        alert("오류가 발생했습니다.");
-    }
+// Spring Security 방식 로그아웃 처리
+document.getElementById("logout-btn").addEventListener("click", () => {
+    document.getElementById("logout-form").submit();
 });
 

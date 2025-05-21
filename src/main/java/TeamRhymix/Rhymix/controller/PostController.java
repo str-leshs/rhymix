@@ -8,6 +8,7 @@ import TeamRhymix.Rhymix.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,28 +33,15 @@ public class PostController {
     }
 
     @GetMapping("/today")
-    public ResponseEntity<PostDto> getTodayPost(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return ResponseEntity.status(401).build(); // 로그인하지 않은 경우
+    public ResponseEntity<PostDto> getTodayPost(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
         }
 
-        Post post = postService.getTodayPost(user.getNickname());
+        String nickname = userDetails.getUsername(); // nickname = username
+        Post post = postService.getTodayPost(nickname);
+
         return post != null ? ResponseEntity.ok(postMapper.toDto(post)) : ResponseEntity.notFound().build();
     }
 
-
-    /**
-     * [로그인과 통합 후 변경 예정]
-     * 특정 사용자 ID로 오늘의 추천곡을 조회하는 API
-     * 프론트엔드에서 쿼리 파라미터로 userId를 전달받아 처리합니다.
-     *
-     * @param userId 사용자 ID
-     * @return 해당 사용자의 오늘의 추천곡 또는 404
-     */
-//    @GetMapping("/today")
-//    public ResponseEntity<PostDto> getTodayPost(@RequestParam String userId) {
-//        Post post = postService.getTodayPost(userId);
-//        return post != null ? ResponseEntity.ok(postMapper.toDto(post)) : ResponseEntity.notFound().build();
-//    }
 }

@@ -34,14 +34,21 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
         const user = await userRes.json();
         const userId = user.nickname;
 
+        // ✅ 이모지+텍스트가 포함된 텍스트 전체 가져오기
+        const moodSelect = document.getElementById("mood");
+        const weatherSelect = document.getElementById("weather");
+
+        const mood = moodSelect.options[moodSelect.selectedIndex].text;
+        const weather = weatherSelect.options[weatherSelect.selectedIndex].text;
+
         const postData = {
             userId: userId,
             title: document.getElementById("trackTitle").textContent,
             artist: document.getElementById("trackArtist").textContent,
             cover: document.getElementById("trackCover").src,
             comment: document.getElementById("comment").value,
-            mood: document.getElementById("mood").value,
-            weather: document.getElementById("weather").value
+            mood: mood,             // ✅ 이모지 포함
+            weather: weather        // ✅ 이모지 포함
         };
 
         // 먼저 오늘 등록된 추천곡이 있는지 확인
@@ -60,7 +67,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 
         if (response.ok) {
             alert("오늘의 추천곡이 등록되었습니다!");
-            window.location.href = "/main"; //오늘의 추천곡 등록 후 메인페이지로 이동
+            window.location.href = "/main"; // 메인페이지로 이동
         } else {
             alert("저장에 실패했습니다.");
         }
