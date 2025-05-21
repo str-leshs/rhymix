@@ -1,5 +1,4 @@
 // login.js
-
 // 1. 폼 제출 이벤트 가로채기
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', function (e) {
@@ -21,7 +20,7 @@ function login() {
     }
 
     // 4. 서버로 로그인 요청 보내기
-    axios.post('/api/users/login', {
+    axios.post('/api/auth/login', {
         nickname: nickname,
         password: password
     })
@@ -35,16 +34,16 @@ function login() {
         });
 }
 
-// 5. 엔터 키로도 로그인 되도록 (input 안에서 엔터 눌렀을 때도 실행되게)
-['nickname', 'password'].forEach(id => {
-    document.getElementById(id).addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            login();
-        }
-    });
-});
+// 5. 엔터 키로도 로그인 되도록 설정
+// ['nickname', 'password'].forEach(id => {
+//     document.getElementById(id).addEventListener('keypress', function (e) {
+//         if (e.key === 'Enter') {
+//             login();
+//         }
+//     });
+// });
 
-// 6. 커스텀 토스트 메시지 함수
+// 6. 커스텀 토스트 메시지 표시 함수
 function showToast(message) {
     let toast = document.getElementById('toast');
     if (!toast) {

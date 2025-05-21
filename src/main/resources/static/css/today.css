@@ -200,6 +200,18 @@ body {
     cursor: pointer;
 }
 
+.select-section select {
+    width: 200px;           /* 너비 키우기 */
+    height: 45px;           /* 높이 키우기 */
+    font-size: 16px;        /* 글씨 키우기 */
+    padding: 8px 12px;      /* 안쪽 여백 */
+    border-radius: 8px;     /* 모서리 둥글게 */
+    border: 1px solid #ccc; /* 경계선 */
+    background-color: #fff; /* 배경색 */
+    cursor: pointer;
+}
+
+
 /* 저장 버튼 위치 조정 */
 #saveBtn {
     margin-top: 24px;

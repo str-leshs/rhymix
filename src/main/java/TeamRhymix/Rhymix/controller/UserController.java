@@ -4,6 +4,7 @@ import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -104,4 +105,5 @@ public class UserController {
 
         return ResponseEntity.ok("비밀번호 변경 완료");
     }
+
 }
