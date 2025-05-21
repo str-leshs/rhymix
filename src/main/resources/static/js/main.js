@@ -246,3 +246,22 @@ function closeDetailModal() {
     document.getElementById("trackDetailModal").style.display = "none";
 }
 
+//10. 로그아웃
+document.getElementById("logout-btn").addEventListener("click", async () => {
+    try {
+        const res = await fetch("/api/auth/logout", {
+            method: "POST"
+        });
+
+        if (res.ok) {
+            alert("로그아웃 되었습니다.");
+            window.location.href = "/";
+        } else {
+            alert("로그아웃에 실패했습니다.");
+        }
+    } catch (err) {
+        console.error("로그아웃 오류:", err);
+        alert("오류가 발생했습니다.");
+    }
+});
+
