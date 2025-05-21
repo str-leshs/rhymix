@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 등록</title>
+    <link rel="stylesheet" href="/css/profile.css">  <!-- ✅ 경로 확인 필요 -->
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <h1>프로필 등록</h1>
+    </div>
+
+    <!-- 프로필 이미지 섹션 -->
+    <div class="profile-image-section">
+        <div class="image-circle" id="preview"></div>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
+        <button type="button" class="set-image-btn" onclick="document.getElementById('imageUpload').click();">
+            이미지 설정
+        </button>
+    </div>
+
+    <form class="profile-form">
+        <label>이름</label>
+        <input type="text" />
+
+        <label>아이디</label>
+        <div class="id-wrapper">
+            <span class="at-symbol">@</span>
+            <input type="text" id="userId" />
+        </div>
+        <span id="id-warning" class="warning-text">영어만 입력할 수 있습니다.</span>
+
+        <script>
+            const userIdInput = document.getElementById('userId');
+            const warningText = document.getElementById('id-warning');
+
+            userIdInput.addEventListener('input', function () {
+                const isValid = /^[a-zA-Z]*$/.test(this.value);
+                if (!isValid) {
+                    warningText.style.display = 'block';
+                } else {
+                    warningText.style.display = 'none';
+                }
+
+                // 영어 외 문자 제거
+                this.value = this.value.replace(/[^a-zA-Z]/g, '');
+            });
+        </script>
+
+
+
+
+        <label>전화번호</label>
+        <div class="phone-wrapper">
+            <input type="text" maxlength="3" class="phone-input" id="phone1" />
+            -
+            <input type="text" maxlength="4" class="phone-input" id="phone2" />
+            -
+            <input type="text" maxlength="4" class="phone-input" id="phone3" />
+        </div>
+
+        <label>이메일 주소</label>
+        <input type="email" />
+
+        <label>상태 메시지</label>
+        <input type="text" />
+
+        <label>블로그 이름</label>
+        <input type="text" />
+
+        <label>비밀번호</label>
+        <div class="password-wrapper">
+            <input type="password" id="password" />
+            <button type="button" class="change-btn" onclick="togglePassword()">보기</button>
+        </div>
+
+        <label>선호 장르</label>
+        <div class="genre-select">
+            <select id="genre1">
+                <option disabled selected>선택</option>
+                <option>K-POP</option>
+                <option>R&B</option>
+                <option>Dance</option>
+                <option>발라드</option>
+                <option>jazz</option>
+                <option>rock</option>
+                <option>classic</option>
+                <option>트로트</option>
+                <option>힙합</option>
+                <option>팝</option>
+                <option>J-POP</option>
+                <option>OST</option>
+                <option>라틴</option>
+                <option>인디</option>
+                <option>밴드</option>
+            </select>
+
+            <select id="genre2">
+                <option disabled selected>선택</option>
+                <option>K-POP</option>
+                <option>R&B</option>
+                <option>Dance</option>
+                <option>발라드</option>
+                <option>jazz</option>
+                <option>rock</option>
+                <option>classic</option>
+                <option>트로트</option>
+                <option>힙합</option>
+                <option>팝</option>
+                <option>J-POP</option>
+                <option>OST</option>
+                <option>라틴</option>
+                <option>인디</option>
+                <option>밴드</option>
+            </select>
+        </div>
+
+        <!-- 중복 경고 메시지 -->
+        <span id="genre-warning" class="warning-text">⚠ 같은 장르를 중복 선택할 수 없습니다.</span>
+
+
+        <button type="submit" class="save-btn">저장</button>
+    </form>
+</div>
+
+<!-- ✅ JavaScript는 HTML 제일 아래에 -->
+<script>
+    // 이미지 미리보기
+    const imageUpload = document.getElementById('imageUpload');
+    const preview = document.getElementById('preview');
+
+    imageUpload.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.style.backgroundImage = `url('${e.target.result}')`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 전화번호 자동 이동
+    document.getElementById('phone1').addEventListener('input', e => {
+        if (e.target.value.length === 3) document.getElementById('phone2').focus();
+    });
+    document.getElementById('phone2').addEventListener('input', e => {
+        if (e.target.value.length === 4) document.getElementById('phone3').focus();
+    });
+
+    // 비밀번호 보기 토글
+    function togglePassword() {
+        const pwField = document.getElementById('password');
+        pwField.type = pwField.type === 'password' ? 'text' : 'password';
+    }
+</script>
+<script>
+    const genre1 = document.getElementById('genre1');
+    const genre2 = document.getElementById('genre2');
+    const genreWarning = document.getElementById('genre-warning');
+
+    function checkGenreDuplicate() {
+        if (genre1.value !== '선택' && genre1.value === genre2.value) {
+            genreWarning.style.display = 'block';
+            // 중복 선택을 막기 위해 방금 선택한 것을 초기화
+            genre2.value = '선택';
+        } else {
+            genreWarning.style.display = 'none';
+        }
+    }
+
+    genre1.addEventListener('change', checkGenreDuplicate);
+    genre2.addEventListener('change', checkGenreDuplicate);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,531 @@
+/* Reset & 기본 */
+* { box-sizing: border-box; margin:0; padding:0; }
+html,body {
+    width:100%; height:100%;
+    background:#FFFCF3;
+    font-family:'Inter',sans-serif;
+    color:#000;
+}
+
+/* 컨테이너 */
+.container {
+    display:flex; flex-direction:column;
+    min-height:100vh; max-width:1440px;
+    margin:0 auto; padding:1vw;
+}
+
+/* 헤더 */
+.main-header {
+    position:relative; overflow:hidden;
+    height:clamp(200px,26vw,300px);
+}
+.yellow-box {
+    position:absolute; top:50%; left:0;
+    transform:translateY(-50%);
+    width:100%; height:clamp(120px,12vw,180px);
+    background:#FCE38A;
+    display:flex; align-items:center;
+    padding-left:3vw; z-index:1;
+}
+.logo {
+    font-family:'Modak',cursive;
+    font-size:clamp(2rem,6vw,80px);
+    z-index:2;
+}
+.lp-img {
+    position:absolute; top:0; right:0;
+    height:clamp(180px,24vw,280px);
+    object-fit:contain; z-index:3;
+}
+
+/* 레이아웃 */
+.main-content {
+    display:flex; gap:1vw; padding:1vw 0;
+}
+.sidebar.left,
+.center {
+    background:#FFF0C9;
+    flex-basis:0; flex-grow:1; min-width:0;
+}
+.sidebar.left { flex:1.5; }
+.center        { flex:5;   }
+
+.sidebar.right  {
+    background:#FFF0C9;
+    flex: 1.5 1 0;   /* grow=1.5, shrink=1, basis=0 */
+    min-width: 0;    /* 콘텐츠가 커도 이 이하로는 작아짐 */
+}
+
+/* 사이드바 박스 크기 */
+.sidebar.left > .profile-card,
+.sidebar.left > .music-pick,
+.sidebar.left > #comment-section,
+.sidebar.right > .playlist-preview {
+    width: 90%;
+    max-width: 300px;
+    margin: 0 auto 1.5vw;
+    box-sizing: border-box;
+}
+
+.sidebar.right .menu-box {
+    width:85%;
+    margin: 0 auto 1.5vw;
+    margin-top: 3vw;    /* 위쪽 여유 추가 */
+}
+/* 메뉴 박스와 동일한 비율로 맞추기 */
+.sidebar.right > .search-box {
+    width: 85%;           /* 사이드바 폭의 85% */
+    max-width: 300px;     /* 필요시 조정 */
+    margin: 0 auto 1.5vw;
+}
+
+/* 내부 input은 부모만큼 꽉 채우기 */
+.sidebar.right > .search-box input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;  /* padding 포함 */
+    padding: 0.6vw 1vw;
+}
+
+/* 프로필 */
+.profile-card {
+    text-align:center; padding:1vw;
+}
+.avatar {
+    width:clamp(100px,12vw,200px);
+    border-radius:50%; margin-bottom:1vw;
+}
+.nickname-box {
+    display: block;          /* inline → block */
+    width: 100%;             /* 부모 폭 가득 */
+    min-height: 2vw;         /* 높이 확보 */
+    line-height: 3vw;        /* 텍스트 중앙 정렬 */
+    text-align: center;
+    background: #FFF9E7;
+    border-radius: 2vw;
+    margin-bottom: 1vw;
+    font-weight: bold;
+    font-size: 1vw;          /* 크기 조금 키움 */
+}
+
+.profile-meta {
+    font-family: 'Jua', cursive;
+    background:#FFF9E7; border-radius:1.5vw;
+    padding:1vw; display:flex;
+    flex-direction:column; align-items:center; gap:0.5vw;
+}
+.profile-meta .bio-message {
+
+    font-family: 'Jua', cursive;
+    min-height: 4vw;
+    padding: 1vw 1vw;
+    font-size: 1vw;         /* 글자 크기도 무드 버튼과 비슷하게 */
+    box-sizing: border-box;
+    text-align: center;
+}
+.tag-container {
+    display: flex;
+    gap: 1vw;
+    flex-wrap: wrap;
+    margin-top: 1vw;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5vw;
+}
+
+.tag {
+    font-family: 'Jua', cursive;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4vw 0.8vw;
+    border-radius: 2vw;
+    font-size: 1vw;
+    font-weight: bold;
+    background: #FCE38A;
+    color: #000;
+}
+
+
+/* 버튼 컨테이너 */
+.profile-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1vw;
+    margin-top: 1vw;
+}
+
+/* 버튼 공통 스타일 */
+.profile-buttons button {
+    font-family: 'Jua', cursive;
+    font-size: clamp(5px, 1vw, 14px);   /* 🔹 더 작게: 최소 10px, 최대 14px */
+    padding: 0.4vw 1vw;                      /* 📌 비율 기반 패딩 */
+    border: none;
+    border-radius: 1vw;
+    cursor: pointer;
+    background-color: #FFD966;
+    color: #333;
+    white-space: nowrap;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+
+/* 마이페이지 버튼 스타일 */
+#mypage-btn {
+    background-color: #FFD966;
+    color: #333;
+    font-weight: bold;
+}
+
+/* 마이페이지 호버 효과 */
+#mypage-btn:hover {
+    background-color: #FFC107;
+    transform: translateY(-2px);
+}
+
+/* 로그아웃 버튼 스타일 */
+#logout-btn {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+/* 로그아웃 호버 효과 */
+#logout-btn:hover {
+    background-color: #e85959;
+    transform: translateY(-2px);
+}
+
+
+/* 오늘의 곡 */
+.music-pick {
+    background:#FFF9E7; border-radius:1vw;
+    padding:1vw; text-align:center;
+}
+.music-pick .music-card {
+    width: 100%;
+}
+.music-card img {
+    width:80%; max-width:220px;
+    display:block; margin:0 auto 1vw;
+}
+.music-title-box {
+    background:#FDEDD0; border-radius:0.8vw;
+    padding:0.5vw;
+}
+.music-artist-box {
+    background:#FCE38A; border-radius:0.8vw;
+}
+.music-card .music-title-box,
+.music-card .music-artist-box {
+    width: 100%;
+    min-height: 2.5vw;       /* 높이 확보 */
+    padding: 0.5vw 1vw;
+    font-size: 0.9vw;
+}
+.mood-buttons {
+    display:flex; gap:0.5vw;
+    justify-content:center; margin-top:1vw;
+}
+.mood-buttons button {
+    background: #F9F1D6;
+    border: none;
+    cursor: pointer;
+
+    /* 반응형 패딩: 화면 작을수록 줄어듦 */
+    padding: clamp(4px, 0.5vw, 6px) clamp(8px, 1vw, 12px);
+
+    min-width: clamp(40px, 8vw, 60px);
+    min-height: clamp(24px, 4vw, 30px);
+
+    /* 텍스트 크기도 반응형 */
+    font-size: clamp(8px, 1vw, 10px);
+
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+
+.mood-caption { margin-top:1vw; font-size:1vw; }
+
+/* 댓글 */
+#comment-section {
+    position: relative;
+    padding: 1vw;
+    padding-bottom: 6vw;
+    background: #FFF9E7;
+    border-radius: 1vw;
+
+    min-height: 25vw;
+    box-sizing: border-box;
+}
+
+
+.comment-list {
+    flex: 1 1 auto;
+    overflow-y: auto;  /* 스크롤이 필요하면 활성화 */
+}
+.comment-input-box {
+    position: absolute;
+    bottom: 1vw;             /* 부모 패딩 기준 아래에서 1vw 위 */
+    left: 1vw;               /* 부모 패딩 기준 왼쪽에서 1vw 안쪽 */
+    right: 1vw;              /* 부모 패딩 기준 오른쪽에서 1vw 안쪽 */
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+}
+/* comment-input-box 안의 input 이 flex item 으로 축소될 수 있도록 */
+.comment-input-box input {
+    flex: 1 1 0;       /* grow=1, shrink=1, basis=0 */
+    min-width: 0;      /* overflow 방지 */
+    height: clamp(32px, 3vw, 40px);
+    padding: 0 0.8vw;
+    font-size: clamp(14px, 1vw, 16px);
+    border-radius: 0.8vw;
+    border: 1px solid #ccc;
+}
+.comment-input-box button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: clamp(24px, 2vw, 32px);
+    height: clamp(24px, 2vw, 32px);
+    font-size: clamp(14px, 1vw, 16px);
+
+    padding: 0;              /* 필요시 여백은 없애거나 아주 소량만 */
+    border-radius: 0.4vw;    /* 둥근 모서리는 vw로 둬도 무방 */
+    background: #FFE08A;
+    border: none;
+    cursor: pointer;
+}
+
+.comment-input-box button::before {
+    content: "✅";
+    margin: 0;               /* 가운데 정렬에는 flex가 이미 적용됨 */
+    font-size: inherit;      /* 부모 폰트 크기를 그대로 */
+}
+
+#comment-input {
+    flex: 1;              /* 남은 공간 전부 차지 */
+    min-width: 0;         /* placeholder overflow 방지 */
+    padding: 0.6vw;
+}
+#comment-submit-btn {
+    background:#FFE08A; border:none;
+    border-radius:0.8vw; padding:0.5vw;
+    cursor:pointer;
+    flex: 0 0 auto;       /* 고정 크기 */
+    margin-left: 0.5vw;
+}
+
+/* 달력 */
+/* ── 캘린더 컨테이너 ── */
+/* 일기 */
+.calendar-section {
+    width: 100%;
+    margin: 1vw auto;
+    box-sizing: border-box;
+    background: #FEF8E5;
+    min-height: 40vw;
+    border-radius: 1vw;
+}
+
+
+/* 일기 */
+.center .diary-section {
+    width: 95%;
+    margin: 1vw auto;
+    box-sizing: border-box;
+    background: #FEF8E5;
+    min-height: 40vw;
+    border-radius: 1vw;
+}
+/* 1) 항상 보이도록 width + 최소 높이 확보 */
+.diary-section .diary-title {
+    display: block;         /* 혹시 inline 요소였다면 block으로 */
+    width: 100%;            /* 부모(.diary-section) 폭만큼 */
+    min-height: 4vw;        /* 빈 상태에서도 높이 확보 */
+    box-sizing: border-box;
+
+    background: #FDE38A;
+    border-radius: 1vw;
+    padding: 0.8vw 1vw;
+    margin-bottom: 1vw;
+
+    font-family: 'Jua', sans-serif;
+    font-size: clamp(1rem, 1.5vw, 2rem);
+    text-align: center;
+    color: #000;
+}
+
+/* 2) 내용이 없을 때 플레이스홀더 텍스트 */
+.diary-section .diary-title:empty::before {
+    content: "📝 내 하루 일기";
+    display: block;
+    color: #000;
+    opacity: 0.6;
+}
+
+
+
+/* 우측 메뉴 */
+.menu-box {
+    background: #FFF9E7;
+    border-radius: 1vw;
+    padding: 2vw 1.5vw;
+}
+.menu-box .menu h3 {
+    font-family: 'Itim', cursive;
+    text-align: center;
+    margin-bottom: 1vw;
+}
+.menu-box .menu button {
+    font-family: 'Itim', cursive;
+    width: 100%;
+    background: rgba(252, 227, 138, 0.8);  /* 기본 노란색 계열 */
+    border: none;
+    border-radius: 2vw;
+    padding: 1vw;
+    margin-bottom: 1.5vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 마우스 올렸을 때 */
+.menu-box .menu button:hover {
+    background-color: #FFD966; /* 더 진한 노란 느낌 */
+    transform: translateY(-2px);
+}
+
+/* ✅ 클릭했을 때 */
+.menu-box .menu button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ── 검색 카드 스타일 ── */
+.search-box {
+    background: #FFF9E7;
+    border-radius: 1vw;
+    padding: 0.5vw 1vw;  /* 위아래 패딩 줄여서 얇게 */
+    position: relative;
+}
+
+/* 검색 input: 메뉴 버튼보다 약간 더 넓게 */
+.search-box input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.5vw 1vw;  /* 위아래 패딩 얇게, 좌우는 충분히 */
+    font-size: 1vw;
+    border: 1px solid #ccc;
+    border-radius: 2vw;
+    box-sizing: border-box;
+}
+
+/* 검색 아이콘 */
+.search-box .search-icon {
+    position: absolute;
+    right: 1vw;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 1vw;
+}
+
+
+
+/* 플레이리스트 */
+.playlist-preview {
+    background: #FFF7DD;
+    border-radius: 1vw;
+    padding: 1.5vw;
+    min-height: 50vw;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.playlist-preview h4 {
+    font-family: 'Jua', cursive;
+    text-align: center;
+    margin-bottom: 1vw;
+    background: #FCE38A;       /* 💡 제목 박스처럼 보이도록 */
+    padding: 0.6vw 1vw;
+    border-radius: 0.8vw;
+    font-size: 1.2vw;
+}
+
+.playlist-preview ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;  /* 나머지 공간 채우기 */
+}
+
+.playlist-preview li {
+    padding: 0.5vw 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 푸터 */
+.footer {
+    background:#FFF0C9; padding:2vw;
+}
+.footer-inner {
+    display:flex; flex-wrap:wrap;
+    justify-content:space-between; gap:2vw;
+    max-width:1080px; margin:0 auto;
+}
+.footer-logo img {
+    width:clamp(32px,4vw,60px);
+}
+.footer-links {
+    display: flex;
+    gap: 4vw;
+}
+
+.footer-column {
+    line-height: 1.8;
+    font-size: 0.9vw;
+}
+
+.footer-column a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.footer-column a:hover {
+    text-decoration: underline;
+}
+
+.credit {
+    text-align:right; font-family:'Kiwi Maru',serif;
+    margin-top:1vw;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+
+
+
+
