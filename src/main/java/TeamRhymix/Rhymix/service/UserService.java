@@ -9,8 +9,8 @@ public interface UserService {
     User getUserByUsername(String username);
     User createUser(User user);
     boolean emailExists(String email);
-    User authenticate(String username, String password);
     boolean updatePassword(String username, String newPassword);
+    User authenticate(String nickname, String password); // 로그인 검증
 
 
 }

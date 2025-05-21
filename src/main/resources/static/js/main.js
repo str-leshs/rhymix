@@ -1,22 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
-    loadUserProfile();
-    loadTodayMusic();
-    loadPlaylist();
-    loadComments();
-    setupCommentSubmit();
-    setupPostModal();  // 날짜 클릭 시 포스트 상세
+    fetch("/api/auth/me")
+        .then(res => {
+            if (!res.ok) throw new Error("로그인 정보 없음");
+            return res.json();
+        })
+        .then(user => {
+            const userId = user.nickname;
+            loadUserProfile();
+            loadTodayMusic(userId);
+            loadPlaylist(userId);
+            loadComments(userId);
+            setupCommentSubmit(userId);
+            setupPostModal();
+            setupCalendar(userId);
+        })
+        .catch(err => {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/login";
+        });
 });
-
 
 // 1. 사용자 프로필
 function loadUserProfile() {
-    fetch('/api/users/me')
+    fetch('/api/auth/me')
         .then(res => res.json())
         .then(user => {
             const nickname = user.nickname?.trim();
             document.getElementById('nickname-box').textContent =
                 nickname && nickname.length > 0 ? nickname : '@...';
-
 
             const profileImage = user.profileImage?.trim();
             document.getElementById('profile-image').src =
@@ -45,46 +56,61 @@ function loadUserProfile() {
             }
         });
 }
+
 // 2. 오늘의 음악
-function loadTodayMusic() {
+function loadTodayMusic(userId) {
     fetch('/api/posts/today')
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error("추천곡 없음");
+            return res.json();
+        })
         .then(post => {
-            const track = post.track || {};
-            const coverImage = track.coverImage?.trim();
+            // 추천곡이 존재할 경우
+            const musicCard = document.querySelector('.music-card');
+            const placeholder = document.getElementById('no-post-placeholder');
+            musicCard.style.display = "block";
+            if (placeholder) placeholder.style.display = "none";
 
             document.querySelector('.music-card img').src =
-                coverImage ? coverImage : 'image/placeholder_album.png';
-
-            const title = track.title?.trim();
-            const artist = track.artist?.trim();
-            const mood1 = track.mood1?.trim();
-            const mood2 = track.mood2?.trim();
+                post.cover?.trim() || 'image/placeholder_album.png';
 
             document.querySelector('.music-title-box').textContent =
-                title && title.length > 0 ? `🎵 ${title}` : '🎵 music';
+                post.title ? `🎵 ${post.title}` : '🎵 music';
 
             document.querySelector('.music-artist-box').textContent =
-                artist && artist.length > 0 ? `🎤 ${artist}` : '🎤 artist';
+                post.artist ? `🎤 ${post.artist}` : '🎤 artist';
 
             document.getElementById('mood-btn-1').textContent =
-                mood1 && mood1.length > 0 ? `🌈 ${mood1}` : '🌈 mood1';
+                post.mood ? `🌈 ${post.mood}` : '🌈 mood';
 
-            document.getElementById('mood-btn-2').textContent =
-                mood2 && mood2.length > 0 ? `🌈 ${mood2}` : '🌈 mood2';
+            document.getElementById('mood-btn-2').textContent = '';
+        })
+        .catch(err => {
+            // 추천곡이 없을 경우 안내 문구 표시
+            const musicCard = document.querySelector('.music-card');
+            const container = document.getElementById('music-pick');
+
+            if (musicCard) musicCard.style.display = "none";
+
+            if (!document.getElementById('no-post-placeholder')) {
+                const placeholder = document.createElement('div');
+                placeholder.id = 'no-post-placeholder';
+                placeholder.textContent = "아직 오늘의 추천곡을 등록하지 않았어요!";
+                placeholder.style.padding = "10px";
+                placeholder.style.textAlign = "center";
+                placeholder.style.fontSize = "14px";
+                placeholder.style.color = "#888";
+                container.appendChild(placeholder);
+            } else {
+                document.getElementById('no-post-placeholder').style.display = "block";
+            }
         });
 }
 
 
-
-
-
-
-
-
-// 4. 플레이리스트 불러오기
-function loadPlaylist() {
-    fetch('/api/playlists/me')
+// 3. 플레이리스트
+function loadPlaylist(userId) {
+    fetch(`/api/playlists/me?userId=${userId}`)
         .then(res => res.json())
         .then(playlist => {
             const title = playlist.title?.trim() || 'playlist.mix';
@@ -101,10 +127,9 @@ function loadPlaylist() {
         });
 }
 
-
-// 5. 댓글 불러오기
-function loadComments() {
-    fetch('/api/posts/today/comments')
+// 4. 댓글
+function loadComments(userId) {
+    fetch(`/api/posts/today/comments?userId=${userId}`)
         .then(res => res.json())
         .then(comments => {
             const commentList = document.getElementById('comment-list');
@@ -117,15 +142,14 @@ function loadComments() {
         });
 }
 
-
-// 6. 댓글 작성
-function setupCommentSubmit() {
+// 5. 댓글 작성
+function setupCommentSubmit(userId) {
     document.getElementById('comment-submit-btn').addEventListener('click', () => {
         const input = document.getElementById('comment-input');
         const text = input.value.trim();
         if (!text) return;
 
-        fetch('/api/posts/today/comments', {
+        fetch(`/api/posts/today/comments?userId=${userId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
@@ -133,14 +157,13 @@ function setupCommentSubmit() {
             .then(res => {
                 if (res.ok) {
                     input.value = '';
-                    loadComments();
+                    loadComments(userId);
                 }
             });
     });
 }
 
-
-// 7. 플레이리스트 생성 (예: "내 음악 등록" 버튼 눌렀을 때)
+// 6. 플레이리스트 저장 예시
 function savePlaylist(title, description, trackIds) {
     fetch('/api/playlists', {
         method: 'POST',
@@ -148,36 +171,29 @@ function savePlaylist(title, description, trackIds) {
         body: JSON.stringify({ title, description, trackIds })
     })
         .then(res => res.json())
-        .then(result => {
+        .then(() => {
             alert("플레이리스트 저장 완료!");
-            loadPlaylist(); // 새로고침
+            loadPlaylist();
         });
 }
 
-
-// 8. 날짜 클릭 시 포스트 상세 보기
-function setupPostModal() {
-    // 만약 모달이 없다면 만들어도 되고, 콘솔 출력용도 가능
-}
-
+// 7. 포스트 상세보기 모달
+function setupPostModal() {}
 function openPostModal(postId) {
     fetch(`/api/posts/${postId}`)
         .then(res => res.json())
         .then(post => {
-            alert(`📌 ${post.track.title} - ${post.track.artist}\n기분: ${post.mood}\n메모: ${post.content}`);
+            alert(`📌 ${post.title} - ${post.artist}\n기분: ${post.mood}\n메모: ${post.comment}`);
         });
 }
 
-//9. 캘린더
-document.addEventListener('DOMContentLoaded', function () {
+// 8. 캘린더
+function setupCalendar(userId) {
     const calendarEl = document.getElementById('calendar');
     const titleEl = document.getElementById('calendar-title');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
-
     if (!calendarEl || !titleEl || !prevBtn || !nextBtn) return;
-
-    const userId = "lion01"; // TODO: 실제 로그인 사용자로 교체
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -186,24 +202,18 @@ document.addEventListener('DOMContentLoaded', function () {
         fixedWeekCount: true,
         dayMaxEventRows: 1,
         events: `/api/calendar/events?userId=${userId}`,
-
-        // 날짜 셀에 앨범 커버 삽입
         eventContent: function (arg) {
             const img = document.createElement('img');
             img.src = arg.event.extendedProps.cover;
             img.className = 'cover-thumb';
             return { domNodes: [img] };
         },
-
-        // 달이 바뀔 때마다 헤더에 연도/월 업데이트
         datesSet: function () {
-            const currentDate = calendar.getDate();  // 👈 중심 날짜 기준
+            const currentDate = calendar.getDate();
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth() + 1;
             titleEl.textContent = `${year}년 ${month}월`;
         },
-
-        // 커버 클릭 시 모달 열기
         eventClick: async function (info) {
             const date = info.event.startStr;
             try {
@@ -227,13 +237,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     calendar.render();
-
-    // 이전/다음 버튼
     prevBtn.addEventListener('click', () => calendar.prev());
     nextBtn.addEventListener('click', () => calendar.next());
-});
+}
 
-// 모달 닫기 함수
+// 9. 모달 닫기
 function closeDetailModal() {
     document.getElementById("trackDetailModal").style.display = "none";
 }
+

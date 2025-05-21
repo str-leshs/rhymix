@@ -11,12 +11,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @EnableWebSecurity
 public class SecurityConfig {
 
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll() // 모든 요청 허용
+//                )
+//                .build();
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 모든 요청 허용
+                        .requestMatchers("/api/users/login", "/api/users/signup").permitAll()
+                        .anyRequest().permitAll() // 개발 중엔 모두 허용
                 )
                 .build();
     }

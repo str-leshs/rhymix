@@ -1,9 +1,11 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.domain.Post;
+import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
 import TeamRhymix.Rhymix.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +32,16 @@ public class PostController {
     }
 
     @GetMapping("/today")
-    public ResponseEntity<PostDto> getTodayPost() {
-        // TODO: 로그인 기능 연동 후 동적 유저 처리
-        Post post = postService.getTodayPost("lion01");
+    public ResponseEntity<PostDto> getTodayPost(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(401).build(); // 로그인하지 않은 경우
+        }
+
+        Post post = postService.getTodayPost(user.getNickname());
         return post != null ? ResponseEntity.ok(postMapper.toDto(post)) : ResponseEntity.notFound().build();
     }
+
 
     /**
      * [로그인과 통합 후 변경 예정]

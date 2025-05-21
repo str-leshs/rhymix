@@ -21,7 +21,7 @@ function login() {
     }
 
     // 4. 서버로 로그인 요청 보내기
-    axios.post('/api/users/login', {
+    axios.post('/api/auth/login', {
         nickname: nickname,
         password: password
     })

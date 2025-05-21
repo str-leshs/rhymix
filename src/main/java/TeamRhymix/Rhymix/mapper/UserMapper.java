@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Component
 public class UserMapper {
+
     public User toEntity(UserDto dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
@@ -23,8 +24,10 @@ public class UserMapper {
         dto.setUsername(user.getUsername());
         dto.setNickname(user.getNickname());
         dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
+        dto.setPassword(null);          // 비밀번호 노출 방지
+        dto.setConfirmPassword(null);   // 비밀번호 노출 방지
         return dto;
     }
 }
+
 

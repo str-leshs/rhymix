@@ -23,20 +23,29 @@ document.getElementById("cancelTrackBtn").addEventListener("click", () => {
 });
 
 document.getElementById("saveBtn").addEventListener("click", async () => {
-    const postData = {
-        userId: "lion01",   //TODO 로그인과 연동 후 수정할 것.
-        title: document.getElementById("trackTitle").textContent,
-        artist: document.getElementById("trackArtist").textContent,
-        cover: document.getElementById("trackCover").src,
-        comment: document.getElementById("comment").value,
-        mood: document.getElementById("mood").value,
-        weather: document.getElementById("weather").value
-    };
-
     try {
-        // 먼저 오늘 등록된 추천곡이 있는지 확인
-        const checkRes = await fetch("/api/posts/today");
+        // 로그인된 사용자 정보 먼저 조회
+        const userRes = await fetch("/api/auth/me");
+        if (!userRes.ok) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
 
+        const user = await userRes.json();
+        const userId = user.nickname;
+
+        const postData = {
+            userId: userId,
+            title: document.getElementById("trackTitle").textContent,
+            artist: document.getElementById("trackArtist").textContent,
+            cover: document.getElementById("trackCover").src,
+            comment: document.getElementById("comment").value,
+            mood: document.getElementById("mood").value,
+            weather: document.getElementById("weather").value
+        };
+
+        // 먼저 오늘 등록된 추천곡이 있는지 확인
+        const checkRes = await fetch(`/api/posts/today?userId=${userId}`);
         if (checkRes.ok) {
             const confirmUpdate = confirm("오늘의 추천곡이 이미 등록되어 있습니다. 수정하시겠습니까?");
             if (!confirmUpdate) return;
@@ -51,7 +60,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 
         if (response.ok) {
             alert("오늘의 추천곡이 등록되었습니다!");
-            window.location.reload();
+            window.location.href = "/main"; //오늘의 추천곡 등록 후 메인페이지로 이동
         } else {
             alert("저장에 실패했습니다.");
         }
