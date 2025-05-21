@@ -1,0 +1,172 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #FFE49D;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    min-height: 100vh;
+}
+
+.container {
+    background: #FFF8E1;
+    width: 400px;
+    padding: 30px 30px 40px;
+    border-radius: 30px;
+    margin-top: 40px;
+}
+
+.header {
+    background: #FFD77A;
+    border-radius: 20px;
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.profile-image-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.image-circle {
+    width: 120px;
+    height: 120px;
+    background: #FCEEC0 ;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.set-image-btn {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: #FFD77A;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.profile-form label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    color: #000;
+}
+
+.profile-form input,
+.profile-form select {
+    width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    margin-top: 5px;
+    font-size: 14px;
+    border: 2px solid #FFD77A;
+    border-radius: 8px;
+    background: #FFFBEA;
+}
+
+input[disabled] {
+    color: #555;
+    background-color: #eee;
+}
+
+.id-wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid #FFD77A;
+    border-radius: 8px;
+    background: #FFFBEA;
+    padding: 0 10px;
+    height: 36px;
+}
+
+.at-symbol {
+    font-size: 14px;
+    margin-right: 6px;
+    color: #555;
+}
+
+#userId {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    outline: none;
+    flex: 1;
+}
+
+.warning-text {
+    font-size: 12px;
+    color: red;
+    margin-top: 4px;
+    margin-left: 4px;
+    display: none;  /* 기본적으로 숨김 */
+}
+
+
+.phone-wrapper {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.phone-wrapper input {
+    flex: 1;
+    height: 36px;
+    padding: 0 10px;
+    font-size: 14px;
+    border: 2px solid #FFD77A;
+    border-radius: 8px;
+    background: #FFFBEA;
+}
+
+
+.password-wrapper {
+    display: flex;
+    gap: 6px;
+}
+
+.password-wrapper input {
+    flex: 1;
+}
+
+.change-btn {
+    background: #FFD77A;
+    border: none;
+    border-radius: 6px;
+    padding: 0 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.genre-select {
+    display: flex;
+    gap: 10px;
+}
+
+.save-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 10px;
+    background: #FFD77A;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+
