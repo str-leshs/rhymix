@@ -167,3 +167,73 @@ function openPostModal(postId) {
             alert(`📌 ${post.track.title} - ${post.track.artist}\n기분: ${post.mood}\n메모: ${post.content}`);
         });
 }
+
+//9. 캘린더
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const titleEl = document.getElementById('calendar-title');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    if (!calendarEl || !titleEl || !prevBtn || !nextBtn) return;
+
+    const userId = "lion01"; // TODO: 실제 로그인 사용자로 교체
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ko',
+        headerToolbar: false,
+        fixedWeekCount: true,
+        dayMaxEventRows: 1,
+        events: `/api/calendar/events?userId=${userId}`,
+
+        // 날짜 셀에 앨범 커버 삽입
+        eventContent: function (arg) {
+            const img = document.createElement('img');
+            img.src = arg.event.extendedProps.cover;
+            img.className = 'cover-thumb';
+            return { domNodes: [img] };
+        },
+
+        // 달이 바뀔 때마다 헤더에 연도/월 업데이트
+        datesSet: function () {
+            const currentDate = calendar.getDate();  // 👈 중심 날짜 기준
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth() + 1;
+            titleEl.textContent = `${year}년 ${month}월`;
+        },
+
+        // 커버 클릭 시 모달 열기
+        eventClick: async function (info) {
+            const date = info.event.startStr;
+            try {
+                const res = await fetch(`/api/calendar/date?userId=${userId}&date=${date}`);
+                if (!res.ok) return alert("추천곡을 불러올 수 없습니다.");
+                const data = await res.json();
+
+                document.getElementById("modalDetailTitle").textContent = data.title;
+                document.getElementById("modalDetailArtist").textContent = data.artist;
+                document.getElementById("modalDetailMood").textContent = data.mood || "-";
+                document.getElementById("modalDetailWeather").textContent = data.weather || "-";
+                document.getElementById("modalDetailComment").textContent = data.comment || "-";
+                document.getElementById("modalDetailCover").src = data.cover || "/image/default-cover.png";
+
+                document.getElementById("trackDetailModal").style.display = "flex";
+            } catch (e) {
+                console.error(e);
+                alert("오류가 발생했습니다.");
+            }
+        }
+    });
+
+    calendar.render();
+
+    // 이전/다음 버튼
+    prevBtn.addEventListener('click', () => calendar.prev());
+    nextBtn.addEventListener('click', () => calendar.next());
+});
+
+// 모달 닫기 함수
+function closeDetailModal() {
+    document.getElementById("trackDetailModal").style.display = "none";
+}

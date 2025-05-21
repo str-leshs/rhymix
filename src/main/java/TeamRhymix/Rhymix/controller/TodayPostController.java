@@ -11,9 +11,5 @@ public class TodayPostController {
         return "post/today";
     }
 
-    @GetMapping("/calendar")
-    public String calendarPage() {
-        return "calendar";
-    }
 }
 
