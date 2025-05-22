@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 1. 사용자 프로필
 function loadUserProfile() {
-    fetch('/api/auth/me')
+    fetch('/api/auth/me') // Spring Security에서 현재 로그인된 사용자 정보 가져오기
         .then(res => res.json())
         .then(user => {
             document.getElementById('nickname-box').textContent = user.nickname || '@...';
@@ -58,12 +58,13 @@ function loadTodayMusic(userId) {
             document.querySelector('.music-artist-box').textContent =
                 post.artist ? `🎤 ${post.artist}` : '🎤 artist';
 
-            // ✅ mood와 weather는 이모지+텍스트로 저장되어 있으므로 그대로 출력
+            // mood와 weather는 이모지+텍스트로 저장되어 있으므로 그대로 출력
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
 
         })
         .catch(err => {
+            // 추천곡이 없을 때 placeholder 표시
             const musicCard = document.querySelector('.music-card');
             const container = document.getElementById('music-pick');
 
@@ -179,7 +180,7 @@ function setupCalendar(userId) {
         headerToolbar: false,
         fixedWeekCount: true,
         dayMaxEventRows: 1,
-        events: `/api/calendar/events?userId=${userId}`,
+        events: `/api/calendar/events?userId=${userId}`,    // 각 날짜별 추천곡 커버를 표시
         eventContent: function (arg) {
             const img = document.createElement('img');
             img.src = arg.event.extendedProps.cover;

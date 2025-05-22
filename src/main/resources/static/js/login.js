@@ -3,7 +3,7 @@
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', function (e) {
     e.preventDefault(); // 기본 제출 막기
-    login();
+    login();    // 커스텀 로그인 함수 실행
 });
 
 // 2. 로그인 함수 정의
