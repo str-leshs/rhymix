@@ -1,13 +1,19 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.domain.Playlist;
+import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PlaylistWithTracksDto;
 import TeamRhymix.Rhymix.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/playlists")
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class PlaylistController {
 
     private final PlaylistService playlistService;
+    private final MongoTemplate mongoTemplate;
 
     /**
      * 로그인 사용자의 월별 플레이리스트 생성
@@ -55,5 +62,19 @@ public class PlaylistController {
 
         return playlistService.getPlaylistWithTracks(id);
     }
+
+    @GetMapping("/theme")
+    public ResponseEntity<PlaylistWithTracksDto> getThemePlaylist(@RequestParam String tag) {
+        List<Post> posts = mongoTemplate.find(
+                Query.query(Criteria.where("weather").is(tag).orOperator(Criteria.where("mood").is(tag))),
+                Post.class
+        );
+
+        PlaylistWithTracksDto dto = new PlaylistWithTracksDto(
+                null, tag + " 테마", "theme", posts
+        );
+        return ResponseEntity.ok(dto);
+    }
+
 }
 

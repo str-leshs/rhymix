@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>플레이리스트</title>
+    <link rel="stylesheet" th:href="@{/css/playlist.css}">
+    <script th:src="@{/js/playlist.js}" defer></script>
+</head>
+<body>
+<div class="playlist-container">
+    <h1>PLAYLIST</h1>
+    <hr class="divider" />
+
+    <div class="theme-playlist-section">
+        <h2>기분/날씨 플레이리스트</h2>
+        <div class="theme-selector">
+            <div class="theme-display">
+                <span id="theme-icon" style="font-size: 48px;">☀</span>
+            </div>
+
+            <div class="theme-dropdown">
+                <select id="theme-select">
+                    <option value="">기분/날씨 선택</option>
+                    <optgroup label="🌤 날씨">
+                        <option value="☀ 맑음">☀ 맑음</option>
+                        <option value="🌧 비">🌧 비</option>
+                        <option value="☁ 구름">☁ 구름</option>
+                        <option value="❄ 눈">❄ 눈</option>
+                        <option value="💨 바람">💨 바람</option>
+                    </optgroup>
+                    <optgroup label="🧠 기분">
+                        <option value="😊 행복">😊 행복</option>
+                        <option value="😞 우울">😞 우울</option>
+                        <option value="😢 슬픔">😢 슬픔</option>
+                        <option value="😡 화남">😡 화남</option>
+                        <option value="😩 피곤">😩 피곤</option>
+                        <option value="🚗 드라이브">🚗 드라이브</option>
+                        <option value="⚡ 에너지 충전">⚡ 에너지 충전</option>
+                        <option value="💤 수면">💤 수면</option>
+                    </optgroup>
+                </select>
+                <button id="theme-submit">선택</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="monthly-section">
+        <div class="monthly-header">
+            <h2>월별 플레이리스트</h2>
+            <div class="year-selector">
+                <select id="year-select"></select>
+            </div>
+        </div>
+
+        <div class="month-grid" id="month-grid">
+            <!-- JS가 1~12월을 생성 -->
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

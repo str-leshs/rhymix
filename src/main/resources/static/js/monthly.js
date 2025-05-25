@@ -1,9 +1,18 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const now = new Date();
-    const year = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
-    const month = now.getMonth() === 0 ? 12 : now.getMonth();
+    // URL 파라미터에서 연도와 월 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const year = parseInt(urlParams.get("year"), 10);
+    const month = parseInt(urlParams.get("month"), 10);
 
-    // 1. 월별 플레이리스트 생성 (nickname 제거됨)
+    if (!year || !month) {
+        document.getElementById("current-month-label").textContent = "잘못된 날짜입니다.";
+        return;
+    }
+
+    // 월 정보 표시
+    document.getElementById("current-month-label").textContent = `${year}년 ${month}월`;
+
+    // 월별 플레이리스트 생성 요청
     let createdPlaylist;
     try {
         const createRes = await fetch(`/api/playlists/generate/monthly?year=${year}&month=${month}`, {
@@ -11,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (!createRes.ok) {
-            alert("⚠️ 플레이리스트 생성 실패");
+            alert("플레이리스트 생성 실패");
             window.location.href = "/main";
             return;
         }
@@ -24,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // 2. 최신 플레이리스트 조회
+    // 플레이리스트 상세 조회
     let playlist;
     try {
         const res = await fetch(`/api/playlists/me`);
@@ -42,7 +51,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // 3. 곡 표시
     const trackGrid = document.getElementById("track-grid");
     const titleEl = document.getElementById("display-title");
     const artistEl = document.getElementById("display-artist");
