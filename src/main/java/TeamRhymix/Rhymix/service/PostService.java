@@ -28,4 +28,7 @@ public interface PostService {
      */
     Post getPostByDate(String userId, LocalDate date);
 
+    List<Post> findPostsByUserAndMonth(String userId, LocalDate start, LocalDate end);
+
+
 }

@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())   //CSRF 보호는 REST API를 사용할 경우 일반적으로 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/image/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password", "/api/users/**").permitAll()
+                        .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password", "/api/users/**","/monthly").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
