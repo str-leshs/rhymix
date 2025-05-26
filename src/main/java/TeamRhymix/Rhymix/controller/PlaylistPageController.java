@@ -15,6 +15,6 @@ public class PlaylistPageController {
     public String showMonthlyPlaylistPage(@RequestParam int year, @RequestParam int month, Model model) {
         model.addAttribute("year", year);
         model.addAttribute("month", month);
-        return "playlist/monthly"; // templates/playlist/monthly.html
+        return "playlist/monthly";
     }
 }

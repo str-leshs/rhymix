@@ -20,16 +20,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (!createRes.ok) {
-            alert("플레이리스트 생성 실패");
-            window.location.href = "/main";
+            const err = await createRes.json(); //에러 메시지 받아오기
+            alert(`⚠️ ${err.message}`); // 사용자에게 에러 메시지 전달
+            history.back();
             return;
         }
 
         createdPlaylist = await createRes.json();
-    } catch (err) {
+        } catch (err) {
         console.error("생성 요청 실패:", err);
         alert("서버 오류로 플레이리스트를 생성하지 못했습니다.");
-        window.location.href = "/main";
+        window.location.href = "playlist/playlist";
         return;
     }
 

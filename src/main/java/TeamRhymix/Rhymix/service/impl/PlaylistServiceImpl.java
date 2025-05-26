@@ -2,6 +2,8 @@ package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.*;
 import TeamRhymix.Rhymix.dto.PlaylistWithTracksDto;
+import TeamRhymix.Rhymix.exception.ErrorCode;
+import TeamRhymix.Rhymix.exception.PlaylistException;
 import TeamRhymix.Rhymix.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,20 +25,27 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final MongoTemplate mongoTemplate;
 
-    /**
-     * 전월 posts를 기반으로 플레이리스트 생성
-     */
     @Override
     public Playlist generateMonthlyPlaylist(String nickname, int year, int month) {
         User user = mongoTemplate.findOne(
                 new Query(Criteria.where("nickname").is(nickname)),
                 User.class
         );
-        if (user == null) throw new RuntimeException("사용자 없음");
+        if (user == null) throw new PlaylistException(ErrorCode.USER_NOT_FOUND);
+
+        LocalDate today = LocalDate.now();
+        LocalDate target = LocalDate.of(year, month, 1);
+
+        if (target.isAfter(today)) {
+            throw new PlaylistException(ErrorCode.FUTURE_MONTH);
+        }
+
+        if (target.getYear() == today.getYear() && target.getMonth() == today.getMonth()) {
+            throw new PlaylistException(ErrorCode.CURRENT_MONTH_INCOMPLETE);
+        }
 
         String title = String.format("%d년 %d월 플레이리스트", year, month);
 
-        // 이미 생성된 월별 플레이리스트 있는지 확인 (userId도 문자열 기준)
         Query checkQuery = new Query();
         checkQuery.addCriteria(Criteria.where("userId").is(user.getNickname()));
         checkQuery.addCriteria(Criteria.where("type").is("monthly"));
@@ -44,24 +53,21 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         Playlist existing = mongoTemplate.findOne(checkQuery, Playlist.class);
         if (existing != null) {
-            log.info("이미 존재하는 월별 플레이리스트 반환: {}, user: {}", existing.getId().toString(), nickname);
             return existing;
         }
 
-        // 해당 월의 추천곡(Post) 조회
-        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate start = target;
         LocalDate end = start.plusMonths(1);
 
         Query postQuery = new Query();
-        postQuery.addCriteria(Criteria.where("userId").is(user.getNickname())); // 👈 문자열 기반 비교
+        postQuery.addCriteria(Criteria.where("userId").is(user.getNickname()));
         postQuery.addCriteria(Criteria.where("createdAt").gte(start).lt(end));
         postQuery.with(Sort.by("createdAt").ascending());
 
         List<Post> posts = mongoTemplate.find(postQuery, Post.class);
 
         if (posts.isEmpty()) {
-            log.warn("추천곡이 없어 플레이리스트를 생성하지 않습니다. user: {}, year: {}, month: {}", nickname, year, month);
-            throw new RuntimeException("해당 월에는 등록된 추천곡이 없습니다.");
+            throw new PlaylistException(ErrorCode.NO_POSTS);
         }
 
         List<String> trackIds = posts.stream()
@@ -69,42 +75,34 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .toList();
 
         Playlist playlist = Playlist.builder()
-                .userId(user.getNickname()) // 👈 문자열로 저장
+                .userId(user.getNickname())
                 .title(title)
                 .type("monthly")
                 .trackIds(trackIds)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Playlist saved = mongoTemplate.save(playlist);
-        log.info("새로 생성된 플레이리스트 ID: {}", saved.getId().toString());
-        return saved;
+        return mongoTemplate.save(playlist);
     }
 
-    /**
-     * playlistId로 플레이리스트 조회 및 트랙 리스트 조립
-     */
     @Override
     public PlaylistWithTracksDto getPlaylistWithTracks(String playlistId) {
         log.info("playlistId 요청됨: '{}'", playlistId);
 
         if (playlistId == null || playlistId.trim().isEmpty()) {
-            log.warn("playlistId가 null 또는 비어 있음");
-            throw new RuntimeException("플레이리스트 ID가 유효하지 않습니다");
+            throw new PlaylistException(ErrorCode.INVALID_ID_FORMAT);
         }
 
         ObjectId objectId;
         try {
             objectId = new ObjectId(playlistId);
         } catch (IllegalArgumentException e) {
-            log.warn("잘못된 ObjectId 형식: {}", playlistId);
-            throw new RuntimeException("유효하지 않은 ID 형식입니다");
+            throw new PlaylistException(ErrorCode.INVALID_ID_FORMAT);
         }
 
         Playlist playlist = mongoTemplate.findById(objectId, Playlist.class);
         if (playlist == null) {
-            log.warn("playlistId={} 에 해당하는 플레이리스트 없음", playlistId);
-            throw new RuntimeException("플레이리스트 없음");
+            throw new PlaylistException(ErrorCode.PLAYLIST_NOT_FOUND);
         }
 
         Query trackQuery = new Query(Criteria.where("_id").in(playlist.getTrackIds()));
@@ -117,6 +115,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 posts
         );
     }
+
     @Override
     public Playlist findLatestMonthlyPlaylistByNickname(String nickname) {
         List<Playlist> list = mongoTemplate.find(
@@ -128,16 +127,13 @@ public class PlaylistServiceImpl implements PlaylistService {
         );
 
         if (list.isEmpty()) {
-            log.warn("📭 월별 플레이리스트 없음. user: {}", nickname);
             return null;
         }
 
-        list.sort((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())); // 최신순 정렬
-
-        Playlist latest = list.get(0);
-        log.info("최신 월별 플레이리스트 반환: {}, user: {}", latest.getId(), nickname);
-        return latest;
+        list.sort((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt()));
+        return list.get(0);
     }
-
 }
+
+
 

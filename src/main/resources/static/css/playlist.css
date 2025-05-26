@@ -15,10 +15,24 @@ body {
     text-align: center;
 }
 
-h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
 }
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header-logo {
+    width: 65px;
+    height: auto;
+}
+
 
 .divider {
     border: none;
@@ -113,8 +127,6 @@ h1 {
     background-color: #fff9e6;
     border: 2px solid #ffd16f;
 }
-
-
 
 /* 연도 셀렉터와 월별 타이틀 정렬 */
 .year-month-header {
