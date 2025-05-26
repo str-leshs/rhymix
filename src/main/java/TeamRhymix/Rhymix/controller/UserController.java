@@ -108,15 +108,11 @@ public class UserController {
     }
     @GetMapping("/api/neighbors")
     public List<NeighborDto> getNeighbors() {
-        List<User> users = userService.getAllUsers();
-
-        return users.stream()
-                .map(user -> new NeighborDto(
-                        user.getNickname(),
-                        user.getProfileImage(),
-                        user.getBio()
-                ))
-                .collect(Collectors.toList());
+        return userService.getAllNeighbors();
+    }
+    @GetMapping("/api/neighbors/genre")
+    public List<NeighborDto> getNeighborsByGenre(@RequestParam String genre) {
+        return userService.getNeighborsByGenre(genre);
     }
 
 

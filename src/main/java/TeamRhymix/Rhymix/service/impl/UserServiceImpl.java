@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import TeamRhymix.Rhymix.dto.UserDto;
+import TeamRhymix.Rhymix.dto.NeighborDto;
+import java.util.stream.Collectors;
+
+
 
 
 import java.util.List;
@@ -64,7 +68,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("🔐 [authenticate] 로그인 시도");
 
         if (nickname == null || rawPassword == null) {
-            System.out.println("⚠ [authenticate] nickname 또는 password가 null입니다.");
+            System.out.println("⚠ [authenticate] nickname 또는 password null.");
             throw new IllegalArgumentException("아이디 또는 비밀번호가 입력되지 않았습니다.");
         }
 
@@ -76,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByNickname(nickname);
         if (user == null) {
-            System.out.println("❌ DB에서 nickname=[" + nickname + "] 인 사용자를 찾지 못함");
+            System.out.println("❌ DB nickname=[" + nickname + "] 인 사용자를 찾지 못함");
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
 
@@ -114,6 +118,28 @@ public class UserServiceImpl implements UserService {
                 null,
                 user.getPhone()
         );
+
+    }
+    @Override
+    public List<NeighborDto> getAllNeighbors() {
+        return userRepository.findAll().stream()
+                .map(user -> new NeighborDto(
+                        user.getNickname(),
+                        user.getProfileImage(),
+                        user.getBio()
+                ))
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<NeighborDto> getNeighborsByGenre(String genre) {
+        return userRepository.findAll().stream()
+                .filter(user -> user.getPreferredGenres() != null && user.getPreferredGenres().contains(genre))
+                .map(user -> new NeighborDto(
+                        user.getNickname(),
+                        user.getProfileImage(),
+                        user.getBio()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

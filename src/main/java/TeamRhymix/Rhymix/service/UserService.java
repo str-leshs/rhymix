@@ -3,6 +3,7 @@ package TeamRhymix.Rhymix.service;
 import TeamRhymix.Rhymix.domain.User;
 import java.util.List;
 import TeamRhymix.Rhymix.dto.UserDto;
+import TeamRhymix.Rhymix.dto.NeighborDto;
 
 
 public interface UserService {
@@ -15,5 +16,8 @@ public interface UserService {
     boolean updatePassword(String username, String newPassword);
     User authenticate(String nickname, String password); // 로그인 검증
     UserDto getUserDtoByUsername(String username);
+    List<NeighborDto> getAllNeighbors();
+    List<NeighborDto> getNeighborsByGenre(String genre);
+
 
 }
