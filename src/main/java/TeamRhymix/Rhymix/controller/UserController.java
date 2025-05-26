@@ -114,6 +114,4 @@ public class UserController {
     public List<NeighborDto> getNeighborsByGenre(@RequestParam String genre) {
         return userService.getNeighborsByGenre(genre);
     }
-
-
 }
