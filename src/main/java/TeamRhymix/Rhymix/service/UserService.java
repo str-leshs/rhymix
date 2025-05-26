@@ -2,15 +2,18 @@ package TeamRhymix.Rhymix.service;
 
 import TeamRhymix.Rhymix.domain.User;
 import java.util.List;
-import TeamRhymix.Rhymix.domain.User;
+import TeamRhymix.Rhymix.dto.UserDto;
+
 
 public interface UserService {
     List<User> getAllUsers();
+    User getUserByNickname(String nickname);
     User getUserByUsername(String username);
+    User findByNameAndEmail(String name, String email);
     User createUser(User user);
     boolean emailExists(String email);
-    User authenticate(String username, String password);
     boolean updatePassword(String username, String newPassword);
-    User findByNameAndEmail(String name, String email);
+    User authenticate(String nickname, String password); // 로그인 검증
+    UserDto getUserDtoByUsername(String username);
 
 }

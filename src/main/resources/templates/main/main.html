@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RHYMIX</title>
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet">
+
+
+    <!-- 메인 CSS -->
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <!-- FullCalendar CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+</head>
+<body>
+
+<!-- 로그인된 nickname을 숨겨진 input에 담아 JS에서 사용 -->
+<input type="hidden" id="hidden-nickname" th:value="${nickname}" />
+<!-- 서버에서 nickname이 없으면 main 페이지 진입 차단 -->
+<div th:if="${nickname == null}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.location.href = "/login";
+        /*]]>*/
+    </script>
+</div>
+
+<div class="container">
+
+    <!-- 헤더 -->
+    <header class="main-header">
+        <div class="yellow-box">
+            <div class="logo">RHYMIX</div>
+        </div>
+        <img class="lp-img" src="/image/LP_image.png" alt="LP 디스크"/>
+    </header>
+
+    <!-- 본문 -->
+    <div class="main-content">
+
+        <!-- 좌측 사이드 -->
+        <aside class="sidebar left">
+            <!-- 프로필 -->
+            <div class="profile-card">
+
+                <div class="nickname-box" id="nickname-box">닉네임 로딩 중...</div>
+                <img class="avatar" id="profile-image" src="/image/placeholder_circle.png" alt="프로필"/>
+                <div class="profile-meta">
+                    <div class="tag-list" id="tag-list"></div>
+                    <div class="bio-message" id="bio-message"></div>
+                </div>
+                <div class="profile-buttons">
+                    <button id="mypage-btn">마이페이지</button>
+                    <button id="logout-btn">로그아웃</button>
+                </div>
+                <!-- Spring Security 로그아웃을 위한 숨겨진 폼 -->
+                <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+
+            </div>
+
+            <!-- 오늘의 곡 -->
+            <div class="music-pick" id="music-pick">
+                <div class="music-card">
+                    <img src="/image/placeholder_album.png" alt="앨범 커버"/>
+                    <div class="music-title-box"></div>
+                    <div class="music-artist-box"></div>
+                    <div class="mood-buttons">
+                        <button id="weather-btn"></button>
+                        <button id="mood-btn"></button>
+                    </div>
+
+                    <p class="mood-caption"></p>
+                </div>
+            </div>
+
+            <!-- 댓글 -->
+            <div id="comment-section">
+                <div id="comment-list"></div>
+                <div class="comment-input-box">
+                    <label for="comment-input" class="visually-hidden">댓글 입력</label>
+                    <input type="text" id="comment-input" placeholder="댓글 작성하기"/>
+                    <button id="comment-submit-btn"></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 중앙 영역 -->
+        <main class="center">
+
+            <!-- 달력 -->
+            <div class="calendar-header-wrapper">
+                <button id="prev-btn" class="nav-btn">⏪</button>
+                <div id="calendar-title" class="calendar-title">2025년 5월</div>
+                <button id="next-btn" class="nav-btn">⏩</button>
+            </div>
+
+            <div class="calendar-section">
+                <div id="calendar"></div>
+            </div>
+
+
+            <!-- 일기 -->
+            <div class="diary-section" id="diary-container">
+                <div class="diary-title"></div>
+                <!-- 실제 일기 내용이 동적으로 들어갈 자리 -->
+            </div>
+
+        </main>
+
+        <!-- 우측 사이드 -->
+        <aside class="sidebar right">
+            <!-- 메뉴 -->
+            <div class="menu-box">
+                <nav class="menu">
+                    <h3>📂 MENU 📂</h3>
+                    <a th:href="@{/today}">
+                        <button id="post-btn">🎵 POST</button>
+                    </a>
+                    <button id="playlist-btn">🎼 PLAYLIST</button>
+                    <button id="neighbor-btn">🧑‍🤝‍🧑 NEIGHBOR</button>
+                </nav>
+
+                <!-- 검색창 -->
+                <div class="search-box">
+                    <label for="search-input" class="visually-hidden">검색창</label>
+                    <input
+                            type="text"
+                            id="search-input"
+                            placeholder="검색어를 입력하세요..."
+                    />
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+            <!-- 플레이리스트 -->
+            <div class="playlist-preview" id="playlist-box">
+                <h4 id="playlist-title">@.mix</h4>   <!-- ✅ 제목 박스 -->
+                <ul id="playlist-items">
+                    <!-- JS에서 <li> 추가됨 -->
+                </ul>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="/image/logo2.png" alt="로고" />
+            </div>
+
+            <div class="footer-links">
+                <div class="footer-column">
+                    <strong>회사</strong><br/>
+                    <a href="#">상세정보</a><br/>
+                    <a href="#">For the ReCord</a>
+                </div>
+                <div class="footer-column">
+                    <strong>멤버</strong><br/>
+                    <a href="#">개인정보 처리방침</a><br/>
+                    <a href="#">안전 및 개인정보 보호센터</a>
+                </div>
+            </div>
+        </div>
+
+        <p class="credit"></p>
+    </footer>
+
+    <!--캘린더 모달창-->
+    <div id="trackDetailModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close-btn" onclick="closeDetailModal()">✕</button>
+            <h3>추천곡 상세정보</h3>
+            <img id="modalDetailCover" src="" alt="앨범 커버">
+            <p><strong>제목:</strong> <span id="modalDetailTitle"></span></p>
+            <p><strong>아티스트:</strong> <span id="modalDetailArtist"></span></p>
+            <p><strong>기분:</strong> <span id="modalDetailMood"></span></p>
+            <p><strong>날씨:</strong> <span id="modalDetailWeather"></span></p>
+            <p><strong>코멘트:</strong> <span id="modalDetailComment"></span></p>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script src="/js/main.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 마이페이지 버튼 클릭 시 이동
+        const mypageBtn = document.getElementById("mypage-btn");
+        if (mypageBtn) {
+            mypageBtn.addEventListener("click", () => {
+                window.location.href = "/mypage";
+            });
+        }
+
+        // ✅ 로그인된 유저 정보 불러와 nickname-box에 반영
+        fetch("/api/users/me")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("사용자 정보를 불러오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const nicknameBox = document.getElementById("nickname-box");
+                if (nicknameBox) {
+                    nicknameBox.textContent = data.nickname;
+                }
+                console.log("유저 정보:", data);
+            })
+            .catch((error) => {
+                console.error("유저 정보 로딩 실패:", error);
+            });
+    });
+</script>
+
+
+</body>
+</html>

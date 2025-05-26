@@ -25,12 +25,29 @@ public class UserRepository {
     }
 
     public User findByUsername(String username) {
+        System.out.println("🔍 [findByUsername] 전달된 username: \"" + username + "\"");
+
         Query query = new Query(Criteria.where("username").is(username));
-        return mongoTemplate.findOne(query, User.class);
+        System.out.println("🔍 [findByUsername] 생성된 Query: " + query.toString());
+
+        User foundUser = mongoTemplate.findOne(query, User.class);
+
+        if (foundUser != null) {
+            System.out.println(" [findByUsername] 사용자 조회 성공: " + foundUser.toString());
+        } else {
+            System.out.println(" [findByUsername] 사용자 조회 실패 - null 반환됨");
+        }
+
+        return foundUser;
     }
 
     public Optional<User> findOptionalByUsername(String username) {
         return Optional.ofNullable(findByUsername(username));
+    }
+
+    public User findByNickname(String nickname) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
+        return mongoTemplate.findOne(query, User.class);
     }
 
     public User save(User user) {
@@ -42,11 +59,14 @@ public class UserRepository {
         return mongoTemplate.exists(query, User.class);
     }
 
-    // ✅ 이름 + 이메일로 유저 조회 (아이디 찾기용)
+    // ✅ 이름 + 이메일로 사용자 찾기
     public User findByNameAndEmail(String name, String email) {
         Query query = new Query(
-                Criteria.where("name").is(name).and("email").is(email)
+                Criteria.where("name").is(name)
+                        .and("email").is(email)
         );
         return mongoTemplate.findOne(query, User.class);
     }
+
+
 }

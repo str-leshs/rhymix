@@ -1,5 +1,4 @@
 // login.js
-
 // 1. 폼 제출 이벤트 가로채기
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', function (e) {
@@ -9,20 +8,20 @@ loginForm.addEventListener('submit', function (e) {
 
 // 2. 로그인 함수 정의
 function login() {
-    const username = document.getElementById('username').value.trim();
+    const nickname = document.getElementById('nickname').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    console.log("보내는 값:", username, password);
+    console.log("보내는 값:", nickname, password);
 
     // 3. 입력값 검사
-    if (!username || !password) {
+    if (!nickname || !password) {
         showToast('아이디와 비밀번호를 모두 입력해주세요.');
         return;
     }
 
-    // 4. 서버로 로그인 요청 보내기 (예: /api/login)
-    axios.post('/api/login', {
-        username: username,
+    // 4. 서버로 로그인 요청 보내기
+    axios.post('/api/auth/login', {
+        nickname: nickname,
         password: password
     })
         .then(function (response) {
@@ -35,16 +34,16 @@ function login() {
         });
 }
 
-// 5. 엔터 키로도 로그인 되도록 (input 안에서 엔터 눌렀을 때도 실행되게)
-['username', 'password'].forEach(id => {
-    document.getElementById(id).addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            login();
-        }
-    });
-});
+// 5. 엔터 키로도 로그인 되도록 설정
+// ['nickname', 'password'].forEach(id => {
+//     document.getElementById(id).addEventListener('keypress', function (e) {
+//         if (e.key === 'Enter') {
+//             login();
+//         }
+//     });
+// });
 
-// 6. 커스텀 토스트 메시지 함수
+// 6. 커스텀 토스트 메시지 표시 함수
 function showToast(message) {
     let toast = document.getElementById('toast');
     if (!toast) {

@@ -1,7 +1,10 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.domain.User;
+import TeamRhymix.Rhymix.dto.UserDto;
+import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import TeamRhymix.Rhymix.dto.NeighborDto;
 
 @RestController
 @RequestMapping("/api/users")
@@ -16,51 +21,66 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
-    // 회원가입
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        if (user.getUsername() == null || user.getEmail() == null) {
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody UserDto userDto) {
+        if (userDto.getNickname() == null || userDto.getUsername() == null ||
+                userDto.getEmail() == null || userDto.getPassword() == null ||
+                userDto.getConfirmPassword() == null) {
+            return ResponseEntity.badRequest().body("모든 필수 정보를 입력해주세요.");
         }
-        User saved = userService.createUser(user);
-        return ResponseEntity.ok(saved);
+
+        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
+        }
+
+        if (userService.getUserByNickname(userDto.getNickname()) != null) {
+            return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
+        }
+
+        User saved = userService.createUser(userMapper.toEntity(userDto));
+        return ResponseEntity.ok(userMapper.toDto(saved));
     }
 
-    // 전체 유저 조회
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    @GetMapping("/exists/nickname")
+    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(userService.getUserByNickname(nickname) != null);
     }
 
-    // 이메일 존재 확인
     @GetMapping("/exists/email")
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.emailExists(email));
     }
 
-    // username으로 유저 조회
-    @GetMapping("/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
-        if (user == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(user);
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> list = userService.getAllUsers().stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
     }
-    // 아이디 찾기: 이름 + 이메일로 조회
-    @PostMapping("/find-id")
-    public ResponseEntity<?> findUsername(@RequestBody Map<String, String> req) {
-        String name = req.get("name");
-        String email = req.get("email");
 
-        User user = userService .findByNameAndEmail(name, email);
-        if (user == null) {
+    @GetMapping("/{nickname}")
+    public ResponseEntity<UserDto> getUserByNickname(@PathVariable String nickname) {
+        User user = userService.getUserByNickname(nickname);
+        if (user == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @PostMapping("/find-id")
+    public ResponseEntity<?> findId(@RequestBody Map<String, String> req) {
+        String username = req.get("username"); // 사용자 이름
+        String email = req.get("email");       // 이메일
+
+        User user = userService.getUserByUsername(username);
+        if (user == null || !user.getEmail().equals(email)) {
             return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
         }
 
-        return ResponseEntity.ok(user.getUsername()); // 사용자 아이디 반환
+        return ResponseEntity.ok(Map.of("nickname", user.getNickname())); // 아이디 반환
     }
 
-    // 비밀번호 찾기: 아이디, 이메일로 인증
     @PostMapping("/find-password")
     public ResponseEntity<?> findPassword(@RequestBody Map<String, String> req) {
         String username = req.get("username");
@@ -74,7 +94,6 @@ public class UserController {
         return ResponseEntity.ok("인증 성공");
     }
 
-    // 비밀번호 재설정
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> req) {
         String username = req.get("username");
@@ -87,4 +106,18 @@ public class UserController {
 
         return ResponseEntity.ok("비밀번호 변경 완료");
     }
+    @GetMapping("/api/neighbors")
+    public List<NeighborDto> getNeighbors() {
+        List<User> users = userService.getAllUsers();
+
+        return users.stream()
+                .map(user -> new NeighborDto(
+                        user.getNickname(),
+                        user.getProfileImage(),
+                        user.getBio()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 }
