@@ -15,6 +15,7 @@ public class UserMapper {
         user.setNickname(dto.getNickname());
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
+        user.setPhone(dto.getPhone());
         user.setJoinedAt(new Date());
         return user;
     }
@@ -24,6 +25,7 @@ public class UserMapper {
         dto.setUsername(user.getUsername());
         dto.setNickname(user.getNickname());
         dto.setEmail(user.getEmail());
+        dto.setPhone(user.getPhone());
         dto.setPassword(null);          // 비밀번호 노출 방지
         dto.setConfirmPassword(null);   // 비밀번호 노출 방지
         return dto;

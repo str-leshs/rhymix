@@ -6,6 +6,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 import TeamRhymix.Rhymix.domain.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import java.security.Principal;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -58,4 +63,16 @@ public class UserRepository {
         Query query = new Query(Criteria.where("email").is(email));
         return mongoTemplate.exists(query, User.class);
     }
+
+    // ✅ 이름 + 이메일로 사용자 찾기
+    public User findByNameAndEmail(String name, String email) {
+        Query query = new Query(
+                Criteria.where("name").is(name)
+                        .and("email").is(email)
+        );
+        return mongoTemplate.findOne(query, User.class);
+    }
+
+
+
 }

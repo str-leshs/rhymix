@@ -19,9 +19,12 @@ public class User {
     private String username; // 사용자 이름 (예: 홍길동)
     private String email;
     private String password;
-    private String nickname; // 로그인 및 블로그용 아이디 (예: gildong2)
+    private String nickname; // 로그인 및 블로그용 아이디
     private String bio;
     private String profileImage;
+    private String phone;
     private Date joinedAt;
     private List<String> preferredGenres;
+    private List<String> neighbors;
+
 }
