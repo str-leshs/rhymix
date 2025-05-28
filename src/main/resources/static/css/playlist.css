@@ -90,6 +90,84 @@ body {
     border-radius: 6px;
     cursor: pointer;
 }
+/* 🌧 테마 모달 전체 배경 */
+#theme-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 내부 박스 */
+.theme-modal-content {
+    background-color: #fff8e7;
+    width: 90%;
+    max-width: 360px;
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    text-align: center;
+}
+
+/* 상단 영역 (아이콘 + 타이틀 + 닫기 버튼) */
+.theme-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+#theme-modal-icon {
+    font-size: 28px;
+    margin-right: 10px;
+}
+
+#theme-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.theme-modal-close {
+    font-size: 22px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* 트랙 리스트 */
+.theme-modal-body {
+    background-color: #ffeda3;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #000;
+    line-height: 1.6;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+/* 확인 버튼 */
+.theme-modal-footer {
+    margin-top: 20px;
+}
+
+.theme-modal-footer button {
+    background-color: #ffd36f;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 
 /* 월별 플레이리스트 */
 

@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlaylistWithTracksDto {
+public class PlaylistDto {
     private String id;
     private String title;
     private String type;

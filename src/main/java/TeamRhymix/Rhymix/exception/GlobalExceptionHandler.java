@@ -10,7 +10,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //TODO 콘솔에 상황에 따른 플레이리스트 생성 불가 이유 보여줄 수 있도록
+    //콘솔에 상황에 따른 플레이리스트 생성 불가 이유 보여줄 수 있도록
 //    @ExceptionHandler(PlaylistException.class)
 //    public ResponseEntity<?> handlePlaylistException(PlaylistException ex) {
 //        return ResponseEntity
@@ -29,6 +29,8 @@ public class GlobalExceptionHandler {
         response.put("message", ex.getErrorCode().getMessage());
         return ResponseEntity.badRequest().body(response);
     }
+
+
 
 }
 

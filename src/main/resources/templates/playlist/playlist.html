@@ -48,6 +48,25 @@
         </div>
     </div>
 
+    <!-- 테마(기분/날씨) 플레이리스트 모달 -->
+    <div id="theme-modal">
+        <div class="theme-modal-content">
+            <div class="theme-modal-header">
+                <span id="theme-modal-icon">🌧</span>
+                <h2 id="theme-modal-title">Rainy Day Playlist</h2>
+                <span class="theme-modal-close" onclick="document.getElementById('theme-modal').style.display='none'">✖</span>
+            </div>
+            <div class="theme-modal-body" id="theme-track-list">
+                <!-- 트랙 리스트 JS로 삽입 -->
+            </div>
+            <div class="theme-modal-footer">
+                <button onclick="document.getElementById('theme-modal').style.display='none'">확인</button>
+            </div>
+        </div>
+    </div>
+
+
+
     <hr class="divider" />
 
     <div class="monthly-section">
