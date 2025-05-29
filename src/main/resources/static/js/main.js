@@ -88,9 +88,12 @@ function loadTodayMusic(userId) {
 
 
 // 3. 플레이리스트
-function loadPlaylist(userId) {
-    fetch(`/api/playlists/me?userId=${userId}`)
-        .then(res => res.json())
+function loadPlaylist() {
+    fetch(`/api/playlists/me`)
+        .then(res => {
+            if (!res.ok) throw new Error("플레이리스트 없음");
+            return res.json();
+        })
         .then(playlist => {
             const title = playlist.title?.trim() || 'playlist.mix';
             document.getElementById('playlist-title').textContent = title;
@@ -98,13 +101,19 @@ function loadPlaylist(userId) {
             const list = document.getElementById('playlist-items');
             list.innerHTML = '';
 
-            (playlist.trackIds || []).forEach(track => {
+            (playlist.tracks || []).forEach(track => {
                 const li = document.createElement('li');
                 li.textContent = `${track.title} – ${track.artist}`;
                 list.appendChild(li);
             });
+        })
+        .catch(err => {
+            console.warn("플레이리스트 로드 실패:", err);
+            const list = document.getElementById('playlist-items');
+            list.innerHTML = '<li>플레이리스트가 없습니다.</li>';
         });
 }
+
 
 // 4. 댓글
 function loadComments(userId) {
@@ -143,18 +152,18 @@ function setupCommentSubmit(userId) {
 }
 
 // 6. 플레이리스트 저장 예시
-function savePlaylist(title, description, trackIds) {
-    fetch('/api/playlists', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, trackIds })
-    })
-        .then(res => res.json())
-        .then(() => {
-            alert("플레이리스트 저장 완료!");
-            loadPlaylist();
-        });
-}
+// function savePlaylist(title, description, trackIds) {
+//     fetch('/api/playlists', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ title, description, trackIds })
+//     })
+//         .then(res => res.json())
+//         .then(() => {
+//             alert("플레이리스트 저장 완료!");
+//             loadPlaylist();
+//         });
+// }
 
 // 7. 포스트 상세보기 모달
 function setupPostModal() {}
