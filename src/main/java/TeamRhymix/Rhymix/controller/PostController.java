@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController
 @RequestMapping("api/posts")
 @RequiredArgsConstructor
@@ -43,5 +46,29 @@ public class PostController {
 
         return post != null ? ResponseEntity.ok(postMapper.toDto(post)) : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/monthly")
+    public ResponseEntity<List<PostDto>> getMonthlyPosts(
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
+            @RequestParam int year,
+            @RequestParam int month
+    ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        String nickname = userDetails.getUsername(); // = userId
+
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.plusMonths(1);
+
+        List<Post> posts = postService.findPostsByUserAndMonth(nickname, startDate, endDate);
+        List<PostDto> dtos = posts.stream()
+                .map(postMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(dtos);
+    }
+
 
 }
