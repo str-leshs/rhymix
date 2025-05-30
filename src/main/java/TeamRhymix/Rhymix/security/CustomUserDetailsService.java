@@ -5,6 +5,7 @@ import TeamRhymix.Rhymix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
+import TeamRhymix.Rhymix.security.CustomUserDetailsService;
 
 @Service
 @RequiredArgsConstructor
