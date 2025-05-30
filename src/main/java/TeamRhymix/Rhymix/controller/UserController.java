@@ -173,8 +173,8 @@ public class UserController {
         return "neighbor/neighborlist";
     }
 
-    // ✅ 마이페이지 화면 (이웃용 공개)
-    @GetMapping("/mypage/{nickname}")
+    // ✅ 마이페이지 화면 (이웃용 공개) - 경로 명확히 변경
+    @GetMapping("/user/mypage/{nickname}")
     public String getMypage(@PathVariable String nickname, Model model) {
         User user = userService.getUserByNickname(nickname);
         if (user == null) {
