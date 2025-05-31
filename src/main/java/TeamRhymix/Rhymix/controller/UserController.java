@@ -7,6 +7,8 @@ import TeamRhymix.Rhymix.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -105,5 +107,28 @@ public class UserController {
 
         return ResponseEntity.ok("비밀번호 변경 완료");
     }
+
+
+    @GetMapping("/me")  //로그인된 사용자의 정보 조회(세션기반)
+    public ResponseEntity<UserDto> getMyProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        String nickname = userDetails.getUsername();
+        User user = userService.getUserByNickname(nickname);
+        if (user == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+
+    @PutMapping("/{nickname}")  //사용자의 프로필 수정
+    public ResponseEntity<?> updateUserProfile(@PathVariable String nickname,
+                                               @RequestBody UserDto userDto) {
+        User updatedUser = userService.updateUserProfile(nickname, userDto);
+        return ResponseEntity.ok(userMapper.toDto(updatedUser));
+    }
+
 
 }

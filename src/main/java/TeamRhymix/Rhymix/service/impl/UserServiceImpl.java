@@ -1,6 +1,8 @@
 package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.User;
+import TeamRhymix.Rhymix.dto.UserDto;
+import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.repository.UserRepository;
 import TeamRhymix.Rhymix.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
     public List<User> getAllUsers() {
@@ -89,4 +92,17 @@ public class UserServiceImpl implements UserService {
         System.out.println("🎉 로그인 성공: " + user.getUsername());
         return user;
     }
+
+    @Override
+    public User updateUserProfile(String nickname, UserDto dto) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+
+        userMapper.updateFromDto(dto, user);
+        return userRepository.save(user);
+    }
+
+
 }
