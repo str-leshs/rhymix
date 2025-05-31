@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>프로필 등록</title>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="/css/profile.css">
+
+    <!-- Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
@@ -23,8 +30,8 @@
     </div>
 
     <form class="profile-form" onsubmit="return false;">
-        <label>이름</label>
-        <input type="text" id="username" th:value="${user.username}" />
+        <label>이름(수정 불가)</label>
+        <input type="text" id="username" th:value="${user.username}" readonly />
 
         <label>아이디(수정 불가)</label>
         <div class="id-wrapper">
@@ -49,11 +56,11 @@
         <input type="text" id="bio" th:value="${user.bio}" />
 
         <label>블로그 이름</label>
-        <input type="text" id="blogName" th:value="${user.username}" />
+        <input type="text" id="blogName" th:value="${user.username}" readonly />
 
         <label>비밀번호</label>
         <div class="password-wrapper">
-            <input type="password" id="password" />
+            <input type="password" id="password" disabled />
             <button type="button" class="change-btn" onclick="togglePassword()">변경</button>
         </div>
 
@@ -83,8 +90,33 @@
         <button type="submit" class="save-btn">저장</button>
     </form>
 </div>
+
+<!-- 기존 JS 파일 -->
 <script th:src="@{/js/my.js}"></script>
+
+<!-- 추가한 모달 실행 스크립트 -->
+<script>
+    // 비밀번호 활성화 toggle
+    function togglePassword() {
+        const pw = document.getElementById('password');
+        pw.disabled = !pw.disabled;
+        if (!pw.disabled) pw.focus();
+    }
+
+    // 저장 버튼 클릭 시 모달 표시
+    document.querySelector('.save-btn').addEventListener('click', async () => {
+        // 여기에서 실제로 서버에 axios.put() 요청 보내는 로직이 있다면 그 후에 실행
+        Swal.fire({
+            icon: 'success',
+            title: '프로필 저장 완료!',
+            text: '변경 사항이 저장되었습니다.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f2c94c',
+            background: '#fffde7',
+            color: '#5c4100'
+        });
+    });
+</script>
 
 </body>
 </html>
-

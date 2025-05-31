@@ -47,7 +47,8 @@
         <aside class="sidebar left">
             <!-- 프로필 -->
             <div class="profile-card">
-                <div class="nickname-box" id="nickname-box"></div>
+
+                <div class="nickname-box" id="nickname-box">닉네임 로딩 중...</div>
                 <img class="avatar" id="profile-image" src="/image/placeholder_circle.png" alt="프로필"/>
                 <div class="profile-meta">
                     <div class="tag-list" id="tag-list"></div>
@@ -195,6 +196,37 @@
 
 
 <script src="/js/main.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 마이페이지 버튼 클릭 시 이동
+        const mypageBtn = document.getElementById("mypage-btn");
+        if (mypageBtn) {
+            mypageBtn.addEventListener("click", () => {
+                window.location.href = "/mypage";
+            });
+        }
+
+        // ✅ 로그인된 유저 정보 불러와 nickname-box에 반영
+        fetch("/api/users/me")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("사용자 정보를 불러오는 데 실패했습니다.");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const nicknameBox = document.getElementById("nickname-box");
+                if (nicknameBox) {
+                    nicknameBox.textContent = data.nickname;
+                }
+                console.log("유저 정보:", data);
+            })
+            .catch((error) => {
+                console.error("유저 정보 로딩 실패:", error);
+            });
+    });
+</script>
+
 
 </body>
 </html>
