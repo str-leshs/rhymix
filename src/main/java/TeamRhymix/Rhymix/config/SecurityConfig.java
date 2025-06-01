@@ -10,13 +10,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import TeamRhymix.Rhymix.security.CustomUserDetailsService;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService; // ✅ 직접 구현한 서비스 주입
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -25,11 +24,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/image/**", "/favicon.ico").permitAll()
                         .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password", "/api/users/**").permitAll()
+                        .requestMatchers("/api/posts/**").permitAll() // ✅ 추가: posts API 인증 없이 허용
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .usernameParameter("nickname")         // ✅ 로그인 시 nickname을 ID로 사용
+                        .usernameParameter("nickname")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/main", true)
                         .permitAll()
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .invalidSessionUrl("/login")
                 )
-                .userDetailsService(customUserDetailsService) // ✅ 명시적으로 설정
+                .userDetailsService(customUserDetailsService)
                 .build();
     }
 

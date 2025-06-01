@@ -20,5 +20,8 @@ public interface UserService {
     List<NeighborDto> getNeighborsByGenre(String genre);
     List<User> getRecommendedUsers(int limit);
     List<User> getNeighborList(String username);
-    boolean updateUserTheme(String username, String selectedTheme);
+    boolean updateTheme(String username, String selectedTheme);
+    String getSelectedTheme(String username);
+    User findByUsername(String username);
 }
+

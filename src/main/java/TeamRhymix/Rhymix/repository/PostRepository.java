@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Sort;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -56,6 +58,12 @@ public class PostRepository {
         Query query = new Query();
         query.addCriteria(Criteria.where("userId").is(userId)
                 .and("createdAt").gte(start).lte(end));
+        return mongoTemplate.findOne(query, Post.class);
+    }
+    public Post findTopByUserIdOrderByCreatedAtDesc(String userId) {
+        Query query = new Query(Criteria.where("userId").is(userId));
+        query.with(Sort.by(Sort.Direction.DESC, "createdAt"));
+        query.limit(1);
         return mongoTemplate.findOne(query, Post.class);
     }
 
