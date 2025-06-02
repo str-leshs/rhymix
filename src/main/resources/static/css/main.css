@@ -126,7 +126,8 @@ html,body {
 .tag-container {
     display: flex;
     gap: 1vw;
-    flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: nowrap;
     margin-top: 1vw;
 }
 
