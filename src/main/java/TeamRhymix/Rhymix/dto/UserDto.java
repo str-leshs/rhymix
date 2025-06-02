@@ -3,6 +3,8 @@ package TeamRhymix.Rhymix.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UserDto {
@@ -12,4 +14,7 @@ public class UserDto {
     private String password;
     private String confirmPassword;
     private String phone;
+    private String bio;
+    private String profileImage;
+    private List<String> preferredGenres;
 }

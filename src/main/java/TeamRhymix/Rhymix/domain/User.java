@@ -24,4 +24,5 @@ public class User {
     private String profileImage;
     private Date joinedAt;
     private List<String> preferredGenres;
+    private String phone;
 }

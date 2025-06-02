@@ -1,0 +1,272 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fef9e7;
+    margin: 0;
+    padding: 0;
+    color: #222;
+}
+
+.playlist-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff6d9;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.header-logo {
+    width: 65px;
+    height: auto;
+}
+
+
+.divider {
+    border: none;
+    border-top: 3px solid #ffd966;
+    margin: 20px 0;
+}
+
+.theme-playlist-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.theme-selector {
+    display: inline-block;
+    background-color: #ffe69c;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.theme-display {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 0.5rem auto;
+    border: 2px solid #f7cc4c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fffaf0;
+}
+
+.theme-display img {
+    width: 60px;
+    height: 60px;
+}
+
+.theme-dropdown {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.theme-dropdown select {
+    padding: 0.3rem;
+    border-radius: 6px;
+}
+
+.theme-dropdown button {
+    background-color: white;
+    border: 1px solid #333;
+    padding: 0.3rem 0.7rem;
+    margin-left: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+/* 🌧 테마 모달 전체 배경 */
+#theme-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 내부 박스 */
+.theme-modal-content {
+    background-color: #fff8e7;
+    width: 90%;
+    max-width: 360px;
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    text-align: center;
+}
+
+/* 상단 영역 (아이콘 + 타이틀 + 닫기 버튼) */
+.theme-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+#theme-modal-icon {
+    font-size: 28px;
+    margin-right: 10px;
+}
+
+#theme-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.theme-modal-close {
+    font-size: 22px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* 트랙 리스트 */
+.theme-modal-body {
+    background-color: #ffeda3;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #000;
+    line-height: 1.6;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+/* 확인 버튼 */
+.theme-modal-footer {
+    margin-top: 20px;
+}
+
+.theme-modal-footer button {
+    background-color: #ffd36f;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+/* 월별 플레이리스트 */
+
+.monthly-section {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 600px; /* grid와 동일하게 고정 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.monthly-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.monthly-header h2 {
+    font-size: 24px;
+    margin: 0 auto; /* 가운데 정렬 */
+}
+
+.year-selector {
+    position: absolute;
+    right: 0;
+    margin-right: 25px;
+}
+
+.year-selector select {
+    padding: 6px 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #fff9e6;
+    border: 2px solid #ffd16f;
+}
+
+/* 연도 셀렉터와 월별 타이틀 정렬 */
+.year-month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    margin-top: 30px;
+}
+
+.year-select-wrapper select {
+    padding: 4px 12px;
+    font-size: 16px;
+    border: 2px solid #f5cd66;
+    border-radius: 8px;
+    background-color: #fffbe6;
+}
+
+/* 월별 그리드 */
+.monthly-section {
+    margin-top: 40px;
+    padding: 20px 0;
+    background-color: #fff5d6;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.monthly-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.year-select-wrapper select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #e0b64c;
+    background-color: #fffaf0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 24px;
+}
+
+.month-button {
+    background-color: #fff7e0;
+    border: 2px solid #ffd16f;
+    border-radius: 12px;
+    padding: 24px 0;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.month-button:hover {
+    background-color: #ffe59a;
+}

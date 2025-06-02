@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 import TeamRhymix.Rhymix.domain.User;
 
-
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -22,6 +22,27 @@ public class UserRepository {
 
     public List<User> findAll() {
         return mongoTemplate.findAll(User.class);
+    }
+
+    public User findByUsername(String username) {
+        System.out.println("🔍 [findByUsername] 전달된 username: \"" + username + "\"");
+
+        Query query = new Query(Criteria.where("username").is(username));
+        System.out.println("🔍 [findByUsername] 생성된 Query: " + query.toString());
+
+        User foundUser = mongoTemplate.findOne(query, User.class);
+
+        if (foundUser != null) {
+            System.out.println(" [findByUsername] 사용자 조회 성공: " + foundUser.toString());
+        } else {
+            System.out.println(" [findByUsername] 사용자 조회 실패 - null 반환됨");
+        }
+
+        return foundUser;
+    }
+
+    public Optional<User> findOptionalByUsername(String username) {
+        return Optional.ofNullable(findByUsername(username));
     }
 
     public User findByNickname(String nickname) {

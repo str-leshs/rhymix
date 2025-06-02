@@ -1,0 +1,219 @@
+/* 기본 설정 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #FFFCF3;
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    max-width: 1080px;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 100px;
+    position: relative;
+}
+
+/* 헤더 */
+.customizing-header {
+    display: flex;
+    align-items: center;
+    padding: clamp(20px, 4vw, 40px) clamp(10px, 2vw, 24px) clamp(10px, 2vw, 24px);
+}
+
+.logo {
+    width: clamp(60px, 6vw, 100px);
+    height: auto;
+}
+
+.title {
+    font-family: 'JejuGothic', sans-serif;
+    font-size: clamp(24px, 5vw, 48px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 공통 섹션 */
+.section {
+    margin-top: clamp(20px, 6vw, 60px);
+}
+
+.section h2 {
+    font-size: clamp(18px, 2.5vw, 28px);
+    color: #FFBF46;
+    background: #FCE38A;
+    padding: clamp(8px, 1vw, 16px);
+    text-align: center;
+}
+
+/* 테마 */
+.theme-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: clamp(10px, 2vw, 20px);
+}
+
+.theme-box {
+    width: clamp(120px, 30%, 260px);
+    aspect-ratio: 1 / 1;
+    border: 2px solid #000;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    position: relative;
+    cursor: pointer;
+    background: none;
+    min-width: 100px;
+    margin-top: 2vw;
+}
+
+.theme-box .top {
+    border-bottom: 1px solid #000;
+}
+
+.theme-box .bottom {
+    background-color: #FFFCF3;
+}
+
+.theme-box.color1 .top { background-color: #FFE49D; }
+.theme-box.color2 .top { background-color: #FFC4CD; }
+.theme-box.color3 .top { background-color: #C3DDB0; }
+.theme-box.color4 .top { background-color: #A3F1FF; }
+.theme-box.color5 .top { background-color: #DAC4FF; }
+.theme-box.color6 .top { background-color: #606060; }
+
+.theme-box.selected {
+    border: 3px solid #007BFF; /* 파란색 강조 테두리 */
+    box-shadow: 0 0 0.5vw rgba(0, 123, 255, 0.4);
+}
+
+
+
+/* 폰트 */
+.font-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background: #FFF0C9;
+    padding: 3vw;
+    gap: 1vw;
+}
+
+.font-options label {
+    font-size: clamp(12px, 1.2vw, 18px);
+}
+
+
+.font-jua {
+    font-family: 'Jua', sans-serif;
+}
+
+.font-42dot {
+    font-family: '42dot Sans', sans-serif;
+}
+
+.font-noto {
+    font-family: 'Noto Serif KR', serif;
+}
+
+
+/* 작성 영역 */
+.write {
+    background: #FFF0C9;
+    padding: clamp(16px, 4vw, 40px);
+}
+
+.title-input {
+    width: 100%;
+    height: clamp(40px, 6vw, 80px);
+    font-size: clamp(16px, 2vw, 24px);
+    padding: 1vw;
+    background: #FFFCF3;
+    border: none;
+    margin-bottom: 1vw;
+}
+
+.content-input {
+    width: 100%;
+    max-width: 100%;
+    height: clamp(200px, 30vw, 400px); /* 고정 또는 반응형 높이 */
+    overflow-y: scroll; /* 세로 스크롤만 표시 */
+    overflow-x: hidden; /* 가로 넘침 방지 */
+    box-sizing: border-box;
+    padding: 1vw;
+    border: 1px solid #ccc;
+    border-radius: 1vw;
+    background-color: #FFFCF3;
+    line-height: 1.6;
+}
+
+
+.char-count {
+    display: block;
+    text-align: right;
+    font-size: clamp(12px, 1.2vw, 16px);
+    color: #878589;
+}
+
+/* 이미지 안내 */
+.image-info {
+    background: #FFF0C9;
+    padding: clamp(12px, 2vw, 24px) clamp(24px, 4vw, 48px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: clamp(14px, 1.2vw, 18px);
+}
+
+.image-upload-btn {
+    padding: clamp(6px, 0.8vw, 12px) clamp(12px, 2vw, 24px);
+    font-size: clamp(14px, 1.2vw, 18px);
+    border-radius: clamp(8px, 1vw, 16px);
+    cursor: pointer;
+    background-color: #FFBF46;
+    border: none;
+    margin-right: clamp(12px, 2vw, 24px);
+}
+
+.image-filename {
+    color: #333;
+    font-size: clamp(12px, 1.2vw, 16px);
+}
+
+
+/* 푸터 / 저장 버튼 */
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 3vw;
+    background: #FCE38A;
+}
+
+.save-btn {
+    background: #FFFCF3;
+    border: none;
+    border-radius: clamp(12px, 2vw, 24px);
+    padding: clamp(8px, 1vw, 16px) clamp(16px, 3vw, 32px);
+    font-size: clamp(16px, 2vw, 24px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 16px);
+}
+
+
+/* 반응형 대응 */
+@media (max-width: 768px) {
+    .theme-box {
+        flex: 1 1 45%;
+    }
+
+    .font-options {
+        flex-direction: column;
+        align-items: center;
+    }
+}

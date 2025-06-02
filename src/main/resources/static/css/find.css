@@ -1,0 +1,27 @@
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #FFD77A; /* 기존 버튼 배경과 유사 */
+    color: #3D2E1E;            /* 기존 텍스트 컬러 */
+    padding: 14px 26px;
+    border-radius: 16px;       /* 살짝 더 둥글게 */
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(255, 215, 100, 0.35);
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    top: 30px;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast.hidden {
+    display: none;
+}

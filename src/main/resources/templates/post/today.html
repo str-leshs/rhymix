@@ -1,57 +1,103 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>오늘의 추천곡</title>
-  <link rel="stylesheet" href="/css/today.css">
-  <script defer src="/js/today.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/today.css}">
+  <script defer th:src="@{/js/today.js}"></script>
 </head>
 <body>
 <div class="today-container">
-  <h1>오늘의 추천곡</h1>
 
-  <!--검색창 -->
-  <div class="search-section">
-    <input type="text" id="searchInput" placeholder="노래 또는 아티스트 검색">
-    <button id="searchBtn">검색</button>
+  <div class="header">
+    <h1 class="page-title">Today's Track</h1>
+    <img th:src="@{/image/logo.png}" alt="로고" class="logo-image">
   </div>
 
-  <!--선택된 곡 정보 -->
-  <div class="track-info">
-    <p id="trackTitle">곡 제목</p>
-    <p id="trackArtist">아티스트</p>
-    <img id="trackCover" src="" alt="앨범커버">
+  <!-- Music 섹션 제목 -->
+  <h2 class="section-title">Music</h2>
+
+  <!-- 음악 정보 수동 입력 버튼 -->
+  <button id="openModalBtn" class="right-float-btn">
+    <i class="fas fa-plus"></i> 곡 정보 입력
+  </button>
+
+  <!-- 선택된 곡 정보 -->
+  <div class="track-display-box">
+    <div class="track-row">
+      <label class="track-label">노래</label>
+      <div class="track-value" id="trackTitle">곡 제목</div>
+    </div>
+
+    <div class="track-row">
+      <label class="track-label">아티스트</label>
+      <div class="track-value" id="trackArtist">아티스트</div>
+    </div>
+
+    <div class="cover-wrapper">
+      <img id="trackCover" th:src="@{/image/default-cover.png}" alt="앨범커버">
+    </div>
   </div>
 
-  <!--코멘트 작성 -->
-  <textarea id="comment" maxlength="50" placeholder="오늘의 기분을 간단히 써보세요 (최대 50자)"></textarea>
 
-  <!--날씨 /기분 선택 -->
-  <div class="select-box">
-    <select id="weather">
-      <option value="">날씨 선택 (선택사항)</option>
-      <option value="맑음">☀ 맑음</option>
-      <option value="흐림">☁ 흐림</option>
-      <option value="비">🌧 비</option>
-    </select>
+  <!-- 코멘트 작성 -->
+  <h2 class="section-title">Comment</h2>
 
-    <select id="mood">
-      <option value="">기분 선택 (선택사항)</option>
-      <option value="행복">😊 행복</option>
-      <option value="피곤">😩 피곤</option>
-      <option value="신남">😆 신남</option>
-    </select>
+  <div class="comment-box">
+    <textarea id="comment" maxlength="50" placeholder="(최대 50자)"></textarea>
+    <div class="char-counter"><span id="charCount">0</span>/50</div>
   </div>
+
+
+  <!-- 날씨/기분 선택 -->
+  <div class="select-section">
+    <h2>Weather / Mood</h2>
+    <div class="select-cards">
+      <!-- 날씨 -->
+      <select id="weather">
+        <option value="">날씨 선택 (선택사항)</option>
+        <option value="☀ 맑음">☀ 맑음</option>
+        <option value="🌧 비">🌧 비</option>
+        <option value="☁ 구름">☁ 구름</option>
+        <option value="❄ 눈">❄ 눈</option>
+        <option value="💨 바람">💨 바람</option>
+      </select>
+
+      <!-- 기분 -->
+      <select id="mood">
+        <option value="">기분 선택 (선택사항)</option>
+        <option value="😊 행복">😊 행복</option>
+        <option value="😞 우울">😞 우울</option>
+        <option value="😢 슬픔">😢 슬픔</option>
+        <option value="😡 화남">😡 화남</option>
+        <option value="😩 피곤">😩 피곤</option>
+        <option value="🚗 드라이브">🚗 드라이브</option>
+        <option value="⚡ 에너지 충전">⚡ 에너지 충전</option>
+        <option value="💤 수면">💤 수면</option>
+      </select>
+
+    </div>
+  </div>
+
 
   <!-- 저장 버튼 -->
   <button id="saveBtn">저장</button>
 </div>
 
-<!-- 모달 (검색 결과 표시용) -->
-<div id="searchModal" class="modal" style="display: none;">
+<!-- 모달창 -->
+<div id="manualInputModal" class="modal" style="display: none;">
   <div class="modal-content">
-    <ul id="searchResults"></ul>
+    <h2>곡 정보 입력</h2>
+
+    <input type="text" id="modalTrackTitle" placeholder="곡 제목">
+    <input type="text" id="modalTrackArtist" placeholder="아티스트명">
+    <input type="url" id="modalTrackCover" placeholder="앨범 커버 이미지 URL">
+
+    <div class="modal-buttons">
+      <button id="cancelTrackBtn">취소</button>
+      <button id="confirmTrackBtn">확인</button>
+    </div>
   </div>
 </div>
-</body>
-</html>
+

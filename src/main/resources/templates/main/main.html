@@ -11,8 +11,25 @@
 
     <!-- 메인 CSS -->
     <link rel="stylesheet" href="css/main.css"/>
+
+    <!-- FullCalendar CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
 </head>
 <body>
+
+<!-- 로그인된 nickname을 숨겨진 input에 담아 JS에서 사용 -->
+<input type="hidden" id="hidden-nickname" th:value="${nickname}" />
+<!-- 서버에서 nickname이 없으면 main 페이지 진입 차단 -->
+<div th:if="${nickname == null}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.location.href = "/login";
+        /*]]>*/
+    </script>
+</div>
+
 <div class="container">
 
     <!-- 헤더 -->
@@ -40,6 +57,8 @@
                     <button id="mypage-btn">마이페이지</button>
                     <button id="logout-btn">로그아웃</button>
                 </div>
+                <!-- Spring Security 로그아웃을 위한 숨겨진 폼 -->
+                <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
 
             </div>
 
@@ -50,8 +69,8 @@
                     <div class="music-title-box"></div>
                     <div class="music-artist-box"></div>
                     <div class="mood-buttons">
-                        <button id="mood-btn-1"></button>
-                        <button id="mood-btn-2"></button>
+                        <button id="weather-btn"></button>
+                        <button id="mood-btn"></button>
                     </div>
 
                     <p class="mood-caption"></p>
@@ -73,8 +92,16 @@
         <main class="center">
 
             <!-- 달력 -->
-            <div class="calendar-section">
+            <div class="calendar-header-wrapper">
+                <button id="prev-btn" class="nav-btn">⏪</button>
+                <div id="calendar-title" class="calendar-title">2025년 5월</div>
+                <button id="next-btn" class="nav-btn">⏩</button>
             </div>
+
+            <div class="calendar-section">
+                <div id="calendar"></div>
+            </div>
+
 
             <!-- 일기 -->
             <div class="diary-section" id="diary-container">
@@ -90,9 +117,16 @@
             <div class="menu-box">
                 <nav class="menu">
                     <h3>📂 MENU 📂</h3>
-                    <button id="post-btn">🎵 POST</button>
-                    <button id="playlist-btn">🎼 PLAYLIST</button>
+                    <a th:href="@{/today}">
+                        <button id="post-btn">🎵 POST</button>
+                    </a>
+                    <a th:href="@{/playlist}">
+                        <button id="playlist-btn">🎼 PLAYLIST</button>
+                    </a>
+
+                    <a th:href="@{/neighborlist}">
                     <button id="neighbor-btn">🧑‍🤝‍🧑 NEIGHBOR</button>
+                    </a>
                 </nav>
 
                 <!-- 검색창 -->
@@ -108,7 +142,7 @@
             </div>
             <!-- 플레이리스트 -->
             <div class="playlist-preview" id="playlist-box">
-                <h4 id="playlist-title">@.mix</h4>   <!-- ✅ 제목 박스 -->
+                <h4 id="playlist-title">@.mix</h4>   
                 <ul id="playlist-items">
                     <!-- JS에서 <li> 추가됨 -->
                 </ul>
@@ -142,14 +176,25 @@
         <p class="credit"></p>
     </footer>
 
+    <!--캘린더 모달창-->
+    <div id="trackDetailModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close-btn" onclick="closeDetailModal()">✕</button>
+            <h3>추천곡 상세정보</h3>
+            <img id="modalDetailCover" src="" alt="앨범 커버">
+            <p><strong>제목:</strong> <span id="modalDetailTitle"></span></p>
+            <p><strong>아티스트:</strong> <span id="modalDetailArtist"></span></p>
+            <p><strong>기분:</strong> <span id="modalDetailMood"></span></p>
+            <p><strong>날씨:</strong> <span id="modalDetailWeather"></span></p>
+            <p><strong>코멘트:</strong> <span id="modalDetailComment"></span></p>
+        </div>
+    </div>
 
 </div>
+
+
 
 <script src="/js/main.js"></script>
 
 </body>
 </html>
-
-
-
-

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이웃 리스트</title>
+    <link rel="stylesheet" href="css/search.css">
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="header">
+    <div class="logo-wrap">
+        <img src="/image/logo2.png" class="logo" alt="로고">
+    </div>
+
+    <div class="button-row">
+        <button class="btn">LIST 📁</button>
+        <button class="btn active">SEARCH 🔍</button>
+    </div>
+</header>
+
+<!-- 검색 띠 -->
+    <div class="search-band">
+        <div class="search-box">
+            <div class="select-wrapper">
+                <select class="genre-select">
+                    <option value="" disabled selected hidden>검색기준</option>
+                    <option value="k-pop">K-POP</option>
+                    <option value="rnb">R&B</option>
+                    <option value="dance">Dance</option>
+                    <option value="ballad">발라드</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="rock">Rock</option>
+                    <option value="classic">Classic</option>
+                    <option value="trot">트로트</option>
+                    <option value="hiphop">힙합</option>
+                    <option value="pop">Pop</option>
+                    <option value="j-pop">J-POP</option>
+                    <option value="ost">OST</option>
+                    <option value="latin">라틴</option>
+                    <option value="indie">인디</option>
+                    <option value="band">밴드</option>
+                </select>
+                <span class="select-arrow">🔽</span>
+            </div>
+
+            <input type="text" class="search-input" placeholder="검색어를 입력하세요" />
+            <button class="search-button">🔍</button>
+        </div>
+    </div>
+
+
+
+
+
+<div class="recommend-wrapper">
+
+
+    <div class="recommend-inner">
+        <div class="friend-actions">
+            <button>이웃신청</button>
+        </div>
+        <div class="friend-list">
+            <div class="friend-item" th:each="neighbor : ${neighbors}">
+                <input type="checkbox" />
+                <img th:src="@{/image/placeholder_circle.png}" class="profile-img" />
+                <div class="nickname" th:text="${neighbor.nickname}">닉네임</div>
+                <div class="tags">
+                    <span class="tag" th:each="tag : ${neighbor.tags}" th:text="'# ' + ${tag}">#태그</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <th:block th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+            <a th:href="@{/neighbors(page=${pageNum})}"
+               th:text="${pageNum}"
+               th:classappend="${currentPage == pageNum} ? 'active' : ''">1</a>
+        </th:block>
+    </div>
+</div>
+
+
+
+</body>
+</html>
+
