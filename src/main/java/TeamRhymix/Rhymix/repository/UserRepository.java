@@ -1,16 +1,11 @@
 package TeamRhymix.Rhymix.repository;
 
+import TeamRhymix.Rhymix.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import TeamRhymix.Rhymix.domain.User;
-import org.springframework.stereotype.Controller;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import java.security.Principal;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -29,30 +24,24 @@ public class UserRepository {
         return mongoTemplate.findAll(User.class);
     }
 
-    public User findByUsername(String username) {
-        System.out.println("🔍 [findByUsername] 전달된 username: \"" + username + "\"");
-
+    // ✅ Optional<User>로 리팩토링된 메서드
+    public Optional<User> findByUsername(String username) {
         Query query = new Query(Criteria.where("username").is(username));
-        System.out.println("🔍 [findByUsername] 생성된 Query: " + query.toString());
+        return Optional.ofNullable(mongoTemplate.findOne(query, User.class));
+    }
 
-        User foundUser = mongoTemplate.findOne(query, User.class);
+    public Optional<User> findByNickname(String nickname) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
+        return Optional.ofNullable(mongoTemplate.findOne(query, User.class));
+    }
 
-        if (foundUser != null) {
-            System.out.println(" [findByUsername] 사용자 조회 성공: " + foundUser.toString());
-        } else {
-            System.out.println(" [findByUsername] 사용자 조회 실패 - null 반환됨");
-        }
-
-        return foundUser;
+    public List<User> findByNicknameIn(List<String> nicknames) {
+        Query query = new Query(Criteria.where("nickname").in(nicknames));
+        return mongoTemplate.find(query, User.class);
     }
 
     public Optional<User> findOptionalByUsername(String username) {
-        return Optional.ofNullable(findByUsername(username));
-    }
-
-    public User findByNickname(String nickname) {
-        Query query = new Query(Criteria.where("nickname").is(nickname));
-        return mongoTemplate.findOne(query, User.class);
+        return findByUsername(username); // 이미 Optional 반환하므로 중첩 제거
     }
 
     public User save(User user) {
@@ -64,7 +53,6 @@ public class UserRepository {
         return mongoTemplate.exists(query, User.class);
     }
 
-    // ✅ 이름 + 이메일로 사용자 찾기
     public User findByNameAndEmail(String name, String email) {
         Query query = new Query(
                 Criteria.where("name").is(name)
@@ -73,6 +61,8 @@ public class UserRepository {
         return mongoTemplate.findOne(query, User.class);
     }
 
-
-
+    public List<User> findByNicknameContainingIgnoreCase(String keyword) {
+        Query query = new Query(Criteria.where("nickname").regex(".*" + keyword + ".*", "i"));
+        return mongoTemplate.find(query, User.class);
+    }
 }

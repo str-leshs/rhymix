@@ -18,7 +18,7 @@
     padding: clamp(20px, 4vw, 30px) clamp(20px, 6vw, 40px);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: clamp(10px, 3vw, 20px);
     box-sizing: border-box;
 }
@@ -74,17 +74,17 @@
 .search-band {
     background: #FCE38A;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: clamp(20px, 5vw, 40px);
-    overflow-x: hidden;
     box-sizing: border-box;
     width: 100%;
 }
 
 .search-box {
     width: 100%;
-    max-width: clamp(320px, 70vw, 880px);
+    max-width: 700px;
     margin: 0 auto;
     padding: clamp(10px, 1.5vw, 14px) clamp(16px, 4vw, 24px);
     display: flex;
@@ -178,11 +178,23 @@
 
 .friend-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     background-color: #FCE38A;
     padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 20px);
     border-radius: clamp(10px, 2vw, 14px);
     gap: clamp(10px, 2vw, 14px);
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.bio {
+    font-size: clamp(12px, 1.5vw, 14px);
+    color: #444;
+    margin-top: 4px;
 }
 
 .friend-item input[type="checkbox"] {
@@ -267,4 +279,64 @@
 .pagination a.active {
     background-color: #FCE38A;
     color: #000;
+}
+
+.toast-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.toast-inner {
+    background: #fffde7;
+    border-radius: 16px;
+    padding: 40px 30px;
+    width: 340px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    font-family: 'Jua', sans-serif;
+    color: #5c4100;
+}
+
+    .toast-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+        color: #5c4100;
+}
+
+.toast-title {
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #5c4100;
+}
+
+.toast-message {
+    font-size: 16px;
+    color: #5c4100;
+    margin-bottom: 20px;
+}
+
+.toast-ok-btn {
+    background-color: #f2c94c;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.toast-ok-btn:hover {
+    background-color: #f1b900;
+}
+
+.hidden {
+    display: none;
 }

@@ -16,10 +16,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfileResponseDto getUserProfile(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElse(null); // ✅ 수정
         if (user == null) return null;
 
-        // User → ResponseDto로 변환
         UserProfileResponseDto response = new UserProfileResponseDto();
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());
@@ -33,10 +32,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfileResponseDto updateUserProfile(String username, UserProfileRequestDto requestDto) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElse(null); // ✅ 수정
         if (user == null) return null;
 
-        // 수정 가능한 필드 업데이트
         user.setEmail(requestDto.getEmail());
         user.setNickname(requestDto.getNickname());
         user.setBio(requestDto.getBio());
@@ -45,7 +43,6 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         userRepository.save(user);
 
-        // 저장된 유저 → 응답 DTO로 변환
         UserProfileResponseDto response = new UserProfileResponseDto();
         response.setUsername(user.getUsername());
         response.setEmail(user.getEmail());

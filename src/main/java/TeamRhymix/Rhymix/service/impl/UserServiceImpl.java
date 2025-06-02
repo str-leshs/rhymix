@@ -5,8 +5,8 @@ import TeamRhymix.Rhymix.dto.NeighborDto;
 import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.repository.UserRepository;
 import TeamRhymix.Rhymix.service.UserService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,50 +19,36 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MongoTemplate mongoTemplate;
 
-    // ✅ 사용자 테마 업데이트 (nickname 기준)
     @Override
     public boolean updateTheme(String nickname, String selectedTheme) {
-        System.out.println("=== updateTheme 호출됨 ===");
-        System.out.println("nickname = " + nickname + ", selectedTheme = " + selectedTheme);
-
-        User user = userRepository.findByNickname(nickname);
-        if (user == null) {
-            System.out.println("❌ 사용자 없음: " + nickname);
-            return false;
-        }
-
+        User user = userRepository.findByNickname(nickname).orElse(null); // ✅ 수정
+        if (user == null) return false;
         user.setSelectedTheme(selectedTheme);
         userRepository.save(user);
-        System.out.println("✅ selectedTheme 저장 완료");
         return true;
     }
 
-    // ✅ 선택된 테마 조회
     @Override
     public String getSelectedTheme(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다: " + username);
-        }
+        User user = userRepository.findByUsername(username).orElse(null); // ✅ 수정
+        if (user == null) throw new RuntimeException("사용자를 찾을 수 없습니다: " + username);
         return user.getSelectedTheme();
     }
-
-
 
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
     @Override
     public User getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
+        return userRepository.findByNickname(nickname).orElse(null);
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     @Override
@@ -90,22 +76,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User authenticate(String nickname, String rawPassword) {
-        if (nickname == null || rawPassword == null) {
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 입력되지 않았습니다.");
+        User user = userRepository.findByNickname(nickname).orElse(null); // ✅ 수정
+        if (user == null || !passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
-
-        nickname = nickname.trim();
-        rawPassword = rawPassword.trim();
-
-        User user = userRepository.findByNickname(nickname);
-        if (user == null) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
-
-        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
-        }
-
         return user;
     }
 
@@ -117,22 +91,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserDtoByUsername(String nickname) {
         User user = getUserByNickname(nickname);
-
-        if (user == null) {
-            throw new RuntimeException("유저 정보를 찾을 수 없습니다.");
-        }
-
+        if (user == null) throw new RuntimeException("유저 정보를 찾을 수 없습니다.");
         return new UserDto(
-                user.getUsername(),
-                user.getNickname(),
-                user.getEmail(),
-                null,
-                null,
-                user.getPhone(),
-                user.getBio(),
-                user.getProfileImage(),
-                user.getPreferredGenres(),
-                user.getSelectedTheme()
+                user.getUsername(), user.getNickname(), user.getEmail(),
+                null, null, user.getPhone(), user.getBio(),
+                user.getProfileImage(), user.getPreferredGenres(), user.getSelectedTheme()
         );
     }
 
@@ -165,19 +128,32 @@ public class UserServiceImpl implements UserService {
         Collections.shuffle(all);
         return all.stream().limit(limit).collect(Collectors.toList());
     }
+
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElse(null);
     }
+
 
     @Override
     public List<User> getNeighborList(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElse(null); // ✅ 수정
         if (user == null || user.getNeighbors() == null) return new ArrayList<>();
-
         return user.getNeighbors().stream()
-                .map(userRepository::findByUsername)
+                .map(u -> userRepository.findByUsername(u).orElse(null)) // ✅ 수정
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<User> searchNeighbors(String keyword, String genre, String currentUsername) {
+        return userRepository.findAll().stream()
+                .filter(user -> !user.getUsername().equals(currentUsername)) // 본인 제외
+                .filter(user -> keyword == null || keyword.isEmpty() || user.getNickname().toLowerCase().contains(keyword.toLowerCase()))
+                .filter(user -> genre == null || genre.isEmpty()
+                        || (user.getPreferredGenres() != null && user.getPreferredGenres().contains(genre)))
+                .collect(Collectors.toList());
+    }
+
+
 }
