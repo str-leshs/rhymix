@@ -30,4 +30,11 @@ public class NeighborController {
         neighborService.addNeighbor(ownerNickname, targetNickname);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/suggested")
+    public ResponseEntity<List<NeighborDto>> getSuggestedNeighbors(@AuthenticationPrincipal UserDetails userDetails) {
+        String nickname = userDetails.getUsername();
+        return ResponseEntity.ok(neighborService.getSuggestedNeighbors(nickname));
+    }
+
 }

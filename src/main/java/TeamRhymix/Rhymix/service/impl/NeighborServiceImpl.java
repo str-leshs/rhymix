@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,4 +51,27 @@ public class NeighborServiceImpl implements NeighborService {
         Update update = new Update().addToSet("neighbors", neighborNickname);
         mongoTemplate.upsert(query, update, Neighbor.class);
     }
+
+    @Override
+    public List<NeighborDto> getSuggestedNeighbors(String currentNickname) {
+        // 본인과 이미 추가된 이웃 닉네임 제외
+        Query neighborQuery = new Query(Criteria.where("ownerNickname").is(currentNickname));
+        Neighbor neighbor = mongoTemplate.findOne(neighborQuery, Neighbor.class);
+        List<String> excludedNicknames = new ArrayList<>();
+        excludedNicknames.add(currentNickname); // 본인 제외
+        if (neighbor != null && neighbor.getNeighbors() != null) {
+            excludedNicknames.addAll(neighbor.getNeighbors());
+        }
+
+        // 제외 대상이 아닌 사용자만 랜덤 추출
+        Query userQuery = new Query(Criteria.where("nickname").nin(excludedNicknames));
+        List<User> candidates = mongoTemplate.find(userQuery, User.class);
+
+        Collections.shuffle(candidates); // 무작위 순서 섞기
+        return candidates.stream()
+                .limit(10)
+                .map(neighborMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }
