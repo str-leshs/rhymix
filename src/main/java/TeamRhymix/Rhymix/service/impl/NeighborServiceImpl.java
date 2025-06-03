@@ -3,9 +3,13 @@ package TeamRhymix.Rhymix.service.impl;
 import TeamRhymix.Rhymix.domain.Neighbor;
 import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.NeighborDto;
+import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.mapper.NeighborMapper;
 import TeamRhymix.Rhymix.service.NeighborService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -79,6 +83,88 @@ public class NeighborServiceImpl implements NeighborService {
         Query query = new Query(Criteria.where("ownerNickname").is(ownerNickname));
         Update update = new Update().pull("neighbors", targetNickname);
         mongoTemplate.updateFirst(query, update, Neighbor.class);
+    }
+
+    @Override
+    public Page<NeighborDto> searchNeighbors(String myNickname, String genre, String keyword, int page, int size) {
+        // 제외 대상 닉네임 목록 (본인 + 기존 이웃)
+        Query neighborQuery = new Query(Criteria.where("ownerNickname").is(myNickname));
+        Neighbor neighbor = mongoTemplate.findOne(neighborQuery, Neighbor.class);
+
+        List<String> excludedNicknames = new ArrayList<>();
+        excludedNicknames.add(myNickname);
+        if (neighbor != null && neighbor.getNeighbors() != null) {
+            excludedNicknames.addAll(neighbor.getNeighbors());
+        }
+
+        // 검색 조건 구성
+        Criteria criteria = new Criteria();
+        List<Criteria> conditions = new ArrayList<>();
+
+        // 제외 대상 닉네임
+        conditions.add(Criteria.where("nickname").nin(excludedNicknames));
+
+        // genre가 있을 경우
+        if (genre != null && !genre.isEmpty()) {
+            conditions.add(Criteria.where("preferredGenres").in(genre));  // ✔️ in으로 변경
+        }
+
+
+        // keyword가 있을 경우
+        if (keyword != null && !keyword.isEmpty()) {
+            conditions.add(Criteria.where("nickname").regex(".*" + keyword + ".*", "i"));
+        }
+
+        // 모든 조건을 and 연산자로 묶기
+        criteria.andOperator(conditions.toArray(new Criteria[0]));
+
+        Query query = new Query(criteria);
+        long total = mongoTemplate.count(query, User.class); // 전체 개수
+
+        query.skip((long) (page - 1) * size).limit(size);
+        List<User> result = mongoTemplate.find(query, User.class);
+
+        List<NeighborDto> dtoList = result.stream()
+                .map(user -> new NeighborDto(
+                        user.getNickname(),
+                        user.getProfileImage(),
+                        user.getPreferredGenres() != null ? user.getPreferredGenres() : List.of()
+                )).toList();
+
+        return new PageImpl<>(dtoList, PageRequest.of(page - 1, size), total);
+    }
+
+
+    @Override
+    public int countSearchResults(String myNickname, String genre, String keyword) {
+        // 본인 및 기존 이웃 제외
+        Query neighborQuery = new Query(Criteria.where("ownerNickname").is(myNickname));
+        Neighbor neighbor = mongoTemplate.findOne(neighborQuery, Neighbor.class);
+
+        List<String> excludedNicknames = new ArrayList<>();
+        excludedNicknames.add(myNickname);
+        if (neighbor != null && neighbor.getNeighbors() != null) {
+            excludedNicknames.addAll(neighbor.getNeighbors());
+        }
+
+        // 검색 조건 구성
+        Criteria criteria = new Criteria();
+        List<Criteria> andConditions = new ArrayList<>();
+
+        andConditions.add(Criteria.where("nickname").nin(excludedNicknames));
+
+        if (genre != null && !genre.isBlank()) {
+            andConditions.add(Criteria.where("preferredGenres").in(genre));
+        }
+
+        if (keyword != null && !keyword.isBlank()) {
+            andConditions.add(Criteria.where("nickname").regex(".*" + keyword + ".*", "i"));
+        }
+
+        criteria.andOperator(andConditions.toArray(new Criteria[0]));
+
+        Query countQuery = new Query(criteria);
+        return (int) mongoTemplate.count(countQuery, User.class);
     }
 
 

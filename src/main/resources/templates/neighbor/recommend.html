@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="css/recommend.css">
 
     <style>
-        /* ✅ 체크박스 커스텀 */
         .friend-item input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -79,70 +78,59 @@
 
 <body>
 
-<!-- 헤더 -->
-<header class="header">
-    <div class="logo-wrap">
-        <img src="/image/logo2.png" class="logo" alt="로고">
-    </div>
-    <div class="button-row">
-        <a href="/neighborlist"><button class="btn">LIST 📁</button></a>
-        <button class="btn active">SEARCH 🔍</button>
-    </div>
-</header>
-
-<!-- 검색 띠 -->
-<div class="search-band">
-    <div class="search-box">
-        <input type="text" class="search-input" placeholder="검색어를 입력하세요" />
-        <button class="search-button">🔍</button>
-    </div>
-</div>
-
-<!-- 레코드판 위 노란 배경 띠 -->
-<div class="highlight-band"></div>
-
-<!-- 전체 콘텐츠 -->
-<div class="container">
-    <div class="vinyl">
-        <img src="/image/vinyl.png" alt="레코드판 이미지">
-    </div>
-</div>
-
-<!-- 추천 친구 전체 박스는 container 밖에 full-width로 배치 -->
-<div class="recommend-wrapper">
-    <div class="recommend-inner">
-        <div class="friend-list" id="friend-list">
-            <!-- 친구 아이템이 JavaScript로 렌더링됨 -->
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="logo-wrap">
+            <img src="/image/logo2.png" class="logo" alt="로고">
         </div>
-        <div class="friend-actions">
-            <button id="refresh-button">새로고침 🔄</button>
-            <button id="request-button">이웃추가</button>
+        <div class="button-row">
+            <a th:href="@{/neighborlist}"><button class="btn">LIST 📁</button></a>
+            <button class="btn active">SEARCH 🔍</button>
+        </div>
+    </header>
+
+    <!-- 검색 띠 -->
+    <div class="search-band">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="검색어를 입력하세요" />
+            <a th:href="@{/search}"><button class="search-button">🔍</button></a>
         </div>
     </div>
-</div>
 
-<!-- ✅ 커스텀 알림창 -->
-<div id="custom-alert" class="alert hidden">
-    <div class="alert-box">
-        <p id="alert-message">이웃 추가 완료!</p>
-        <button id="alert-close">확인</button>
+    <!-- 레코드판 위 노란 배경 띠 -->
+    <div class="highlight-band"></div>
+
+    <!-- 전체 콘텐츠 -->
+    <div class="container">
+        <div class="vinyl">
+            <img src="/image/vinyl.png" alt="레코드판 이미지">
+        </div>
     </div>
-</div>
 
-<!-- ✅ JavaScript 연결 -->
-<script src="/js/friend.js"></script>
+    <!-- 추천 친구 전체 박스는 container 밖에 full-width로 배치 -->
+    <div class="recommend-wrapper">
+        <div class="recommend-inner">
+            <div class="friend-list" id="friend-list">
+                <!-- 친구 아이템이 JavaScript로 렌더링됨 -->
+            </div>
+            <div class="friend-actions">
+                <button id="refresh-button">새로고침 🔄</button>
+                <button id="request-button">이웃추가</button>
+            </div>
+        </div>
+    </div>
 
-<!-- ✅ 커스텀 알림창 스크립트 -->
-<script>
-    function showCustomAlert(message) {
-        document.getElementById("alert-message").textContent = message;
-        document.getElementById("custom-alert").classList.remove("hidden");
-    }
+    <!-- 커스텀 알림창 -->
+    <div id="custom-alert" class="alert hidden">
+        <div class="alert-box">
+            <p id="alert-message">이웃 추가 완료!</p>
+            <button id="alert-close">확인</button>
+        </div>
+    </div>
 
-    document.getElementById("alert-close").addEventListener("click", () => {
-        document.getElementById("custom-alert").classList.add("hidden");
-    });
-</script>
+    <!-- JavaScript 연결 -->
+    <script src="/js/friend.js"></script>
+
 
 </body>
 </html>

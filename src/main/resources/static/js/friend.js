@@ -71,3 +71,13 @@ document.getElementById("request-button").addEventListener("click", async () => 
         showCustomAlert("이웃 추가에 실패했습니다.");
     }
 });
+
+//커스텀 알림창
+function showCustomAlert(message) {
+    document.getElementById("alert-message").textContent = message;
+    document.getElementById("custom-alert").classList.remove("hidden");
+}
+
+document.getElementById("alert-close").addEventListener("click", () => {
+    document.getElementById("custom-alert").classList.add("hidden");
+});

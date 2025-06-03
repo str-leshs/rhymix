@@ -12,5 +12,5 @@ import java.util.List;
 public class NeighborDto {
     private String nickname;
     private String profileImage;
-    private List<String> genres;
+    private List<String> preferredGenres;
 }

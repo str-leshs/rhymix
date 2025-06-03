@@ -10,20 +10,20 @@ import java.util.List;
 @Component
 public class NeighborMapper {
 
-    /**
-     * 이웃 목록 조회 -> User 객체를 NeighborDto로 변환
-     */
+    //User → NeighborDto 변환 (장르 NPE 방지)
     public NeighborDto toDto(User user) {
+        List<String> genres = (user.getPreferredGenres() != null)
+                ? user.getPreferredGenres()
+                : List.of();
+
         return new NeighborDto(
                 user.getNickname(),
                 user.getProfileImage(),
-                user.getPreferredGenres()
+                genres
         );
     }
 
-    /**
-     * 이웃 추가 -> User 객체를 Neighbor.MyNeighbor로 변환
-     */
+    //User → Neighbor.MyNeighbor 변환 (이웃 단순 표시용)
     public Neighbor.MyNeighbor toSimple(User user) {
         return new Neighbor.MyNeighbor(
                 user.getNickname(),
