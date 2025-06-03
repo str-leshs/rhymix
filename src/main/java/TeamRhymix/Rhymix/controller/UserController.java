@@ -49,7 +49,20 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(saved));
     }
 
+    @ResponseBody
+    @GetMapping("/api/users/me")
+    public ResponseEntity<UserDto> getCurrentUser(@AuthenticationPrincipal UserDetails user) {
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
 
+        User entity = userService.getUserByNickname(user.getUsername());
+        if (entity == null) {
+            return ResponseEntity.status(404).build();
+        }
+
+        return ResponseEntity.ok(userMapper.toDto(entity));
+    }
 
 
     // ✅ 테마 저장 (Principal 기반으로 수정)

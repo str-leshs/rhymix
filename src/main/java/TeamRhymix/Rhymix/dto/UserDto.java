@@ -21,20 +21,4 @@ public class UserDto {
     private String profileImage;
     private List<String> preferredGenres;
     private String selectedTheme;
-
-    // 전체 필드 생성자
-    public UserDto(String username, String nickname, String email, String password,
-                   String confirmPassword, String phone, String bio,
-                   String profileImage, List<String> preferredGenres, String selectedTheme) {
-        this.username = username;
-        this.nickname = nickname;
-        this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.phone = phone;
-        this.bio = bio;
-        this.profileImage = profileImage;
-        this.preferredGenres = preferredGenres;
-        this.selectedTheme = selectedTheme;
-    }
 }

@@ -114,27 +114,27 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByNameAndEmail(name, email);
     }
 
-    @Override
-    public UserDto getUserDtoByUsername(String nickname) {
-        User user = getUserByNickname(nickname);
-
-        if (user == null) {
-            throw new RuntimeException("유저 정보를 찾을 수 없습니다.");
-        }
-
-        return new UserDto(
-                user.getUsername(),
-                user.getNickname(),
-                user.getEmail(),
-                null,
-                null,
-                user.getPhone(),
-                user.getBio(),
-                user.getProfileImage(),
-                user.getPreferredGenres(),
-                user.getSelectedTheme()
-        );
-    }
+//    @Override
+//    public UserDto getUserDtoByUsername(String nickname) {
+//        User user = getUserByNickname(nickname);
+//
+//        if (user == null) {
+//            throw new RuntimeException("유저 정보를 찾을 수 없습니다.");
+//        }
+//
+//        return new UserDto(
+//                user.getUsername(),
+//                user.getNickname(),
+//                user.getEmail(),
+//                null,
+//                null,
+//                user.getPhone(),
+//                user.getBio(),
+//                user.getProfileImage(),
+//                user.getPreferredGenres(),
+//                user.getSelectedTheme()
+//        );
+//    }
 
     @Override
     public List<NeighborDto> getAllNeighbors() {
