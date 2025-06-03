@@ -241,6 +241,7 @@ html,body {
 .music-title-box {
     background-color: var(--highlight); border-radius:0.8vw;
     padding:0.5vw;
+    margin-bottom: 0.5vw;
 
 }
 .music-artist-box {

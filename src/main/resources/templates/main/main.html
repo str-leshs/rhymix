@@ -59,17 +59,14 @@
             <!-- 오늘의 곡 -->
             <div class="music-pick" id="music-pick">
                 <div class="music-card">
-                    <div class="album-cover-wrapper">
-                        <img src="/image/placeholder_album.png" alt="앨범 커버" class="album-thumb" />
-                        <div class="album-cover-placeholder"></div>
-                    </div>
+                    <img src="/image/placeholder_album.png" alt="앨범 커버"/>
                     <div class="music-title-box"></div>
                     <div class="music-artist-box"></div>
-                    <div class="empty-box"></div>
                     <div class="mood-buttons">
                         <button id="weather-btn"></button>
                         <button id="mood-btn"></button>
                     </div>
+
                     <p class="mood-caption"></p>
                 </div>
             </div>
@@ -87,14 +84,17 @@
 
         <!-- 중앙 영역 -->
         <main class="center">
+            <!-- 달력 -->
             <div class="calendar-header-wrapper">
                 <button id="prev-btn" class="nav-btn">⏪</button>
                 <div id="calendar-title" class="calendar-title">2025년 5월</div>
                 <button id="next-btn" class="nav-btn">⏩</button>
             </div>
+
             <div class="calendar-section">
                 <div id="calendar"></div>
             </div>
+
             <div class="diary-section" id="diary-container">
                 <div class="today-post-box">
                     <input type="text" id="title-input" value="" />

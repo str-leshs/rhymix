@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadUserProfile(); // 이 안에서 applyThemeClass 실행됨
 
-    // ✅ 존재할 경우에만 추천곡 로드 시도
+    // 존재할 경우에만 추천곡 로드 시도
     fetch('/api/posts/today', { method: 'HEAD' })
         .then(res => {
             if (res.ok) {
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ✅ 사용자 테마 적용 함수
+// 사용자 테마 적용 함수
 function applyThemeClass(user) {
     const existing = [...document.body.classList].find(c => c.startsWith("theme-color"));
     if (existing) document.body.classList.remove(existing);
@@ -56,7 +56,7 @@ function applyThemeClass(user) {
     }
 }
 
-// ✅ 사용자 프로필 로딩 + 테마 반영
+// 사용자 프로필 로딩 + 테마 반영
 function loadUserProfile() {
     fetch('/api/auth/me')
         .then(res => res.json())
@@ -74,11 +74,12 @@ function loadUserProfile() {
                 tagList.appendChild(span);
             });
 
-            applyThemeClass(user); // ✅ 테마 클래스 적용
+            applyThemeClass(user); // 테마 적용
         });
 }
 
 
+// 오늘의 음악
 function loadTodayMusic(userId) {
     fetch('/api/posts/today')
         .then(res => {
@@ -88,39 +89,47 @@ function loadTodayMusic(userId) {
         .then(post => {
             const musicCard = document.querySelector('.music-card');
             const placeholder = document.getElementById('no-post-placeholder');
-
-            // 정상 데이터 → 카드 보여주고 placeholder 숨김
             musicCard.style.display = "block";
             if (placeholder) placeholder.style.display = "none";
 
-            document.querySelector('.music-card img').src = post.cover?.trim() || '/image/placeholder_album.png';
-            document.querySelector('.music-title-box').textContent = post.title ? `🎵 ${post.title}` : '🎵 music';
-            document.querySelector('.music-artist-box').textContent = post.artist ? `🎤 ${post.artist}` : '🎤 artist';
+            document.querySelector('.music-card img').src =
+                post.cover?.trim() || 'image/placeholder_album.png';
+
+            document.querySelector('.music-title-box').textContent =
+                post.title ? `🎵 ${post.title}` : '🎵 music';
+
+            document.querySelector('.music-artist-box').textContent =
+                post.artist ? `🎤 ${post.artist}` : '🎤 artist';
+
+            // mood와 weather는 이모지+텍스트로 저장되어 있으므로 그대로 출력
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
+
         })
-        .catch(() => {
+        .catch(err => {
+            // 추천곡이 없을 때 placeholder 표시
             const musicCard = document.querySelector('.music-card');
             const container = document.getElementById('music-pick');
+
             if (musicCard) musicCard.style.display = "none";
 
-            let placeholder = document.getElementById('no-post-placeholder');
-            if (!placeholder) {
-                placeholder = document.createElement('div');
+            if (!document.getElementById('no-post-placeholder')) {
+                const placeholder = document.createElement('div');
                 placeholder.id = 'no-post-placeholder';
-                placeholder.className = 'music-empty-box';
-                placeholder.innerHTML = `
-                    <img src="/image/placeholder_album.png" alt="기본 앨범 커버" class="cover-thumb" />
-                    <p class="empty-text">아직 오늘의 추천곡이 없습니다 🎵</p>
-                `;
+                placeholder.textContent = "아직 오늘의 추천곡을 등록하지 않았어요!";
+                placeholder.style.padding = "10px";
+                placeholder.style.textAlign = "center";
+                placeholder.style.fontSize = "14px";
+                placeholder.style.color = "#888";
                 container.appendChild(placeholder);
             } else {
-                placeholder.style.display = "block";
+                document.getElementById('no-post-placeholder').style.display = "block";
             }
         });
 }
 
 
+// 플레이리스트
 function loadPlaylist() {
     fetch(`/api/playlists/me`)
         .then(res => {
@@ -130,8 +139,10 @@ function loadPlaylist() {
         .then(playlist => {
             const title = playlist.title?.trim() || 'playlist.mix';
             document.getElementById('playlist-title').textContent = title;
+
             const list = document.getElementById('playlist-items');
             list.innerHTML = '';
+
             (playlist.tracks || []).forEach(track => {
                 const li = document.createElement('li');
                 li.textContent = `${track.title} – ${track.artist}`;
@@ -145,8 +156,9 @@ function loadPlaylist() {
         });
 }
 
-function loadComments() {
-    fetch(`/api/posts/today/comments`)
+// 댓글
+function loadComments(userId) {
+    fetch(`/api/posts/today/comments?userId=${userId}`)
         .then(res => res.json())
         .then(comments => {
             const commentList = document.getElementById('comment-list');
@@ -159,13 +171,14 @@ function loadComments() {
         });
 }
 
+// 댓글 작성
 function setupCommentSubmit(userId) {
     document.getElementById('comment-submit-btn').addEventListener('click', () => {
         const input = document.getElementById('comment-input');
         const text = input.value.trim();
         if (!text) return;
 
-        fetch(`/api/posts/today/comments`, {
+        fetch(`/api/posts/today/comments?userId=${userId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
@@ -173,22 +186,23 @@ function setupCommentSubmit(userId) {
             .then(res => {
                 if (res.ok) {
                     input.value = '';
-                    loadComments();
+                    loadComments(userId);
                 }
             });
     });
 }
 
+// 포스트 상세보기 모달
 function setupPostModal() {}
+// function openPostModal(postId) {
+//     fetch(`/api/posts/${postId}`)
+//         .then(res => res.json())
+//         .then(post => {
+//             alert(`📌 ${post.title} - ${post.artist}\n기분: ${post.mood}\n메모: ${post.comment}`);
+//         });
+// }
 
-function openPostModal(postId) {
-    fetch(`/api/posts/${postId}`)
-        .then(res => res.json())
-        .then(post => {
-            alert(`📌 ${post.title} - ${post.artist}\n기분: ${post.mood}\n메모: ${post.comment}`);
-        });
-}
-
+// 캘린더
 function setupCalendar(userId) {
     const calendarEl = document.getElementById('calendar');
     const titleEl = document.getElementById('calendar-title');
@@ -202,7 +216,7 @@ function setupCalendar(userId) {
         headerToolbar: false,
         fixedWeekCount: true,
         dayMaxEventRows: 1,
-        events: `/api/calendar/events?userId=${userId}`,
+        events: `/api/calendar/events?userId=${userId}`,    // 각 날짜별 추천곡 커버를 표시
         eventContent: function (arg) {
             const img = document.createElement('img');
             img.src = arg.event.extendedProps.cover;
@@ -241,37 +255,6 @@ function setupCalendar(userId) {
     prevBtn.addEventListener('click', () => calendar.prev());
     nextBtn.addEventListener('click', () => calendar.next());
 }
-
-function loadLatestPost() {
-    fetch('/api/posts/my-latest')
-        .then(res => {
-            if (!res.ok) throw new Error('최신 글 없음');
-            return res.json();
-        })
-        .then(post => {
-            const titleInput = document.getElementById('title-input');
-            const commentInput = document.getElementById('content-input');
-
-            console.log("🎯 받아온 post.title:", post.title);  // <- 디버깅용
-            console.log("🎯 받아온 post.comment:", post.comment);
-
-            if (titleInput) {
-                titleInput.value = post.title || '(제목 없음)';
-                console.log("✅ title.value:", titleInput.value);
-            }
-
-            if (commentInput) {
-                commentInput.innerText = post.comment || '(내용 없음)';
-                console.log("✅ comment.innerText:", commentInput.innerText);
-            }
-        })
-        .catch(err => {
-            console.log('글쓰기 입력란 불러오기 실패:', err);
-        });
-}
-
-
-
 
 
 function closeDetailModal() {
