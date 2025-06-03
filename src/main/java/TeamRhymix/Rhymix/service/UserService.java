@@ -2,8 +2,8 @@ package TeamRhymix.Rhymix.service;
 
 import TeamRhymix.Rhymix.domain.User;
 import java.util.List;
-import TeamRhymix.Rhymix.dto.UserDto;
-import TeamRhymix.Rhymix.dto.NeighborDto;
+
+import TeamRhymix.Rhymix.dto.DiaryDto;
 
 
 public interface UserService {
@@ -15,7 +15,10 @@ public interface UserService {
     boolean emailExists(String email);
     boolean updatePassword(String username, String newPassword);
     User authenticate(String nickname, String password); // 로그인 검증
-    boolean updateTheme(String username, String selectedTheme);
+    void updateTheme(String username, String selectedTheme);
     String getSelectedTheme(String username);
+    DiaryDto getDiary(String nickname);
+    void updateDiary(String nickname, DiaryDto diaryDto);
+
 }
 

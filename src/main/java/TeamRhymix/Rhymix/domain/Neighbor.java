@@ -25,7 +25,7 @@ public class Neighbor {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MyNeighbor {
+    public static class MyNeighbor {    // 이웃 관계(Neighbor) 안의 구성 요소로써 이웃 하나(MyNeighbor) 정의하기 위해 중첩클래스 사용했음
         private String nickname;
         private String profileImage;
     }

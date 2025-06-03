@@ -1,17 +1,19 @@
 package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.User;
-import TeamRhymix.Rhymix.dto.NeighborDto;
-import TeamRhymix.Rhymix.dto.UserDto;
+import TeamRhymix.Rhymix.dto.DiaryDto;
 import TeamRhymix.Rhymix.repository.UserRepository;
 import TeamRhymix.Rhymix.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public List<User> getAllUsers() {
@@ -82,20 +85,19 @@ public class UserServiceImpl implements UserService {
 
     // ✅ 사용자 테마 업데이트 (nickname 기준)
     @Override
-    public boolean updateTheme(String nickname, String selectedTheme) {
+    public void updateTheme(String nickname, String selectedTheme) {
         System.out.println("=== updateTheme 호출됨 ===");
         System.out.println("nickname = " + nickname + ", selectedTheme = " + selectedTheme);
 
         User user = userRepository.findByNickname(nickname);
         if (user == null) {
             System.out.println("❌ 사용자 없음: " + nickname);
-            return false;
+            return;
         }
 
         user.setSelectedTheme(selectedTheme);
         userRepository.save(user);
         System.out.println("✅ selectedTheme 저장 완료");
-        return true;
     }
 
     // ✅ 선택된 테마 조회
@@ -107,6 +109,32 @@ public class UserServiceImpl implements UserService {
         }
         return user.getSelectedTheme();
     }
+
+    @Override
+    public DiaryDto getDiary(String nickname) {
+        User user = mongoTemplate.findOne(
+                Query.query(Criteria.where("nickname").is(nickname)), User.class);
+        if (user == null) throw new RuntimeException("사용자 없음");
+
+        return new DiaryDto(
+                user.getNickname(),
+                user.getDiaryTitle(),
+                user.getDiaryContent(),
+                user.getDiaryImage()
+        );
+    }
+
+    @Override
+    public void updateDiary(String nickname, DiaryDto diaryDto) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
+        Update update = new Update()
+                .set("diaryTitle", diaryDto.getDiaryTitle())
+                .set("diaryContent", diaryDto.getDiaryContent())
+                .set("diaryImage", diaryDto.getDiaryImage());
+
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+
 
 
 }

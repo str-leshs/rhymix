@@ -1,6 +1,7 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.domain.User;
+import TeamRhymix.Rhymix.dto.DiaryDto;
 import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.dto.NeighborDto;
 import TeamRhymix.Rhymix.mapper.UserMapper;
@@ -180,5 +181,28 @@ public class UserController {
 
         model.addAttribute("user", user);
         return "mypage/view";
+    }
+
+    //사용자 다이어리 조회
+    @ResponseBody
+    @GetMapping("/api/users/me/diary")
+    public ResponseEntity<DiaryDto> getDiary(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) return ResponseEntity.status(401).build();
+
+        String nickname = userDetails.getUsername();
+        DiaryDto diary = userService.getDiary(nickname);
+        return ResponseEntity.ok(diary);
+    }
+
+    //사용자 다이어리 저장
+    @ResponseBody
+    @PostMapping("/api/users/me/diary")
+    public ResponseEntity<?> updateDiary(@AuthenticationPrincipal UserDetails userDetails,
+                                         @RequestBody DiaryDto diaryDto) {
+        if (userDetails == null) return ResponseEntity.status(401).body("로그인이 필요합니다.");
+
+        String nickname = userDetails.getUsername();
+        userService.updateDiary(nickname, diaryDto);
+        return ResponseEntity.ok("다이어리가 저장되었습니다.");
     }
 }

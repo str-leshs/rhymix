@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setupCommentSubmit(nickname);
             setupPostModal();
             setupCalendar(nickname);
-            loadLatestPost();
+            loadDiary();
         })
         .catch(err => {
             console.warn("🎵 추천곡 API 요청 실패:", err);
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setupCommentSubmit(nickname);
             setupPostModal();
             setupCalendar(nickname);
-            loadLatestPost();
+            loadDiary();
         });
 });
 
@@ -194,13 +194,6 @@ function setupCommentSubmit(userId) {
 
 // 포스트 상세보기 모달
 function setupPostModal() {}
-// function openPostModal(postId) {
-//     fetch(`/api/posts/${postId}`)
-//         .then(res => res.json())
-//         .then(post => {
-//             alert(`📌 ${post.title} - ${post.artist}\n기분: ${post.mood}\n메모: ${post.comment}`);
-//         });
-// }
 
 // 캘린더
 function setupCalendar(userId) {
@@ -255,6 +248,37 @@ function setupCalendar(userId) {
     prevBtn.addEventListener('click', () => calendar.prev());
     nextBtn.addEventListener('click', () => calendar.next());
 }
+
+//다이어리
+function loadDiary() {
+    fetch("/api/users/me/diary")
+        .then(res => {
+            console.log("다이어리 응답 상태:", res.status);
+            if (!res.ok) throw new Error("다이어리 없음");
+            return res.json();
+        })
+        .then(diary => {
+            console.log("📘 diary 로드:", diary);
+
+            document.getElementById("title-input").value = diary.diaryTitle || "";
+            document.getElementById("content-input").textContent = diary.diaryContent || "";
+
+            if (diary.diaryImage) {
+                const img = document.createElement("img");
+                img.src = diary.diaryImage;
+                img.alt = "다이어리 이미지";
+                img.style.width = "60%";
+                img.style.display = "block";
+                img.style.margin = "20px auto";
+                img.style.borderRadius = "12px";
+                const target = document.querySelector(".today-post-box");
+                target.appendChild(img);
+            }
+
+        })
+        .catch(err => console.error("다이어리 로드 실패:", err));
+}
+
 
 
 function closeDetailModal() {

@@ -27,5 +27,9 @@ public class User {
     private List<String> preferredGenres;
     private List<String> neighbors;
     private String selectedTheme;
+    private String diaryTitle;
+    private String diaryContent;
+    private String diaryImage;
+
 
 }
