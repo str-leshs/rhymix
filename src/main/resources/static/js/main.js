@@ -46,15 +46,16 @@ function applyThemeClass(user) {
     const existing = [...document.body.classList].find(c => c.startsWith("theme-color"));
     if (existing) document.body.classList.remove(existing);
 
-    const selected = user.selectedTheme;
-    if (selected) {
-
-        console.log("적용할 테마:", selected);
-        document.body.classList.add(`theme-${selected}`);
-    } else {
-        console.warn("선택된 테마가 없습니다. 기본 테마 유지.");
+    let selected = user.selectedTheme;
+    if (!selected || selected.trim() === "") {
+        console.warn("선택된 테마가 없습니다. 기본 테마 'color1' 적용.");
+        selected = "color1"; // 기본 테마 지정
     }
+
+    console.log("적용할 테마:", selected);
+    document.body.classList.add(`theme-${selected}`);
 }
+
 
 // 사용자 프로필 로딩 + 테마 반영
 function loadUserProfile() {
@@ -288,3 +289,4 @@ function closeDetailModal() {
 document.getElementById("logout-btn").addEventListener("click", () => {
     document.getElementById("logout-form").submit();
 });
+

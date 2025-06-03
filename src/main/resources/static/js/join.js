@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             if (res.ok) {
-                alert("환영합니다! 블로그 기본세팅을 위해 마이페이지로 이동합니다.");
-                window.location.href = "/my/profile";
+                alert("환영합니다! 로그인 후 블로그 기본세팅을 진행해주세요(마이페이지 -> 프로필 편집)");
+                window.location.href = "/login";
             } else {
                 const message = await res.text();
                 alert(`회원가입 실패: ${message}`);

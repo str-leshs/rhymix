@@ -34,16 +34,7 @@ function login() {
         });
 }
 
-// 5. 엔터 키로도 로그인 되도록 설정
-// ['nickname', 'password'].forEach(id => {
-//     document.getElementById(id).addEventListener('keypress', function (e) {
-//         if (e.key === 'Enter') {
-//             login();
-//         }
-//     });
-// });
-
-// 6. 커스텀 토스트 메시지 표시 함수
+// 5. 커스텀 토스트 메시지 표시 함수
 function showToast(message) {
     let toast = document.getElementById('toast');
     if (!toast) {
