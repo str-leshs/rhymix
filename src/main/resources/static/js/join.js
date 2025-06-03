@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (res.ok) {
                 alert("환영합니다! 블로그 기본세팅을 위해 마이페이지로 이동합니다.");
-                window.location.href = "/mypage/customize";
+                window.location.href = "/my/profile";
             } else {
                 const message = await res.text();
                 alert(`회원가입 실패: ${message}`);

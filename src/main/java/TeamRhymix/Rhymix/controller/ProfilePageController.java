@@ -30,8 +30,8 @@ public class ProfilePageController {
         //th:each="g : ${genres}" 형태로 HTML에서 반복 렌더링
         model.addAttribute("user", user);
         model.addAttribute("genres", List.of(
-                "K-POP", "R&B", "Dance", "발라드", "Jazz", "Rock",
-                "Classic", "트로트", "hiphop", "Pop", "J-POP", "OST", "라틴", "인디", "밴드"
+                "K-POP", "R&B", "Dance", "발라드", "jazz", "Rock",
+                "Classic", "트로트", "hiphop", "Pop", "J-POP", "OST", "라틴", "인디", "band"
         ));
         return "my/profile";
     }

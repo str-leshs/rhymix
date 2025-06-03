@@ -2,6 +2,8 @@ package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.DiaryDto;
+import TeamRhymix.Rhymix.dto.UserDto;
+import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.repository.UserRepository;
 import TeamRhymix.Rhymix.service.UserService;
 
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MongoTemplate mongoTemplate;
+    private final UserMapper userMapper;
 
     @Override
     public List<User> getAllUsers() {
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    // ✅ 사용자 테마 업데이트 (nickname 기준)
+    // 사용자 테마 업데이트 (nickname 기준)
     @Override
     public void updateTheme(String nickname, String selectedTheme) {
         System.out.println("=== updateTheme 호출됨 ===");
@@ -100,7 +103,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("✅ selectedTheme 저장 완료");
     }
 
-    // ✅ 선택된 테마 조회
+    // 선택된 테마 조회
     @Override
     public String getSelectedTheme(String username) {
         User user = userRepository.findByUsername(username);
@@ -109,6 +112,18 @@ public class UserServiceImpl implements UserService {
         }
         return user.getSelectedTheme();
     }
+
+    @Override
+    public void updateUserProfile(String nickname, UserDto userDto) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null) {
+            throw new RuntimeException("사용자를 찾을 수 없습니다.");
+        }
+
+        userMapper.updateFromDto(userDto, user);
+        userRepository.save(user);
+    }
+
 
     @Override
     public DiaryDto getDiary(String nickname) {

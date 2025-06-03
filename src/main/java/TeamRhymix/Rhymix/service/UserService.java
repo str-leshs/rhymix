@@ -4,6 +4,7 @@ import TeamRhymix.Rhymix.domain.User;
 import java.util.List;
 
 import TeamRhymix.Rhymix.dto.DiaryDto;
+import TeamRhymix.Rhymix.dto.UserDto;
 
 
 public interface UserService {
@@ -19,6 +20,8 @@ public interface UserService {
     String getSelectedTheme(String username);
     DiaryDto getDiary(String nickname);
     void updateDiary(String nickname, DiaryDto diaryDto);
+    void updateUserProfile(String nickname, UserDto userDto);
+
 
 }
 

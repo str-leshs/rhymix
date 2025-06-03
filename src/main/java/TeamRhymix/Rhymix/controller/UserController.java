@@ -65,8 +65,19 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toDto(entity));
     }
 
+    @ResponseBody
+    @PutMapping("/api/users/{nickname}")
+    public ResponseEntity<?> updateUserProfile(@PathVariable String nickname, @RequestBody UserDto userDto) {
+        try {
+            userService.updateUserProfile(nickname, userDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("프로필 업데이트 실패: " + e.getMessage());
+        }
+    }
 
-    // ✅ 테마 저장 (Principal 기반으로 수정)
+
+    // 테마 저장 (Principal 기반으로 수정)
     @ResponseBody
     @PostMapping("/api/users/me/theme")
     public ResponseEntity<?> updateTheme(@RequestBody Map<String, String> request, Principal principal) {
@@ -183,7 +194,7 @@ public class UserController {
         return "mypage/view";
     }
 
-    //사용자 다이어리 조회
+    //다이어리 조회
     @ResponseBody
     @GetMapping("/api/users/me/diary")
     public ResponseEntity<DiaryDto> getDiary(@AuthenticationPrincipal UserDetails userDetails) {
@@ -194,7 +205,7 @@ public class UserController {
         return ResponseEntity.ok(diary);
     }
 
-    //사용자 다이어리 저장
+    //다이어리 저장
     @ResponseBody
     @PostMapping("/api/users/me/diary")
     public ResponseEntity<?> updateDiary(@AuthenticationPrincipal UserDetails userDetails,

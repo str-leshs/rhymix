@@ -4,6 +4,7 @@ import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.UserDto;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Component
@@ -16,27 +17,50 @@ public class UserMapper {
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
         user.setJoinedAt(new Date());
-        user.setSelectedTheme(dto.getSelectedTheme()); // ✅ dto → entity로 테마 저장
+        if (dto.getSelectedTheme() == null || dto.getSelectedTheme().isBlank()) {
+            user.setSelectedTheme("yellow"); // 기본 테마
+        } else {
+            user.setSelectedTheme(dto.getSelectedTheme());
+        }
         return user;
     }
 
+//    public UserDto toDto(User user) {
+//        UserDto dto = new UserDto();
+//        dto.setUsername(user.getUsername());
+//        dto.setNickname(user.getNickname());
+//        dto.setEmail(user.getEmail());
+//        dto.setPhone(user.getPhone());
+//        dto.setBio(user.getBio());
+//        dto.setProfileImage(user.getProfileImage());
+//        dto.setPreferredGenres(user.getPreferredGenres());
+//
+//        dto.setSelectedTheme(user.getSelectedTheme()); // ✅ entity → dto로 테마 전달
+//
+//        dto.setPassword(null);          // 비밀번호 노출 방지
+//        dto.setConfirmPassword(null);   // 비밀번호 노출 방지
+//
+//        return dto;
+//    }
     public UserDto toDto(User user) {
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
         dto.setNickname(user.getNickname());
         dto.setEmail(user.getEmail());
-        dto.setPhone(user.getPhone());
-        dto.setBio(user.getBio());
-        dto.setProfileImage(user.getProfileImage());
-        dto.setPreferredGenres(user.getPreferredGenres());
+        dto.setPhone(user.getPhone() != null ? user.getPhone() : "");
+        dto.setBio(user.getBio() != null ? user.getBio() : "");
+        dto.setProfileImage(user.getProfileImage() != null ? user.getProfileImage() : "/img/default-profile.png");
+        dto.setPreferredGenres(user.getPreferredGenres() != null ? user.getPreferredGenres() : new ArrayList<>());
 
-        dto.setSelectedTheme(user.getSelectedTheme()); // ✅ entity → dto로 테마 전달
+        dto.setSelectedTheme(user.getSelectedTheme());
 
-        dto.setPassword(null);          // 비밀번호 노출 방지
-        dto.setConfirmPassword(null);   // 비밀번호 노출 방지
+        // 보안 상 노출 금지
+        dto.setPassword(null);
+        dto.setConfirmPassword(null);
 
         return dto;
     }
+
 
     public void updateFromDto(UserDto dto, User user) {
         // 이름, 아이디, 비밀번호는 수정하지 않음
@@ -45,6 +69,6 @@ public class UserMapper {
         user.setBio(dto.getBio());
         user.setProfileImage(dto.getProfileImage());
         user.setPreferredGenres(dto.getPreferredGenres());
-        user.setSelectedTheme(dto.getSelectedTheme()); // ✅ update 시 테마 반영
+        user.setSelectedTheme(dto.getSelectedTheme());
     }
 }

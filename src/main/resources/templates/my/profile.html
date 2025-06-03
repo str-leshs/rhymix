@@ -40,14 +40,18 @@
         </div>
 
         <label>전화번호</label>
+        <!-- 전화번호 -->
         <div class="phone-wrapper">
             <input type="text" maxlength="3" class="phone-input" id="phone1"
-                   th:value="${user.phone != null ? #strings.arraySplit(user.phone, '-')[0] : ''}" />
+                   th:value="${user.phone != null and #strings.contains(user.phone, '-') ? #strings.arraySplit(user.phone, '-')[0] : ''}" />
+
             <input type="text" maxlength="4" class="phone-input" id="phone2"
-                   th:value="${user.phone != null ? #strings.arraySplit(user.phone, '-')[1] : ''}" />
+                   th:value="${user.phone != null and #strings.contains(user.phone, '-') ? #strings.arraySplit(user.phone, '-')[1] : ''}" />
+
             <input type="text" maxlength="4" class="phone-input" id="phone3"
-                   th:value="${user.phone != null ? #strings.arraySplit(user.phone, '-')[2] : ''}" />
+                   th:value="${user.phone != null and #strings.contains(user.phone, '-') ? #strings.arraySplit(user.phone, '-')[2] : ''}" />
         </div>
+
 
         <label>이메일 주소</label>
         <input type="email" id="email" th:value="${user.email}" />
@@ -94,29 +98,6 @@
 <!-- 기존 JS 파일 -->
 <script th:src="@{/js/my.js}"></script>
 
-<!-- 추가한 모달 실행 스크립트 -->
-<script>
-    // 비밀번호 활성화 toggle
-    function togglePassword() {
-        const pw = document.getElementById('password');
-        pw.disabled = !pw.disabled;
-        if (!pw.disabled) pw.focus();
-    }
-
-    // 저장 버튼 클릭 시 모달 표시
-    document.querySelector('.save-btn').addEventListener('click', async () => {
-        // 여기에서 실제로 서버에 axios.put() 요청 보내는 로직이 있다면 그 후에 실행
-        Swal.fire({
-            icon: 'success',
-            title: '프로필 저장 완료!',
-            text: '변경 사항이 저장되었습니다.',
-            confirmButtonText: '확인',
-            confirmButtonColor: '#f2c94c',
-            background: '#fffde7',
-            color: '#5c4100'
-        });
-    });
-</script>
 
 </body>
 </html>
