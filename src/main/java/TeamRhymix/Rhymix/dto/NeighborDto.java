@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 
-
+//프론트에 전달할 이웃 DTO
 @Getter
 @Setter
 @AllArgsConstructor

@@ -153,55 +153,6 @@ public class UserController {
         return ResponseEntity.ok("비밀번호 변경 완료");
     }
 
-    @ResponseBody
-    @GetMapping("/api/neighbors")
-    public List<NeighborDto> getNeighbors() {
-        return userService.getAllNeighbors();
-    }
-
-    @ResponseBody
-    @GetMapping("/api/neighbors/genre")
-    public List<NeighborDto> getNeighborsByGenre(@RequestParam String genre) {
-        return userService.getNeighborsByGenre(genre);
-    }
-
-    @ResponseBody
-    @GetMapping("/api/recommend-neighbors")
-    public List<NeighborDto> getRecommendedNeighbors() {
-        return userService.getRecommendedUsers(5).stream()
-                .map(user -> new NeighborDto(
-                        user.getNickname(),
-                        user.getProfileImage(),
-                        user.getPreferredGenres() != null ? user.getPreferredGenres() : List.of()
-                ))
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/neighborlist")
-    public String getNeighborList(Model model, Principal principal) {
-        String username = principal.getName();
-        List<User> neighbors = userService.getNeighborList(username);
-
-        List<Map<String, String>> leftList = new ArrayList<>();
-        List<Map<String, String>> rightList = new ArrayList<>();
-
-        for (int i = 0; i < neighbors.size(); i++) {
-            User user = neighbors.get(i);
-            Map<String, String> info = new HashMap<>();
-            info.put("nickname", user.getNickname());
-            info.put("profileImage", user.getProfileImage());
-
-            if (i % 2 == 0) {
-                leftList.add(info);
-            } else {
-                rightList.add(info);
-            }
-        }
-
-        model.addAttribute("leftList", leftList);
-        model.addAttribute("rightList", rightList);
-        return "neighbor/neighborlist";
-    }
     @GetMapping("/customizing")
     public String showCustomizingPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername(); // ✅ 로그인 아이디

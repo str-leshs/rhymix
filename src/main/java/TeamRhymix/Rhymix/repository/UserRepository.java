@@ -64,14 +64,6 @@ public class UserRepository {
         return mongoTemplate.exists(query, User.class);
     }
 
-    // ✅ 이름 + 이메일로 사용자 찾기
-    public User findByNameAndEmail(String name, String email) {
-        Query query = new Query(
-                Criteria.where("name").is(name)
-                        .and("email").is(email)
-        );
-        return mongoTemplate.findOne(query, User.class);
-    }
 
 
 

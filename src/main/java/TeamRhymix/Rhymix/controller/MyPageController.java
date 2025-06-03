@@ -22,19 +22,16 @@ public class MyPageController {
      */
     @GetMapping("/mypage")
     public String showMyPage(Model model) {
-        // 현재 인증된 사용자 정보 가져오기
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // 인증되지 않았을 경우 로그인 페이지로 리다이렉트
         if (auth == null || !auth.isAuthenticated()
                 || auth.getPrincipal().equals("anonymousUser")) {
             return "redirect:/login";
         }
 
-        // 인증된 사용자의 nickname 기반으로 사용자 정보 조회
         if (auth.getPrincipal() instanceof UserDetails userDetails) {
             String nickname = userDetails.getUsername();
-            User user = userService.getUserByNickname(nickname); // UserService에서 사용자 정보 조회
+            User user = userService.getUserByNickname(nickname);
 
             if (user != null) {
                 model.addAttribute("nickname", user.getNickname());

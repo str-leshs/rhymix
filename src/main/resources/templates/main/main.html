@@ -48,7 +48,9 @@
                     <div class="bio-message" id="bio-message"></div>
                 </div>
                 <div class="profile-buttons">
+                    <a th:href="@{/mypage}">
                     <button id="mypage-btn">마이페이지</button>
+                    </a>
                     <button id="logout-btn">로그아웃</button>
                 </div>
                 <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
@@ -161,20 +163,7 @@
     </div>
 </div>
 
-<!-- 메인 JS -->
 <script src="/js/main.js"></script>
-
-<!-- 마이페이지 버튼 이벤트만 별도 -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const mypageBtn = document.getElementById("mypage-btn");
-        if (mypageBtn) {
-            mypageBtn.addEventListener("click", () => {
-                window.location.href = "/mypage";
-            });
-        }
-    });
-</script>
 
 </body>
 </html>

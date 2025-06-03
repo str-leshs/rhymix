@@ -79,9 +79,9 @@
       <div class="menu-box">
         <nav class="menu">
           <h3>📂 MENU 📂</h3>
-          <button id="post-btn" onclick="location.href='/today'">🎵 POST</button>
-          <button id="playlist-btn" onclick="location.href='/playlist'">🎼 PLAYLIST</button>
-          <a href="/mypage/neighborlist" class="menu-btn">🧑‍🤝‍🧑 NEIGHBOR</a>
+          <a th:href="@{/today}"><button id="post-btn">🎵 POST</button></a>
+          <a th:href="@{/playlist}"><button id="playlist-btn">🎼 PLAYLIST</button></a>
+          <a th:href="@{/neighborlist}"><button id="neighbor-btn">🧑‍🤝‍🧑 NEIGHBOR</button></a>
         </nav>
         <div class="search-box">
           <input type="text" id="search-input" placeholder="검색어를 입력하세요..." />
