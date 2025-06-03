@@ -74,4 +74,12 @@ public class NeighborServiceImpl implements NeighborService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void removeNeighbor(String ownerNickname, String targetNickname) {
+        Query query = new Query(Criteria.where("ownerNickname").is(ownerNickname));
+        Update update = new Update().pull("neighbors", targetNickname);
+        mongoTemplate.updateFirst(query, update, Neighbor.class);
+    }
+
+
 }

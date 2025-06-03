@@ -37,4 +37,12 @@ public class NeighborController {
         return ResponseEntity.ok(neighborService.getSuggestedNeighbors(nickname));
     }
 
+    @DeleteMapping("/remove")
+    public ResponseEntity<Void> removeNeighbor(@AuthenticationPrincipal UserDetails userDetails,
+                                               @RequestParam String targetNickname) {
+        String ownerNickname = userDetails.getUsername();
+        neighborService.removeNeighbor(ownerNickname, targetNickname);
+        return ResponseEntity.ok().build();
+    }
+
 }

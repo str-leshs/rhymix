@@ -13,6 +13,62 @@
             text-overflow: ellipsis;
             vertical-align: middle;
         }
+        .delete-btn {
+            margin-left: 10px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            background-color: #f55;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .alert {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* 어두운 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .alert.hidden {
+            display: none;
+        }
+
+        .alert-box {
+            background-color: #fff8cc;
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 2px solid #f2cc0f;
+        }
+
+        .alert .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .alert .buttons button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #confirm-cancel {
+            background-color: #ccc;
+            border: none;
+        }
+        #confirm-ok {
+            background-color: #f44336;
+            border: none;
+            color: white;
+        }
+
     </style>
 </head>
 <body>
@@ -53,6 +109,7 @@
                     <a th:href="@{'/mypage/' + ${neighbor.nickname}}">
                         <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
                     </a>
+                    <button class="delete-btn" th:data-nickname="${neighbor.nickname}">삭제</button>
                 </div>
             </div>
         </div>
@@ -67,11 +124,69 @@
                     <a th:href="@{'/mypage/' + ${neighbor.nickname}}">
                         <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
                     </a>
+                    <button type="button" class="delete-btn" th:data-nickname="${neighbor.nickname}">삭제</button>
                 </div>
             </div>
         </div>
 
+
     </section>
+
+    <div id="confirm-alert" class="alert hidden">
+        <div class="alert-box">
+            <p id="confirm-message"></p>
+            <div class="buttons">
+                <button type="button" id="confirm-cancel">취소</button>
+                <button type="button" id="confirm-ok">삭제</button>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<script>
+    let pendingDeleteNickname = null;
+
+    function showConfirmDelete(nickname) {
+        pendingDeleteNickname = nickname;
+        document.getElementById("confirm-message").textContent = `${nickname}님을 이웃목록에서 삭제하시겠습니까?`;
+        document.getElementById("confirm-alert").classList.remove("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // 삭제 버튼에 클릭 이벤트 연결
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const nickname = button.getAttribute("data-nickname");
+                showConfirmDelete(nickname);
+            });
+        });
+
+        // 삭제
+        document.getElementById("confirm-ok").addEventListener("click", async () => {
+            if (!pendingDeleteNickname) return;
+
+            try {
+                await fetch(`/api/neighbors/remove?targetNickname=${pendingDeleteNickname}`, {
+                    method: "DELETE"
+                });
+                location.reload();
+            } catch (error) {
+                console.error("삭제 실패:", error);
+                alert("이웃 삭제에 실패했습니다.");
+            }
+
+            document.getElementById("confirm-alert").classList.add("hidden");
+        });
+
+        // 취소
+        document.getElementById("confirm-cancel").addEventListener("click", () => {
+            document.getElementById("confirm-alert").classList.add("hidden");
+        });
+    });
+</script>
+
+
 </body>
 </html>
