@@ -20,7 +20,7 @@ function renderFriendList(friends) {
     container.innerHTML = "";
 
     friends.forEach((friend, index) => {
-        const genreTags = (friend.genres || [])
+        const genreTags = (friend.preferredGenres || [])
             .map(genre => `<span class="tag"># ${genre}</span>`)
             .join(' ');
 
@@ -38,6 +38,7 @@ function renderFriendList(friends) {
         `;
     });
 }
+
 
 // 새로고침
 document.getElementById("refresh-button").addEventListener("click", loadRecommendedFriends);

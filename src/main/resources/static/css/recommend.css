@@ -261,6 +261,8 @@
     left: 3px;
     line-height: 1.2;
 }
+
+/* ✅ 커스텀 알림창 */
 .alert {
     position: fixed;
     top: 0; left: 0;
@@ -299,4 +301,19 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+/* 장르 태그 */
+.tags {
+    display: flex;
+    gap: clamp(4px, 1vw, 8px);
+}
+
+.tag {
+    background-color: #FFF;
+    border-radius: clamp(8px, 2vw, 12px);
+    padding: clamp(2px, 0.5vw, 4px) clamp(6px, 1.5vw, 10px);
+    font-size: clamp(12px, 1.5vw, 13px);
+    font-weight: 500;
+}
+
 

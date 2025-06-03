@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class NeighborMapper {
 
-    //User → NeighborDto 변환 (장르 NPE 방지)
+    //User → NeighborDto 변환 (NullPointException 방지)
     public NeighborDto toDto(User user) {
         List<String> genres = (user.getPreferredGenres() != null)
                 ? user.getPreferredGenres()
