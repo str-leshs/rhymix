@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController // ✅ RestController로 변경 (ResponseEntity 자동 반환)
 @RequiredArgsConstructor
-public class BlogController {
+public class CustomController {
 
     private final UserService userService;
 

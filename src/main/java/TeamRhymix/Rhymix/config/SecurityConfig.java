@@ -23,8 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/image/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password", "/api/users/**").permitAll()
-                        .requestMatchers("/api/posts/**").permitAll() // ✅ 추가: posts API 인증 없이 허용
+                        .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password", "/api/users/**", "/api/posts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
