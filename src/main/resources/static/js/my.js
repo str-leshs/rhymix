@@ -4,7 +4,7 @@ const preview = document.getElementById('preview');
 
 document.getElementById('imageUpload').addEventListener('change', function () {
     const file = this.files[0];
-        if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = function (e) {
             preview.style.backgroundImage = `url('${e.target.result}')`;
@@ -41,10 +41,26 @@ document.querySelector('.save-btn').addEventListener('click', function (e) {
     axios.put(`/api/users/${nickname}`, {
         email, phone, bio, profileImage, preferredGenres
     }).then(() => {
-        alert("프로필이 저장되었습니다!");
-        window.location.href = "/main";
+        Swal.fire({
+            icon: 'success',
+            title: '프로필 저장 완료!',
+            text: '변경 사항이 저장되었습니다.',
+            confirmButtonText: '확인',
+            confirmButtonColor: '#f2c94c',
+            background: '#fffde7',
+            color: '#5c4100'
+        }).then(() => {
+            window.location.href = "/main"; // SweetAlert 확인 누르면 이동
+        });
     }).catch(err => {
         console.error("저장 실패:", err);
-        alert("저장 중 오류가 발생했습니다.");
+        Swal.fire({
+            icon: 'error',
+            title: '저장 실패!',
+            text: '프로필 저장 중 오류가 발생했습니다.',
+            confirmButtonColor: '#f2c94c',
+            background: '#fffde7',
+            color: '#5c4100'
+        });
     });
 });

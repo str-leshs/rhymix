@@ -1,75 +1,77 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>이웃 리스트</title>
-    <link rel="stylesheet" href="css/neighborlist.css">
+    <link rel="stylesheet" th:href="@{/css/neighborlist.css}">
+    <style>
+        .nickname {
+            display: inline-block;
+            max-width: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 헤더 -->
-    <header class="header">
-        <div class="logo-wrap">
-            <img src="/image/logo2.png" class="logo" alt="로고">
-        </div>
-
-        <div class="button-row">
-            <button class="btn active">LIST 📁</button>
-            <button class="btn">SEARCH 🔍</button>
-        </div>
-    </header>
-
-
-    <!-- 버튼 아래 배경 영역 -->
-    <div class="highlight-band"></div>
-
-    <div class="container">
-    <!-- 레코드판 이미지 -->
-    <div class="vinyl">
-        <img src="/image/vinyl.png" alt="레코드판 이미지">
+<!-- 헤더 -->
+<header class="header">
+    <div class="logo-wrap">
+        <a th:href="@{/main}">
+        <img th:src="@{/image/logo2.png}" class="logo" alt="로고" />
+        </a>
     </div>
 
-    <!-- templates/neighbor/neighborlist.html -->
+    <div class="button-row">
+        <button class="btn active">LIST 📁</button>
+        <a th:href="@{/recommend}"><button class="btn">SEARCH 🔍</button></a>
+    </div>
+</header>
+
+<div class="highlight-band"></div>
+
+<div class="container">
+
+    <!-- 레코드판 이미지 -->
+    <div class="vinyl">
+        <img th:src="@{/image/vinyl.png}" alt="레코드판 이미지" />
+    </div>
+
+    <!-- 이웃 리스트 -->
     <section class="neighbor-list">
+
+        <!-- 왼쪽 컬럼 -->
         <div class="neighbor-column">
             <div class="neighbor-inner-box">
-                <div class="neighbor-item" th:each="i : ${#numbers.sequence(0,8)}">
-                    <th:block th:if="${i < leftList.size()}">
-                        <img th:src="@{${leftList[i]['profileImage']}}" alt="프로필 이미지">
-                        <span th:text="${leftList[i]['nickname']}" class="nickname">닉네임</span>
-                    </th:block>
-                    <th:block th:unless="${i < leftList.size()}">
-                        <img src="/image/placeholder_circle.png" alt="프로필 이미지">
-                        <span class="nickname"></span>
-                    </th:block>
+                <div class="neighbor-item" th:each="neighbor : ${leftList}">
+                    <img th:src="${neighbor.profileImage}"
+                         alt="프로필 이미지"
+                         onerror="this.onerror=null; this.src='/image/placeholder_circle.png';" />
+                    <a th:href="@{'/mypage/' + ${neighbor.nickname}}">
+                        <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
+                    </a>
                 </div>
             </div>
         </div>
 
+        <!-- 오른쪽 컬럼 -->
         <div class="neighbor-column">
             <div class="neighbor-inner-box">
-                <div class="neighbor-item" th:each="i : ${#numbers.sequence(0,8)}">
-                    <th:block th:if="${i < rightList.size()}">
-                        <img th:src="@{${rightList[i]['profileImage']}}" alt="프로필 이미지">
-                        <span th:text="${rightList[i]['nickname']}" class="nickname">닉네임</span>
-                    </th:block>
-                    <th:block th:unless="${i < rightList.size()}">
-                        <img src="/image/placeholder_circle.png" alt="프로필 이미지">
-                        <span class="nickname"></span>
-                    </th:block>
+                <div class="neighbor-item" th:each="neighbor : ${rightList}">
+                    <img th:src="${neighbor.profileImage}"
+                         alt="프로필 이미지"
+                         onerror="this.onerror=null; this.src='/image/placeholder_circle.png';" />
+                    <a th:href="@{'/mypage/' + ${neighbor.nickname}}">
+                        <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
+                    </a>
                 </div>
             </div>
         </div>
+
     </section>
-
-
-
-
-
-
-
-
-
 </div>
 </body>
 </html>

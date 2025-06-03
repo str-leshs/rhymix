@@ -2,11 +2,15 @@
 * { box-sizing: border-box; margin:0; padding:0; }
 html,body {
     width:100%; height:100%;
-    background:#FFFCF3;
+    background-color: var(--background-wrap);
     font-family:'Inter',sans-serif;
-    color:#000;
+    color: var(--font-color);
 }
-
+/* 오늘 날짜 셀 강조 - 테마에 따라 색상 변경 */
+.fc .fc-day-today {
+    background-color: var(--calendar-today) !important;
+    transition: background-color 0.3s ease;
+}
 /* 컨테이너 */
 .container {
     display:flex; flex-direction:column;
@@ -23,7 +27,7 @@ html,body {
     position:absolute; top:50%; left:0;
     transform:translateY(-50%);
     width:100%; height:clamp(120px,12vw,180px);
-    background:#FCE38A;
+    background-color: var(--highlight);
     display:flex; align-items:center;
     padding-left:3vw; z-index:1;
 }
@@ -43,18 +47,14 @@ html,body {
     display:flex; gap:1vw; padding:1vw 0;
 }
 .sidebar.left,
-.center {
-    background:#FFF0C9;
+.center,
+.sidebar.right {
+    background-color: var(--menu-bg);
     flex-basis:0; flex-grow:1; min-width:0;
 }
 .sidebar.left { flex:1.5; }
 .center        { flex:5;   }
-
-.sidebar.right  {
-    background:#FFF0C9;
-    flex: 1.5 1 0;   /* grow=1.5, shrink=1, basis=0 */
-    min-width: 0;    /* 콘텐츠가 커도 이 이하로는 작아짐 */
-}
+.sidebar.right { flex:1.5; }
 
 /* 사이드바 박스 크기 */
 .sidebar.left > .profile-card,
@@ -85,6 +85,7 @@ html,body {
     min-width: 0;
     box-sizing: border-box;  /* padding 포함 */
     padding: 0.6vw 1vw;
+
 }
 
 /* 프로필 */
@@ -101,7 +102,7 @@ html,body {
     min-height: 2vw;         /* 높이 확보 */
     line-height: 3vw;        /* 텍스트 중앙 정렬 */
     text-align: center;
-    background: #FFF9E7;
+    background-color: var(--main-bg);
     border-radius: 2vw;
     margin-bottom: 1vw;
     font-weight: bold;
@@ -110,7 +111,7 @@ html,body {
 
 .profile-meta {
     font-family: 'Jua', cursive;
-    background:#FFF9E7; border-radius:1.5vw;
+    background-color: var(--main-bg); border-radius:1.5vw;
     padding:1vw; display:flex;
     flex-direction:column; align-items:center; gap:0.5vw;
 }
@@ -146,8 +147,8 @@ html,body {
     border-radius: 2vw;
     font-size: 1vw;
     font-weight: bold;
-    background: #FCE38A;
-    color: #000;
+    background-color: var(--highlight);
+    color: var(--font-color);
 }
 
 
@@ -167,8 +168,8 @@ html,body {
     border: none;
     border-radius: 1vw;
     cursor: pointer;
-    background-color: #FFD966;
-    color: #333;
+    background-color: var(--button);
+    color: var(--font-color);
     white-space: nowrap;
     text-align: center;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -178,14 +179,14 @@ html,body {
 
 /* 마이페이지 버튼 스타일 */
 #mypage-btn {
-    background-color: #FFD966;
+    background-color: var(--button);
     color: #333;
     font-weight: bold;
 }
 
 /* 마이페이지 호버 효과 */
 #mypage-btn:hover {
-    background-color: #FFC107;
+    background-color: var(--highlight);
     transform: translateY(-2px);
 }
 
@@ -203,8 +204,31 @@ html,body {
 
 
 /* 오늘의 곡 */
+.album-cover-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;  /* 정사각형 유지 */
+    background-color: #dcdcdc;
+    border-radius: 0.5vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1vw;
+    color: #888;
+}
+
+/* 실제 이미지가 있을 경우 placeholder를 숨김 */
+.album-cover {
+    width: 100%;
+    max-width: 220px;
+    display: block;
+    margin: 0 auto;
+}
+
+.album-cover[src=""] {
+    display: none;
+}
 .music-pick {
-    background:#FFF9E7; border-radius:1vw;
+    background-color: var(--main-bg); border-radius:1vw;
     padding:1vw; text-align:center;
 }
 .music-pick .music-card {
@@ -215,11 +239,12 @@ html,body {
     display:block; margin:0 auto 1vw;
 }
 .music-title-box {
-    background:#FDEDD0; border-radius:0.8vw;
+    background-color: var(--highlight); border-radius:0.8vw;
     padding:0.5vw;
+
 }
 .music-artist-box {
-    background:#FCE38A; border-radius:0.8vw;
+    background-color: var(--highlight); border-radius:0.8vw;
 }
 .music-card .music-title-box,
 .music-card .music-artist-box {
@@ -233,7 +258,7 @@ html,body {
     justify-content:center; margin-top:1vw;
 }
 .mood-buttons button {
-    background: #F9F1D6;
+    background-color: var(--menu-bg);
     border: none;
     cursor: pointer;
 
@@ -258,7 +283,7 @@ html,body {
     position: relative;
     padding: 1vw;
     padding-bottom: 6vw;
-    background: #FFF9E7;
+    background-color: var(--menu-bg);
     border-radius: 1vw;
 
     min-height: 25vw;
@@ -300,7 +325,7 @@ html,body {
 
     padding: 0;              /* 필요시 여백은 없애거나 아주 소량만 */
     border-radius: 0.4vw;    /* 둥근 모서리는 vw로 둬도 무방 */
-    background: #FFE08A;
+    background-color: var(--highlight);
     border: none;
     cursor: pointer;
 }
@@ -317,7 +342,7 @@ html,body {
     padding: 0.6vw;
 }
 #comment-submit-btn {
-    background:#FFE08A; border:none;
+    background-color: var(--highlight); border:none;
     border-radius:0.8vw; padding:0.5vw;
     cursor:pointer;
     flex: 0 0 auto;       /* 고정 크기 */
@@ -331,7 +356,7 @@ html,body {
     width: 100%;
     margin: 1vw auto;
     box-sizing: border-box;
-    background: #FEF8E5;
+    background-color: var(--main-bg);
     min-height: 40vw;
     border-radius: 1vw;
 }
@@ -342,18 +367,17 @@ html,body {
     width: 95%;
     margin: 1vw auto;
     box-sizing: border-box;
-    background: #FEF8E5;
+    background-color: var(--main-bg);
     min-height: 40vw;
     border-radius: 1vw;
 }
 /* 1) 항상 보이도록 width + 최소 높이 확보 */
-.diary-section .diary-title {
-    display: block;         /* 혹시 inline 요소였다면 block으로 */
-    width: 100%;            /* 부모(.diary-section) 폭만큼 */
-    min-height: 4vw;        /* 빈 상태에서도 높이 확보 */
-    box-sizing: border-box;
-
-    background: #FDE38A;
+/* 제목 스타일 */
+#title-input {
+    display: block;
+    width: 100%;
+    min-height: 4vw;
+    background-color: var(--highlight);
     border-radius: 1vw;
     padding: 0.8vw 1vw;
     margin-bottom: 1vw;
@@ -364,21 +388,32 @@ html,body {
     color: #000;
 }
 
-/* 2) 내용이 없을 때 플레이스홀더 텍스트 */
-.diary-section .diary-title:empty::before {
-    content: "📝 내 하루 일기";
+/* 내용 스타일 */
+#content-input {
     display: block;
-    color: #000;
-    opacity: 0.6;
+    width: 100%;
+    min-height: 20vw;
+    background-color: var(--main-bg);
+    border-radius: 1vw;
+    padding: 1vw;
+    font-family: 'Jua', sans-serif;
+    font-size: 1vw;
+    line-height: 1.6;
+    color: var(--font-color);
 }
+
 
 
 
 /* 우측 메뉴 */
 .menu-box {
-    background: #FFF9E7;
+    width: 100%;
+    margin: 0 auto 1.5vw;
+    background-color: var(--main-bg);
     border-radius: 1vw;
     padding: 2vw 1.5vw;
+    box-sizing: border-box;
+
 }
 .menu-box .menu h3 {
     font-family: 'Itim', cursive;
@@ -386,9 +421,9 @@ html,body {
     margin-bottom: 1vw;
 }
 .menu-box .menu button {
-    font-family: 'Itim', cursive;
     width: 100%;
-    background: rgba(252, 227, 138, 0.8);  /* 기본 노란색 계열 */
+    font-family: 'Itim', cursive;
+    background-color: var(--menu-bg);
     border: none;
     border-radius: 2vw;
     padding: 1vw;
@@ -400,7 +435,7 @@ html,body {
 
 /* ✅ 마우스 올렸을 때 */
 .menu-box .menu button:hover {
-    background-color: #FFD966; /* 더 진한 노란 느낌 */
+    background-color: var(--button);
     transform: translateY(-2px);
 }
 
@@ -412,10 +447,13 @@ html,body {
 
 /* ── 검색 카드 스타일 ── */
 .search-box {
-    background: #FFF9E7;
+    width: 100%;
+    background-color: var(--search-bg);
     border-radius: 1vw;
     padding: 0.5vw 1vw;  /* 위아래 패딩 줄여서 얇게 */
     position: relative;
+    margin-top: 1vw;
+    box-sizing: border-box;
 }
 
 /* 검색 input: 메뉴 버튼보다 약간 더 넓게 */
@@ -423,7 +461,7 @@ html,body {
     width: 100%;
     min-width: 0;
     padding: 0.5vw 1vw;  /* 위아래 패딩 얇게, 좌우는 충분히 */
-    font-size: 1vw;
+    font-size: 0.8vw;
     border: 1px solid #ccc;
     border-radius: 2vw;
     box-sizing: border-box;
@@ -432,6 +470,7 @@ html,body {
 /* 검색 아이콘 */
 .search-box .search-icon {
     position: absolute;
+    background-color: transparent;
     right: 1vw;
     top: 50%;
     transform: translateY(-50%);
@@ -443,7 +482,9 @@ html,body {
 
 /* 플레이리스트 */
 .playlist-preview {
-    background: #FFF7DD;
+    width: 85%;
+    margin: 0 auto 1.5vw;
+    background-color: var(--main-bg);
     border-radius: 1vw;
     padding: 1.5vw;
     min-height: 50vw;
@@ -451,16 +492,17 @@ html,body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+
 }
 
 .playlist-preview h4 {
     font-family: 'Jua', cursive;
     text-align: center;
     margin-bottom: 1vw;
-    background: #FCE38A;       /* 💡 제목 박스처럼 보이도록 */
+    background-color: var(--menu-bg);      /* 💡 제목 박스처럼 보이도록 */
     padding: 0.6vw 1vw;
     border-radius: 0.8vw;
-    font-size: 1.2vw;
+    font-size: 1.1vw;
 }
 
 .playlist-preview ul {
@@ -479,7 +521,7 @@ html,body {
 
 /* 푸터 */
 .footer {
-    background:#FFF0C9; padding:2vw;
+    background-color: var(--main-bg); padding:2vw;
 }
 .footer-inner {
     display:flex; flex-wrap:wrap;
@@ -624,6 +666,100 @@ html,body {
 
 .modal-close-btn:hover {
     color: #000;
+}
+:root {
+    --main-bg: #fff9e6;
+    --highlight: #ffe066;
+    --button: #ffeb99;
+    --font-color: #222;
+    --search-bg: #FFF9E7;
+    --border-color:#ffeb99;
+    --calendar-today: #fff2cc;
+}
+/* 예시 - color1 테마 */
+.theme-color1 {
+    --main-bg: #fff9e6;
+    --highlight: #ffe066;
+    --button: #ffeb99;
+    --font-color: #222;
+    --search-bg: #FFF9E7;
+    --background-wrap: #fffde6;
+    --calendar-today: #fff2cc;
+    --border-color:#ffe066;
+    --menu-bg:#ffeb99;
+    --menu-button-bg:#fff9e6;
+}
+
+/* 예시 - color2 테마 */
+.theme-color2 {
+    --main-bg: #fff1f1;
+    --highlight: #f3a6b3;
+    --button: #ff99aa;
+    --font-color: #222;
+    --search-bg: #ffeef2;
+    --background-wrap: #fff1f1;
+    --calendar-today: #ffd6e5;
+    --border-color:#ff99aa;
+    --menu-bg:#ffbfcf;
+    --menu-button-bg:#fff1f1;
+}
+.theme-color3 {
+    --main-bg: #f9fcf5;
+    --highlight: #d3e6c6;
+    --button: #c3d9b8;
+    --font-color: #222;
+    --search-bg: #f4f8ef;
+    --background-wrap: #f6faf2;
+    --calendar-today: #e8f1de;
+    --border-color: #c3d9b8;
+    --menu-bg: #edf5e7;
+    --menu-button-bg: #f9fcf5;
+}
+
+
+
+
+/* color4 - 하늘색 테마 */
+.theme-color4 {
+    --main-bg: #f0fbff;
+    --highlight: #b7ecff;
+    --button: #8dd8f7;
+    --font-color: #222;
+    --search-bg: #e6f8ff;
+    --background-wrap: #e0f7ff;
+    --calendar-today: #ccefff;
+    --border-color:#8dd8f7;
+    --menu-bg:#e0f7ff;
+    --menu-button-bg:#f0fbff;
+}
+
+/* color5 - 연보라 테마 */
+.theme-color5 {
+    --main-bg: #f9f6fd;
+    --highlight: #ddd0f5;
+    --button: #cbbbe9;
+    --font-color: #222;
+    --search-bg: #f2edf9;
+    --background-wrap: #f7f3fb;
+    --calendar-today: #e5daf4;
+    --border-color: #cbbbe9;
+    --menu-bg: #ece4f6;
+    --menu-button-bg: #f9f6fd;
+}
+
+
+/* color6 - 다크 그레이 테마 */
+.theme-color6 {
+    --main-bg: #eeeeee;
+    --highlight: #999999;
+    --button: #666666;
+    --font-color: #222;
+    --search-bg: #dddddd;
+    --background-wrap: #cccccc;
+    --calendar-today: #bbbbbb;
+    --border-color:#666666;
+    --menu-bg:#dddddd;
+    --menu-button-bg:#eeeeee;
 }
 
 

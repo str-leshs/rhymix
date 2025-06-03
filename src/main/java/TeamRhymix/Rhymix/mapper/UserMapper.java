@@ -16,6 +16,7 @@ public class UserMapper {
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
         user.setJoinedAt(new Date());
+        user.setSelectedTheme(dto.getSelectedTheme()); // ✅ dto → entity로 테마 저장
         return user;
     }
 
@@ -28,6 +29,8 @@ public class UserMapper {
         dto.setBio(user.getBio());
         dto.setProfileImage(user.getProfileImage());
         dto.setPreferredGenres(user.getPreferredGenres());
+
+        dto.setSelectedTheme(user.getSelectedTheme()); // ✅ entity → dto로 테마 전달
 
         dto.setPassword(null);          // 비밀번호 노출 방지
         dto.setConfirmPassword(null);   // 비밀번호 노출 방지
@@ -42,9 +45,6 @@ public class UserMapper {
         user.setBio(dto.getBio());
         user.setProfileImage(dto.getProfileImage());
         user.setPreferredGenres(dto.getPreferredGenres());
+        user.setSelectedTheme(dto.getSelectedTheme()); // ✅ update 시 테마 반영
     }
-
-
 }
-
-

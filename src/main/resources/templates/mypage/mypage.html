@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>마이페이지 | RHYMIX</title>
+
+  <!-- 구글 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet">
+
+  <!-- ✅ 스타일 -->
+  <link rel="stylesheet" th:href="@{/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/css/mypage.css}" />
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 헤더 -->
+  <header class="main-header">
+    <div class="yellow-box">
+      <div class="logo">RHYMIX</div>
+    </div>
+    <img class="lp-img" src="/image/LP_image.png" alt="LP 디스크"/>
+  </header>
+
+  <!-- 본문 -->
+  <div class="main-content">
+
+    <!-- 좌측 사이드바 -->
+    <aside class="sidebar left">
+      <div class="profile-card">
+        <div class="nickname-box" id="nickname-box">닉네임</div>
+        <img class="avatar" id="profile-image" src="/image/placeholder_circle.png" alt="프로필"/>
+        <div class="profile-meta">
+          <div class="tag-list" id="tag-list">#장르</div>
+          <div class="bio-message" id="bio-message">한줄소개</div>
+        </div>
+        <div class="profile-buttons">
+          <button id="mypage-btn">메인페이지</button>
+          <button id="logout-btn">로그아웃</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 중앙 콘텐츠 -->
+    <main class="center">
+      <section class="manage-area">
+
+        <!-- 계정 관리 카드 -->
+        <div class="manage-card">
+          <h3>계정 관리</h3>
+          <a th:href="@{/profile}" class="manage-link">
+            <div class="link-left">
+              <span class="emoji">📝</span>
+              <span>프로필 편집하기</span>
+            </div>
+            <div class="link-right">➔</div>
+          </a>
+        </div>
+
+        <!-- 블로그 관리 카드 -->
+        <div class="manage-card">
+          <h3>블로그 관리</h3>
+          <a th:href="@{/customizing}" class="manage-link">
+            <div class="link-left">
+              <span class="emoji">📒</span>
+              <span>블로그 꾸미기</span>
+            </div>
+            <div class="link-right">➔</div>
+          </a>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- 우측 사이드바 -->
+    <aside class="sidebar right">
+      <div class="menu-box">
+        <nav class="menu">
+          <h3>📂 MENU 📂</h3>
+          <button id="post-btn" onclick="location.href='/today'">🎵 POST</button>
+          <button id="playlist-btn" onclick="location.href='/playlist'">🎼 PLAYLIST</button>
+          <a href="/mypage/neighborlist" class="menu-btn">🧑‍🤝‍🧑 NEIGHBOR</a>
+        </nav>
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="검색어를 입력하세요..." />
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- 푸터 -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="/image/logo2.png" alt="로고" />
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <strong>회사</strong><br/>
+          <a href="#">상세정보</a><br/>
+          <a href="#">For the ReCord</a>
+        </div>
+        <div class="footer-column">
+          <strong>멤버</strong><br/>
+          <a href="#">개인정보 처리방침</a><br/>
+          <a href="#">안전 및 개인정보 보호센터</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 🔸 유저 정보 불러오기
+    fetch("/api/users/me")
+            .then((response) => {
+              if (!response.ok) throw new Error("사용자 정보를 불러오는 데 실패했습니다.");
+              return response.json();
+            })
+            .then((data) => {
+              // 닉네임
+              document.getElementById("nickname-box").textContent = data.nickname;
+
+              // 프로필 이미지
+              if (data.profileImage && data.profileImage.trim() !== "") {
+                document.getElementById("profile-image").src = data.profileImage;
+              }
+
+              // 한줄소개
+              document.getElementById("bio-message").textContent = data.bio || "";
+
+              // 선호 장르
+              const tagListEl = document.getElementById("tag-list");
+              tagListEl.innerHTML = "";
+              if (Array.isArray(data.preferredGenres)) {
+                data.preferredGenres.forEach((genre) => {
+                  const span = document.createElement("span");
+                  span.className = "tag";
+                  span.textContent = "#" + genre;
+                  tagListEl.appendChild(span);
+                });
+              }
+
+              console.log("✅ 유저 정보:", data);
+            })
+            .catch((error) => {
+              console.error("❌ 유저 정보 로딩 실패:", error);
+            });
+
+    // 🔸 메인페이지 이동
+    const homeBtn = document.getElementById("mypage-btn");
+    if (homeBtn) {
+      homeBtn.addEventListener("click", () => {
+        window.location.href = "/main";
+      });
+    }
+
+    // 🔸 로그아웃 처리
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        showToast("👋 로그아웃 되었습니다.");
+        setTimeout(() => {
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/logout";
+          document.body.appendChild(form);
+          form.submit();
+        }, 1500);
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

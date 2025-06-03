@@ -169,4 +169,26 @@ input[disabled] {
 }
 
 
+.swal2-popup {
+    background-color: #fffde7 !important;  /* 배경: 크림빛 노랑 */
+    color: #5c4100 !important;             /* 텍스트: 짙은 갈색 */
+    border-radius: 16px !important;
+    font-family: 'Jua', sans-serif;
+}
+
+.swal2-title,
+.swal2-html-container {
+    color: #5c4100 !important;
+}
+
+.swal2-confirm {
+    background-color: #f2c94c !important;  /* 버튼: 밝은 노랑 */
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: bold;
+}
+
+.swal2-confirm:hover {
+    background-color: #f1b900 !important;
+}
 

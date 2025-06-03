@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Customizing</title>
-    <link rel="stylesheet" href="/css/customizing.css">
-    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
-    <style>
-        @font-face {
-            font-family: '42dot Sans';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2204@1.0/42dotSans-Regular.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/customizing.css" />
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 
 </head>
+
 <body>
+<input type="hidden" id="hidden-username" th:value="${username}" />
+<input type="hidden" id="hidden-nickname" th:value="${nickname}" />
 <div class="container">
     <header class="customizing-header">
         <img src="/image/logo2.png" alt="로고" class="logo" />
@@ -27,154 +25,45 @@
     <section class="section theme">
         <h2>THEME</h2>
         <div class="theme-grid">
-            <div class="theme-box color1 selected">
-                <div class="top"></div>
-                <div class="bottom"></div>
-            </div>
-            <div class="theme-box color2">
-                <div class="top"></div>
-                <div class="bottom"></div>
-            </div>
-            <div class="theme-box color3">
-                <div class="top"></div>
-                <div class="bottom"></div>
-            </div>
-            <div class="theme-box color4">
-                <div class="top"></div>
-                <div class="bottom"></div>
-            </div>
-            <div class="theme-box color5">
-                <div class="top"></div>
-                <div class="bottom"></div>
-            </div>
-            <div class="theme-box color6">
-                <div class="top"></div>
-                <div class="bottom"></div>
-            </div>
+            <div class="theme-box color1 selected" data-theme="color1"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color2" data-theme="color2"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color3" data-theme="color3"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color4" data-theme="color4"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color5" data-theme="color5"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color6" data-theme="color6"><div class="top"></div><div class="bottom"></div></div>
         </div>
     </section>
-
 
     <section class="section font">
         <h2>FONT</h2>
         <div class="font-options">
-            <label class="font-jua">
-                <input type="radio" name="font" checked /> RHYMIX 리믹스
-            </label>
-            <label class="font-42dot">
-                <input type="radio" name="font" /> RHYMIX 리믹스
-            </label>
-            <label class="font-noto">
-                <input type="radio" name="font" /> RHYMIX 리믹스
-            </label>
+            <label class="font-jua"><input type="radio" name="font" value="jua" checked /> RHYMIX 리믹스</label>
+            <label class="font-leferi"><input type="radio" name="font" value="leferi" /> RHYMIX 리믹스</label>
+            <label class="font-noto"><input type="radio" name="font" value="noto" /> RHYMIX 리믹스</label>
         </div>
     </section>
-
 
     <section class="section write">
         <h2>WRITE</h2>
-
-        <!-- 제목 입력 -->
-        <label for="title-input" class="visually-hidden"></label>
         <input type="text" id="title-input" class="title-input" maxlength="30" placeholder="(제목을 입력하세요.)" />
         <span class="char-count" id="title-count">(0/30)</span>
-
-        <!-- 내용 입력 -->
         <div id="content-input" class="content-input" contenteditable="true" style="min-height: 300px;"></div>
-
         <span class="char-count" id="content-count">(0/300)</span>
 
-        <!-- 이미지 업로드 -->
         <div class="image-info">
             <input type="file" id="imageInput" accept="image/*" style="display: none;" />
-            <label for="imageInput" class="image-upload-btn">
-                📷 이미지 추가
-            </label>
+            <label for="imageInput" class="image-upload-btn">📷 이미지 추가</label>
             <span class="image-filename" id="imageFilename">선택된 파일 없음</span>
         </div>
-
-        <!-- 이미지 미리보기 -->
         <div id="imagePreviewContainer" style="margin-top: 2vw;"></div>
     </section>
 
-
-
-
-
     <footer class="footer">
-        <button class="save-btn">
-            💾SAVE
-        </button>
+        <button class="save-btn">💾 SAVE</button>
     </footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/customizing.js"></script>
 </body>
-<script>
-    document.querySelectorAll('.theme-box').forEach(box => {
-        box.addEventListener('click', () => {
-            document.querySelectorAll('.theme-box').forEach(b => b.classList.remove('selected'));
-            box.classList.add('selected');
-        });
-    });
-</script>
-
-
-<script>
-    const imageInput = document.getElementById('imageInput');
-    const imageFilename = document.getElementById('imageFilename');
-    const contentInput = document.getElementById('content-input'); // contenteditable div
-    const titleInput = document.querySelector('.title-input');
-    const titleCount = document.getElementById('title-count');
-    const contentCount = document.getElementById('content-count');
-
-    // 이미지 삽입
-    imageInput.addEventListener('change', function () {
-        if (imageInput.files.length > 0) {
-            const file = imageInput.files[0];
-            imageFilename.textContent = file.name;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = '첨부 이미지';
-                img.style.width = 'clamp(150px, 50%, 400px)';     // 최소 150px, 최대 400px, 기본 50%
-                img.style.height = 'auto';                        // 비율 유지
-                img.style.marginTop = '1vw';
-                img.style.borderRadius = '1vw';
-                img.style.display = 'block';
-                img.style.marginLeft = 'auto';
-                img.style.marginRight = 'auto';
-
-                const existingImg = contentInput.querySelector('img');
-                if (existingImg) existingImg.remove();
-
-                contentInput.appendChild(img);
-
-                const range = document.createRange();
-                const sel = window.getSelection();
-                range.setStart(contentInput, 0);  // 맨 앞 또는 원하는 위치로
-                range.collapse(true);             // 커서 이동
-                sel.removeAllRanges();
-                sel.addRange(range);
-
-            };
-            reader.readAsDataURL(file);
-        } else {
-            imageFilename.textContent = '선택된 파일 없음';
-        }
-    });
-
-    // 글자 수 카운트
-    titleInput.addEventListener('input', () => {
-        titleCount.textContent = `(${titleInput.value.length}/30)`;
-    });
-
-    contentInput.addEventListener('input', () => {
-        // textContent 기준 글자 수
-        contentCount.textContent = `(${contentInput.innerText.length}/300)`;
-    });
-</script>
-
-
-
 </html>
