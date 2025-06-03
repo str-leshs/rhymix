@@ -4,9 +4,7 @@ import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import TeamRhymix.Rhymix.dto.CommentDto;
 
 public interface PostService {
     /**
@@ -18,7 +16,6 @@ public interface PostService {
      * 특정 유저의 오늘의 추천곡을 조회
      */
     Post getTodayPost(String userId);
-    Post getLatestPost(String userId);
 
     /**
      * 특정 사용자가 등록한 모든 추천곡 조회
@@ -32,6 +29,4 @@ public interface PostService {
 
     List<Post> findPostsByUserAndMonth(String userId, LocalDate start, LocalDate end);
 
-    List<CommentDto> getCommentsForTodayPost(String nickname);
-    void addCommentToTodayPost(String nickname, String text);
 }

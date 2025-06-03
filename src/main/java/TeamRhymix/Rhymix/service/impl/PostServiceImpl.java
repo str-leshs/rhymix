@@ -1,8 +1,6 @@
 package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.Post;
-import TeamRhymix.Rhymix.domain.Post.Comment;
-import TeamRhymix.Rhymix.dto.CommentDto;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
 import TeamRhymix.Rhymix.repository.PostRepository;
@@ -76,46 +74,6 @@ public class PostServiceImpl implements PostService {
         query.addCriteria(Criteria.where("createdAt").gte(start).lt(end));
         query.with(Sort.by(Sort.Direction.ASC, "createdAt"));
         return mongoTemplate.find(query, Post.class);
-    }
-
-    @Override
-    public List<CommentDto> getCommentsForTodayPost(String userId) {
-        Post post = getTodayPost(userId);
-        List<CommentDto> dtoList = new ArrayList<>();
-
-        if (post != null && post.getComments() != null) {
-            for (Comment comment : post.getComments()) {
-                CommentDto dto = new CommentDto();
-                dto.setText(comment.getText());
-                dto.setUserNickname(comment.getUserNickname());
-                dto.setCreatedAt(comment.getCreatedAt());
-                dtoList.add(dto);
-            }
-        }
-
-        return dtoList;
-    }
-
-    @Override
-    public void addCommentToTodayPost(String userId, String text) {
-        Post post = getTodayPost(userId);
-        if (post != null) {
-            if (post.getComments() == null) {
-                post.setComments(new ArrayList<>());
-            }
-
-            Comment comment = new Comment();
-            comment.setText(text);
-            comment.setUserNickname(userId);
-            comment.setCreatedAt(LocalDateTime.now());
-
-            post.getComments().add(comment);
-            postRepository.save(post);
-        }
-    }
-    @Override
-    public Post getLatestPost(String userId) {
-        return postRepository.findTopByUserIdOrderByCreatedAtDesc(userId);
     }
 
 }
