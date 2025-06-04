@@ -40,11 +40,13 @@ public class PostServiceImpl implements PostService {
             existing.setMood(dto.getMood());
             existing.setWeather(dto.getWeather());
             existing.setComment(dto.getComment());
+            existing.setChats(dto.getChats());
             existing.setCreatedAt(LocalDateTime.now());
             return postRepository.save(existing);
         } else {
             Post newPost = postMapper.toEntity(dto);
             newPost.setComment(dto.getComment());
+            newPost.setChats(dto.getChats());
             newPost.setCreatedAt(LocalDateTime.now());
             return postRepository.save(newPost);
         }

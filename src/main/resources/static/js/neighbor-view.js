@@ -1,13 +1,24 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const pathParts = location.pathname.split('/');
-    const neighborId = pathParts[pathParts.length - 1]; // /neighbor/{nickname} 형태
+    const neighborId = pathParts[pathParts.length - 1]; // 이웃 닉네임
+
+    // 로그인한 사용자 닉네임 가져오기
+    let currentUserNickname = null;
+    try {
+        const res = await fetch('/api/users/me/nickname');
+        if (!res.ok) throw new Error('로그인 정보를 가져올 수 없습니다.');
+        currentUserNickname = await res.text();
+    } catch (e) {
+        console.warn('댓글 작성 불가: 로그인한 사용자 정보를 불러오지 못했습니다.');
+    }
 
     loadNeighborProfile(neighborId);
-    loadNeighborPost(neighborId);
+    loadNeighborPost(neighborId, currentUserNickname);
     loadNeighborDiary(neighborId);
     loadNeighborPlaylist(neighborId);
     setupNeighborCalendar(neighborId);
 });
+
 
 // 사용자 테마 적용 함수
 function applyThemeClass(user) {
@@ -17,14 +28,13 @@ function applyThemeClass(user) {
     let selected = user.selectedTheme;
     if (!selected || selected.trim() === "") {
         console.warn("선택된 테마가 없습니다. 기본 테마 'color1' 적용.");
-        selected = "color1"; // 기본 테마 지정
+        selected = "color1";
     }
 
     console.log("적용할 테마:", selected);
     document.body.classList.add(`theme-${selected}`);
 }
 
-// 1. 이웃 정보
 function loadNeighborProfile(nickname) {
     fetch(`/api/users/${nickname}`)
         .then(res => res.json())
@@ -40,13 +50,12 @@ function loadNeighborProfile(nickname) {
                 span.textContent = `#${tag}`;
                 tagList.appendChild(span);
             });
-
-            applyThemeClass(user); // 기존 main.js와 동일한 테마 적용 함수
+            applyThemeClass(user);
         });
 }
 
-// 2. 오늘의 곡
-function loadNeighborPost(nickname) {
+//이웃의 오늘의 추천곡
+function loadNeighborPost(nickname, currentUserNickname) {
     fetch(`/api/posts/today?nickname=${nickname}`)
         .then(res => res.json())
         .then(post => {
@@ -56,13 +65,54 @@ function loadNeighborPost(nickname) {
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
             document.querySelector('.mood-caption').textContent = post.comment || '';
+
+            loadNeighborChats(post.id);
+            setupChatForm(post.id, currentUserNickname);
         })
         .catch(() => {
-            document.querySelector('.music-card').innerHTML = "<p>오늘의 추천곡이 없습니다.</p>";
+            document.querySelector('.music-card').innerHTML = "<p>아직 오늘의 포스팅을 하지 않으셨어요!</p>";
         });
 }
+// 댓글 조회
+function loadNeighborChats(postId) {
+    fetch(`/api/posts/${postId}/chats`)
+        .then(res => res.json())
+        .then(chats => {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = '';
+            chats.forEach(chat => {
+                const li = document.createElement('li');
+                li.textContent = `${chat.userNickname}: ${chat.text}`;
+                list.appendChild(li);
+            });
+        })
+        .catch(err => console.error("댓글 불러오기 오류:", err));
+}
+// 댓글 작성
+function setupChatForm(postId, userNickname) {
+    const input = document.getElementById('chat-input');
+    const button = document.getElementById('chat-submit-btn');
 
-// 3. 일기
+    button.onclick = () => {
+        const text = input.value.trim();
+        if (!text || !userNickname) return;
+
+        fetch(`/api/posts/${postId}/chat`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userNickname: userNickname, //로그인 사용자한 사용자가 댓글을 다는 것임
+                text: text
+            })
+        })
+            .then(() => {
+                input.value = '';
+                loadNeighborChats(postId);
+            });
+    };
+}
+
+//이웃의 다이어리
 function loadNeighborDiary(nickname) {
     fetch(`/api/users/${nickname}/diary`)
         .then(res => res.json())
@@ -82,7 +132,7 @@ function loadNeighborDiary(nickname) {
         });
 }
 
-// 4. 전월 플레이리스트
+// 이웃의 전월 플레이리스트
 function loadNeighborPlaylist(nickname) {
     fetch(`/api/playlists/monthly?nickname=${nickname}`)
         .then(res => res.json())
@@ -98,7 +148,7 @@ function loadNeighborPlaylist(nickname) {
         });
 }
 
-// 5. 달력
+//이웃의 뮤직캘린더
 function setupNeighborCalendar(nickname) {
     const calendarEl = document.getElementById('calendar');
     const titleEl = document.getElementById('calendar-title');
@@ -128,7 +178,7 @@ function setupNeighborCalendar(nickname) {
         eventClick: async function (info) {
             const date = info.event.startStr;
             try {
-                const res = await fetch(`/api/calendar/date?userId=${nickname}&date=${date}`); // ✅ 수정
+                const res = await fetch(`/api/calendar/date?userId=${nickname}&date=${date}`);
                 if (!res.ok) return alert("추천곡을 불러올 수 없습니다.");
                 const data = await res.json();
 
@@ -151,4 +201,3 @@ function setupNeighborCalendar(nickname) {
     prevBtn.addEventListener('click', () => calendar.prev());
     nextBtn.addEventListener('click', () => calendar.next());
 }
-

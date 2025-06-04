@@ -1,6 +1,43 @@
+// document.addEventListener("DOMContentLoaded", () => {
+//     const nickname = document.getElementById('hidden-nickname')?.value;
+//
+//     if (!nickname) {
+//         alert("로그인이 필요합니다.");
+//         window.location.href = "/login";
+//         return;
+//     }
+//
+//     loadUserProfile(); // 이 안에서 applyThemeClass 실행됨
+//
+//     // 존재할 경우에만 추천곡 로드 시도
+//     fetch('/api/posts/today', { method: 'HEAD' })
+//         .then(res => {
+//             if (res.ok) {
+//                 loadTodayMusic(nickname);
+//             } else {
+//                 console.warn("🎵 추천곡 API 없음: loadTodayMusic 생략");
+//             }
+//
+//             loadUserProfile();
+//             loadTodayMusicAndComments(nickname);
+//             setupPostModal();
+//             setupCalendar(nickname);
+//             loadDiary();
+//         })
+//         .catch(err => {
+//             console.warn("🎵 추천곡 API 요청 실패:", err);
+//
+//             // 실패해도 나머지 로직 실행
+//             loadPlaylist(nickname);
+//             loadComments(nickname);
+//             setupCommentSubmit(nickname);
+//             setupPostModal();
+//             setupCalendar(nickname);
+//             loadDiary();
+//         });
+// });
 document.addEventListener("DOMContentLoaded", () => {
     const nickname = document.getElementById('hidden-nickname')?.value;
-    const username = document.getElementById('hidden-username')?.value;
 
     if (!nickname) {
         alert("로그인이 필요합니다.");
@@ -8,38 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    loadUserProfile(); // 이 안에서 applyThemeClass 실행됨
-
-    // 존재할 경우에만 추천곡 로드 시도
-    fetch('/api/posts/today', { method: 'HEAD' })
-        .then(res => {
-            if (res.ok) {
-                loadTodayMusic(nickname);
-            } else {
-                console.warn("🎵 추천곡 API 없음: loadTodayMusic 생략");
-            }
-
-            // 이 안에서 다른 함수 호출 (중첩된 then 블록 안)
-            loadPlaylist(nickname);
-            loadComments(nickname);
-            setupCommentSubmit(nickname);
-            setupPostModal();
-            setupCalendar(nickname);
-            loadDiary();
-        })
-        .catch(err => {
-            console.warn("🎵 추천곡 API 요청 실패:", err);
-
-            // 실패해도 나머지 로직 실행
-            loadPlaylist(nickname);
-            loadComments(nickname);
-            setupCommentSubmit(nickname);
-            setupPostModal();
-            setupCalendar(nickname);
-            loadDiary();
-        });
+    loadUserProfile();
+    loadTodayMusicAndComments(nickname);
+    loadPlaylist();
+    setupPostModal();
+    setupCalendar(nickname);
+    loadDiary();
 });
-
 
 // 사용자 테마 적용 함수
 function applyThemeClass(user) {
@@ -81,7 +93,7 @@ function loadUserProfile() {
 
 
 // 오늘의 음악
-function loadTodayMusic(userId) {
+function loadTodayMusicAndComments(nickname) {
     fetch('/api/posts/today')
         .then(res => {
             if (!res.ok) throw new Error("추천곡 없음");
@@ -89,31 +101,21 @@ function loadTodayMusic(userId) {
         })
         .then(post => {
             const musicCard = document.querySelector('.music-card');
-            const placeholder = document.getElementById('no-post-placeholder');
-            musicCard.style.display = "block";
-            if (placeholder) placeholder.style.display = "none";
-
-            document.querySelector('.music-card img').src =
-                post.cover?.trim() || 'image/placeholder_album.png';
-
-            document.querySelector('.music-title-box').textContent =
-                post.title ? `🎵 ${post.title}` : '🎵 music';
-
-            document.querySelector('.music-artist-box').textContent =
-                post.artist ? `🎤 ${post.artist}` : '🎤 artist';
-
-            // mood와 weather는 이모지+텍스트로 저장되어 있으므로 그대로 출력
+            document.querySelector('.music-card img').src = post.cover || '/image/placeholder_album.png';
+            document.querySelector('.music-title-box').textContent = `🎵 ${post.title}`;
+            document.querySelector('.music-artist-box').textContent = `🎤 ${post.artist}`;
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
+            musicCard.style.display = "block";
 
+            loadComments(post.id);
+            setupCommentSubmit(post.id, nickname);
         })
-        .catch(err => {
-            // 추천곡이 없을 때 placeholder 표시
+        .catch(() => {
             const musicCard = document.querySelector('.music-card');
+            musicCard.style.display = "none";
+
             const container = document.getElementById('music-pick');
-
-            if (musicCard) musicCard.style.display = "none";
-
             if (!document.getElementById('no-post-placeholder')) {
                 const placeholder = document.createElement('div');
                 placeholder.id = 'no-post-placeholder';
@@ -123,11 +125,10 @@ function loadTodayMusic(userId) {
                 placeholder.style.fontSize = "14px";
                 placeholder.style.color = "#888";
                 container.appendChild(placeholder);
-            } else {
-                document.getElementById('no-post-placeholder').style.display = "block";
             }
         });
 }
+
 
 
 // 플레이리스트
@@ -158,40 +159,46 @@ function loadPlaylist() {
 }
 
 // 댓글
-function loadComments(userId) {
-    fetch(`/api/posts/today/comments?userId=${userId}`)
+// 댓글 목록 조회
+function loadComments(postId) {
+    fetch(`/api/posts/${postId}/chats`)
         .then(res => res.json())
-        .then(comments => {
-            const commentList = document.getElementById('comment-list');
-            commentList.innerHTML = '';
-            (comments || []).forEach(c => {
+        .then(chats => {
+            const list = document.getElementById('comment-list');
+            list.innerHTML = '';
+            (chats || []).forEach(chat => {
                 const div = document.createElement('div');
-                div.textContent = `${c.userNickname || '익명'}: ${c.text}`;
-                commentList.appendChild(div);
+                div.textContent = `${chat.userNickname || '익명'}: ${chat.text}`;
+                list.appendChild(div);
             });
         });
 }
 
+
 // 댓글 작성
-function setupCommentSubmit(userId) {
-    document.getElementById('comment-submit-btn').addEventListener('click', () => {
-        const input = document.getElementById('comment-input');
+function setupCommentSubmit(postId, userNickname) {
+    const input = document.getElementById('comment-input');
+    const button = document.getElementById('comment-submit-btn');
+
+    if (!input || !button) return;
+
+    button.onclick = () => {
         const text = input.value.trim();
         if (!text) return;
 
-        fetch(`/api/posts/today/comments?userId=${userId}`, {
+        fetch(`/api/posts/${postId}/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-        })
-            .then(res => {
-                if (res.ok) {
-                    input.value = '';
-                    loadComments(userId);
-                }
-            });
-    });
+            body: JSON.stringify({ userNickname, text })
+        }).then(res => {
+            if (res.ok) {
+                input.value = '';
+                loadComments(postId);
+            }
+        });
+    };
 }
+
 
 // 포스트 상세보기 모달
 function setupPostModal() {}

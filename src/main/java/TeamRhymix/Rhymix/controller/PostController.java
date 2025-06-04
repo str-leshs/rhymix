@@ -1,5 +1,6 @@
 package TeamRhymix.Rhymix.controller;
 
+import TeamRhymix.Rhymix.domain.Chat;
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
@@ -7,11 +8,13 @@ import TeamRhymix.Rhymix.service.PostService;
 import TeamRhymix.Rhymix.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -20,6 +23,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final PostMapper postMapper;
+    private final MongoTemplate mongoTemplate;
 
     /**
      * 오늘의 추천곡 저장 API
@@ -78,6 +82,36 @@ public class PostController {
 
         return ResponseEntity.ok(dtos);
     }
+
+    @PostMapping("/{postId}/chat")
+    public ResponseEntity<?> addChatToPost(@PathVariable String postId,
+                                           @RequestBody Chat chat) {
+        // 현재 시간 추가
+        chat.setCreatedAt(LocalDateTime.now());
+
+        // 게시글 찾기
+        Post post = mongoTemplate.findById(postId, Post.class);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 댓글 추가 및 저장
+        post.getChats().add(chat);
+        mongoTemplate.save(post);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{postId}/chats")
+    public ResponseEntity<List<Chat>> getChatsForPost(@PathVariable String postId) {
+        Post post = mongoTemplate.findById(postId, Post.class);
+        if (post == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(post.getChats());
+    }
+
 
 
 }

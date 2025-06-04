@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,5 +26,7 @@ public class Post {
     private String mood;           // 기분
     private String comment;        // 코멘트
     private LocalDateTime createdAt;  // 등록 시간
+    private List<Chat> chats = new ArrayList<>(); // 댓글
+
 
 }

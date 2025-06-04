@@ -1,10 +1,12 @@
 package TeamRhymix.Rhymix.repository;
 
+import TeamRhymix.Rhymix.domain.Chat;
 import TeamRhymix.Rhymix.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -66,6 +68,18 @@ public class PostRepository {
         query.limit(1);
         return mongoTemplate.findOne(query, Post.class);
     }
+
+    /**
+     * 특정 Post에 댓글(Chat) 추가
+     * @param postId 댓글을 추가할 Post의 ID
+     * @param chat 추가할 댓글 객체
+     */
+    public void addChatToPost(String postId, Chat chat) {
+        Query query = new Query(Criteria.where("_id").is(postId));
+        Update update = new Update().push("chats", chat);
+        mongoTemplate.updateFirst(query, update, Post.class);
+    }
+
 
 
 

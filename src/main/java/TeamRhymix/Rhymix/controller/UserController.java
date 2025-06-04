@@ -64,6 +64,14 @@ public class UserController {
     }
 
     @ResponseBody
+    @GetMapping("/api/users/me/nickname")
+    public ResponseEntity<String> getCurrentUserNickname(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) return ResponseEntity.status(401).build();
+        return ResponseEntity.ok(userDetails.getUsername());
+    }
+
+
+    @ResponseBody
     @PutMapping("/api/users/{nickname}")
     public ResponseEntity<?> updateUserProfile(@PathVariable String nickname, @RequestBody UserDto userDto) {
         try {

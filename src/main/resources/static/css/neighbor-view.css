@@ -1,4 +1,4 @@
-@import url("/css/main.css"); /* 기존 메인 스타일 재사용 */
+@import url("main.css"); /* 기존 메인 스타일 재사용 */
 
 /* neighbor 페이지 전용 구분선 또는 강조 */
 .neighbor-label {
@@ -43,7 +43,65 @@
     color: var(--font-color);
 }
 
-/* 방문자의 댓글 작성 막기 (숨기기 또는 비활성화 선택 가능) */
-#comment-section .comment-input-box {
-    display: none;
+/* 댓글 섹션 */
+.comment-section {
+    background-color: var(--menu-bg);
+    padding: 1vw;
+    border-radius: 1vw;
+    margin-top: 1.5vw;
+    min-height: 20vw;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* 댓글 리스트 */
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1vw 0;
+    max-height: 15vw;
+    overflow-y: auto;
+    font-size: 1vw;
+}
+
+.chat-list li {
+    margin-bottom: 0.5vw;
+    padding: 0.6vw 1vw;
+    border-radius: 0.8vw;
+    background-color: var(--main-bg);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+    font-family: 'Jua', cursive;
+}
+
+/* 작성 영역 */
+.chat-input-box {
+    display: flex;
+    gap: 0.5vw;
+    align-items: center;
+    margin-top: 1vw;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 0.6vw;
+    border: 1px solid #ccc;
+    border-radius: 0.8vw;
+    font-size: 1vw;
+    font-family: 'Jua', cursive;
+    background-color: #fff;
+}
+
+#chat-submit-btn {
+    padding: 0.6vw 1.2vw;
+    font-size: 1vw;
+    font-family: 'Jua', cursive;
+    background-color: var(--highlight);
+    border: none;
+    border-radius: 0.8vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#chat-submit-btn:hover {
+    background-color: var(--button);
 }
