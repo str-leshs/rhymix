@@ -59,13 +59,6 @@
         </div>
     </div>
 
-    <div class="pagination">
-        <th:block th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-            <a th:href="@{/neighbor/search(page=${pageNum})}"
-               th:text="${pageNum}"
-               th:classappend="${currentPage == pageNum} ? 'active' : ''">1</a>
-        </th:block>
-    </div>
 
     <div id="custom-alert" class="alert hidden">
         <div class="alert-box">
