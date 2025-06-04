@@ -3,14 +3,12 @@ package TeamRhymix.Rhymix.controller;
 import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.DiaryDto;
 import TeamRhymix.Rhymix.dto.UserDto;
-import TeamRhymix.Rhymix.dto.NeighborDto;
 import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -191,7 +189,7 @@ public class UserController {
         }
 
         model.addAttribute("user", user);
-        return "mypage/view";
+        return "neighbor-view";
     }
 
     //다이어리 조회
@@ -216,4 +214,13 @@ public class UserController {
         userService.updateDiary(nickname, diaryDto);
         return ResponseEntity.ok("다이어리가 저장되었습니다.");
     }
+
+    //이웃의 다이어리 조회
+    @ResponseBody
+    @GetMapping("/api/users/{nickname}/diary")
+    public ResponseEntity<DiaryDto> getDiaryByNickname(@PathVariable String nickname) {
+        DiaryDto diary = userService.getDiary(nickname);
+        return ResponseEntity.ok(diary);
+    }
+
 }

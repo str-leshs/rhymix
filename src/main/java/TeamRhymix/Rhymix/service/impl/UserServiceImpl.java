@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,14 +33,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
+        return userRepository.findByNickname(nickname)
+                .orElse(null);
     }
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+                .orElse(null);
     }
-
 
     @Override
     public User createUser(User user) {
@@ -55,14 +56,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updatePassword(String username, String newPassword) {
-        Optional<User> optionalUser = userRepository.findOptionalByUsername(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            return true;
-        }
-        return false;
+        return userRepository.findByUsername(username)
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                    return true;
+                })
+                .orElse(false);
     }
 
     @Override
@@ -74,10 +74,8 @@ public class UserServiceImpl implements UserService {
         nickname = nickname.trim();
         rawPassword = rawPassword.trim();
 
-        User user = userRepository.findByNickname(nickname);
-        if (user == null) {
-            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
-        }
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
@@ -86,50 +84,37 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    // 사용자 테마 업데이트 (nickname 기준)
     @Override
     public void updateTheme(String nickname, String selectedTheme) {
         System.out.println("=== updateTheme 호출됨 ===");
         System.out.println("nickname = " + nickname + ", selectedTheme = " + selectedTheme);
 
-        User user = userRepository.findByNickname(nickname);
-        if (user == null) {
-            System.out.println("❌ 사용자 없음: " + nickname);
-            return;
-        }
-
-        user.setSelectedTheme(selectedTheme);
-        userRepository.save(user);
-        System.out.println("✅ selectedTheme 저장 완료");
+        userRepository.findByNickname(nickname).ifPresentOrElse(user -> {
+            user.setSelectedTheme(selectedTheme);
+            userRepository.save(user);
+            System.out.println("✅ selectedTheme 저장 완료");
+        }, () -> System.out.println("❌ 사용자 없음: " + nickname));
     }
 
-    // 선택된 테마 조회
     @Override
     public String getSelectedTheme(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다: " + username);
-        }
-        return user.getSelectedTheme();
+        return userRepository.findByUsername(username)
+                .map(User::getSelectedTheme)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다: " + username));
     }
 
     @Override
     public void updateUserProfile(String nickname, UserDto userDto) {
-        User user = userRepository.findByNickname(nickname);
-        if (user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다.");
-        }
-
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         userMapper.updateFromDto(userDto, user);
         userRepository.save(user);
     }
 
-
     @Override
     public DiaryDto getDiary(String nickname) {
-        User user = mongoTemplate.findOne(
-                Query.query(Criteria.where("nickname").is(nickname)), User.class);
-        if (user == null) throw new RuntimeException("사용자 없음");
+        User user = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         return new DiaryDto(
                 user.getNickname(),
@@ -149,7 +134,4 @@ public class UserServiceImpl implements UserService {
 
         mongoTemplate.updateFirst(query, update, User.class);
     }
-
-
-
 }

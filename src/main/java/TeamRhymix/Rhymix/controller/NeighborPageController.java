@@ -1,6 +1,7 @@
 package TeamRhymix.Rhymix.controller;
 
 import TeamRhymix.Rhymix.dto.NeighborDto;
+import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.service.NeighborService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
@@ -60,6 +62,13 @@ public class NeighborPageController {
         model.addAttribute("totalPages", resultPage.getTotalPages());
 
         return "neighbor/search";
+    }
+
+    @GetMapping("/mypage/neighbor-view/{nickname}")
+    public String viewNeighborPage(@PathVariable String nickname, Model model) {
+        UserDto user = neighborService.getNeighborProfile(nickname);
+        model.addAttribute("user", user);
+        return "mypage/neighbor-view";
     }
 
 

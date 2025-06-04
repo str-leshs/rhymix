@@ -36,16 +36,25 @@ public class PostController {
     }
 
     @GetMapping("/today")
-    public ResponseEntity<PostDto> getTodayPost(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(401).build();
+    public ResponseEntity<PostDto> getTodayPost(
+            @RequestParam(required = false) String nickname,
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails
+    ) {
+        if (nickname == null) {
+            if (userDetails == null) {
+                return ResponseEntity.status(401).build();
+            }
+            nickname = userDetails.getUsername(); // 본인 닉네임
         }
 
-        String nickname = userDetails.getUsername(); // nickname = username
         Post post = postService.getTodayPost(nickname);
 
-        return post != null ? ResponseEntity.ok(postMapper.toDto(post)) : ResponseEntity.notFound().build();
+        return post != null
+                ? ResponseEntity.ok(postMapper.toDto(post))
+                : ResponseEntity.notFound().build();
     }
+
+
 
     @GetMapping("/monthly")
     public ResponseEntity<List<PostDto>> getMonthlyPosts(

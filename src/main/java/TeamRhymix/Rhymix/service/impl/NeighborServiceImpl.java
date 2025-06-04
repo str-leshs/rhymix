@@ -5,6 +5,7 @@ import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.NeighborDto;
 import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.mapper.NeighborMapper;
+import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.NeighborService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ public class NeighborServiceImpl implements NeighborService {
 
     private final MongoTemplate mongoTemplate;
     private final NeighborMapper neighborMapper;
+    private final UserMapper userMapper;
 
     @Override
     public List<NeighborDto> getNeighbors(String ownerNickname) {
@@ -166,6 +168,17 @@ public class NeighborServiceImpl implements NeighborService {
         Query countQuery = new Query(criteria);
         return (int) mongoTemplate.count(countQuery, User.class);
     }
+
+    @Override
+    public UserDto getNeighborProfile(String nickname) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
+        User user = mongoTemplate.findOne(query, User.class);
+        if (user == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다: " + nickname);
+        }
+        return userMapper.toDto(user);
+    }
+
 
 
 }
