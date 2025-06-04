@@ -73,7 +73,7 @@
     font-family: 'Jua', cursive;
 }
 
-/* 작성 영역 */
+/* 댓글 작성 영역 */
 .chat-input-box {
     display: flex;
     gap: 0.5vw;

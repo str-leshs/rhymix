@@ -279,76 +279,80 @@ html,body {
 
 .mood-caption { margin-top:1vw; font-size:1vw; }
 
-/* 댓글 */
-#comment-section {
-    position: relative;
-    padding: 1vw;
-    padding-bottom: 6vw;
+/* 댓글 섹션 */
+.comment-section {
     background-color: var(--menu-bg);
+    padding: 1vw;
     border-radius: 1vw;
-
-    min-height: 25vw;
+    margin-top: 1.5vw;
+    min-height: 20vw;
     box-sizing: border-box;
+    position: relative;
 }
 
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1vw 0;
+    max-height: 15vw;
+    overflow-y: auto;
+    font-size: 1vw;
+    font-family: 'Jua', cursive;
+}
 
-.comment-list {
-    flex: 1 1 auto;
-    overflow-y: auto;  /* 스크롤이 필요하면 활성화 */
-}
-.comment-input-box {
-    position: absolute;
-    bottom: 1vw;             /* 부모 패딩 기준 아래에서 1vw 위 */
-    left: 1vw;               /* 부모 패딩 기준 왼쪽에서 1vw 안쪽 */
-    right: 1vw;              /* 부모 패딩 기준 오른쪽에서 1vw 안쪽 */
-    display: flex;
-    align-items: center;
-    gap: 0.5vw;
-}
-/* comment-input-box 안의 input 이 flex item 으로 축소될 수 있도록 */
-.comment-input-box input {
-    flex: 1 1 0;       /* grow=1, shrink=1, basis=0 */
-    min-width: 0;      /* overflow 방지 */
-    height: clamp(32px, 3vw, 40px);
-    padding: 0 0.8vw;
-    font-size: clamp(14px, 1vw, 16px);
+.chat-list li {
+    margin-bottom: 0.5vw;
+    padding: 0.6vw 1vw;
     border-radius: 0.8vw;
-    border: 1px solid #ccc;
+    background-color: var(--main-bg);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
 }
-.comment-input-box button {
+/* 댓글 작성 영역 */
+.chat-input-box {
     display: flex;
+    gap: 0.5vw;
     align-items: center;
-    justify-content: center;
+    margin-top: 1vw;
 
-    width: clamp(24px, 2vw, 32px);
-    height: clamp(24px, 2vw, 32px);
-    font-size: clamp(14px, 1vw, 16px);
+    width: 100%;  /* 왼쪽 사이드 영역 너비에 맞춤 */
+    max-width: 100%;  /* 넘치지 않게 */
+}
 
-    padding: 0;              /* 필요시 여백은 없애거나 아주 소량만 */
-    border-radius: 0.4vw;    /* 둥근 모서리는 vw로 둬도 무방 */
+/* 입력창 */
+#chat-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.4vw 0.8vw;
+    border: 1px solid #ccc;
+    border-radius: 0.8vw;
+    font-size: 0.9vw;
+    font-family: 'Jua', cursive;
+    background-color: #fff;
+}
+
+/* 확인 버튼 */
+#chat-submit-btn {
+    padding: 0.4vw 0.8vw;  /* 더 작게 */
+    font-size: 0.9vw;
+    font-family: 'Jua', cursive;
     background-color: var(--highlight);
     border: none;
+    border-radius: 0.8vw;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    flex-shrink: 0;     /* 줄어들지 않게 */
 }
 
-.comment-input-box button::before {
+/* ✅ 버튼 이모지 */
+#chat-submit-btn::before {
     content: "✅";
-    margin: 0;               /* 가운데 정렬에는 flex가 이미 적용됨 */
-    font-size: inherit;      /* 부모 폰트 크기를 그대로 */
 }
 
-#comment-input {
-    flex: 1;              /* 남은 공간 전부 차지 */
-    min-width: 0;         /* placeholder overflow 방지 */
-    padding: 0.6vw;
-}
-#comment-submit-btn {
-    background-color: var(--highlight); border:none;
-    border-radius:0.8vw; padding:0.5vw;
-    cursor:pointer;
-    flex: 0 0 auto;       /* 고정 크기 */
-    margin-left: 0.5vw;
-}
+
+
+
+
 
 /* 달력 */
 .calendar-section {

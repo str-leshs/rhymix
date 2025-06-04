@@ -164,12 +164,12 @@ function loadComments(postId) {
     fetch(`/api/posts/${postId}/chats`)
         .then(res => res.json())
         .then(chats => {
-            const list = document.getElementById('comment-list');
+            const list = document.getElementById('chat-list');
             list.innerHTML = '';
-            (chats || []).forEach(chat => {
-                const div = document.createElement('div');
-                div.textContent = `${chat.userNickname || '익명'}: ${chat.text}`;
-                list.appendChild(div);
+            chats.forEach(chat => {
+                const li = document.createElement('li');
+                li.textContent = `${chat.userNickname || '익명'}: ${chat.text}`;
+                list.appendChild(li);
             });
         });
 }
@@ -177,26 +177,24 @@ function loadComments(postId) {
 
 // 댓글 작성
 function setupCommentSubmit(postId, userNickname) {
-    const input = document.getElementById('comment-input');
-    const button = document.getElementById('comment-submit-btn');
+    const input = document.getElementById('chat-input');
+    const button = document.getElementById('chat-submit-btn');
 
-    if (!input || !button) return;
-
-    button.onclick = () => {
+    button.addEventListener('click', () => {
         const text = input.value.trim();
         if (!text) return;
 
         fetch(`/api/posts/${postId}/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userNickname, text })
+            body: JSON.stringify({ text, userNickname })
         }).then(res => {
             if (res.ok) {
                 input.value = '';
                 loadComments(postId);
             }
         });
-    };
+    });
 }
 
 
