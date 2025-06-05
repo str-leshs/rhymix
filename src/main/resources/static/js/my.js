@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         input.addEventListener('input', validatePhoneAndToggleSave);
     });
 
-    validatePhoneAndToggleSave(); // 페이지 로드 시 한 번 실행
+    validatePhoneAndToggleSave();
 
     // 저장 버튼 클릭 이벤트
     saveBtn.addEventListener('click', function () {
@@ -60,8 +60,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(g => g !== '선택')
             .map(g => g.toLowerCase().replace(/[\s\-]/g, ''));
 
+        const selectedTheme = document.getElementById('selectedTheme')?.value || 'color1';
+
         axios.put(`/api/users/${nickname}`, {
-            email, phone, bio, profileImage, preferredGenres
+            email, phone, bio, profileImage, preferredGenres, selectedTheme
         }).then(() => {
             Swal.fire({
                 icon: 'success',

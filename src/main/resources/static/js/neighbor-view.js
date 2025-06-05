@@ -39,7 +39,7 @@ function loadNeighborProfile(nickname) {
     fetch(`/api/users/${nickname}`)
         .then(res => res.json())
         .then(user => {
-            document.getElementById('nickname-box').textContent = user.nickname || '...';
+            document.getElementById('nickname-box').textContent ='@'+ user.nickname || '...';
             document.getElementById('profile-image').src = user.profileImage || '/image/placeholder_circle.png';
             document.getElementById('bio-message').textContent = user.bio || '';
             const tagList = document.getElementById('tag-list');
@@ -65,6 +65,7 @@ function loadNeighborPost(nickname, currentUserNickname) {
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
             document.querySelector('.mood-caption').textContent = post.comment || '';
+            document.getElementById('music-comment').textContent = post.comment || '';
 
             loadNeighborChats(post.id);
             setupChatForm(post.id, currentUserNickname);

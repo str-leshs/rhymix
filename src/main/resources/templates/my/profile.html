@@ -59,8 +59,9 @@
         <label>상태 메시지</label>
         <input type="text" id="bio" th:value="${user.bio}" />
 
-        <label>블로그 이름</label>
-        <input type="text" id="blogName" th:value="${user.username}" readonly />
+<!--        <label>블로그 이름</label>-->
+<!--        <input type="text" id="blogName" th:value="${user.username}" readonly />-->
+        <input type="hidden" id="selectedTheme" th:value="${user.selectedTheme}" />
 
         <label>비밀번호</label>
         <div class="password-wrapper">

@@ -1,41 +1,3 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     const nickname = document.getElementById('hidden-nickname')?.value;
-//
-//     if (!nickname) {
-//         alert("로그인이 필요합니다.");
-//         window.location.href = "/login";
-//         return;
-//     }
-//
-//     loadUserProfile(); // 이 안에서 applyThemeClass 실행됨
-//
-//     // 존재할 경우에만 추천곡 로드 시도
-//     fetch('/api/posts/today', { method: 'HEAD' })
-//         .then(res => {
-//             if (res.ok) {
-//                 loadTodayMusic(nickname);
-//             } else {
-//                 console.warn("🎵 추천곡 API 없음: loadTodayMusic 생략");
-//             }
-//
-//             loadUserProfile();
-//             loadTodayMusicAndComments(nickname);
-//             setupPostModal();
-//             setupCalendar(nickname);
-//             loadDiary();
-//         })
-//         .catch(err => {
-//             console.warn("🎵 추천곡 API 요청 실패:", err);
-//
-//             // 실패해도 나머지 로직 실행
-//             loadPlaylist(nickname);
-//             loadComments(nickname);
-//             setupCommentSubmit(nickname);
-//             setupPostModal();
-//             setupCalendar(nickname);
-//             loadDiary();
-//         });
-// });
 document.addEventListener("DOMContentLoaded", () => {
     const nickname = document.getElementById('hidden-nickname')?.value;
 
@@ -74,7 +36,7 @@ function loadUserProfile() {
     fetch('/api/auth/me')
         .then(res => res.json())
         .then(user => {
-            document.getElementById('nickname-box').textContent = user.nickname || '@...';
+            document.getElementById('nickname-box').textContent ='@'+ user.nickname || '@...';
             document.getElementById('profile-image').src = user.profileImage || '/image/placeholder_circle.png';
             document.getElementById('bio-message').textContent = user.bio || '블로그 방문을 환영합니다!';
 
@@ -106,6 +68,7 @@ function loadTodayMusicAndComments(nickname) {
             document.querySelector('.music-artist-box').textContent = `🎤 ${post.artist}`;
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
+            document.getElementById('music-comment').textContent = post.comment || '';
             musicCard.style.display = "block";
 
             loadComments(post.id);
