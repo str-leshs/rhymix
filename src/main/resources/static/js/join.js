@@ -30,8 +30,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 아이디 중복 확인
     checkButton.addEventListener("click", async function () {
-        const nickname = usernameInput.value.trim(); // nickname = 로그인용 ID
-        if (!nickname) return alert("아이디를 입력해주세요.");
+        const nickname = usernameInput.value.trim();
+
+        if (!nickname) {
+            alert("아이디를 입력해주세요.");
+            return;
+        }
+
+        if (!isValidNickname(nickname)) {
+            alert("아이디는 영문자와 숫자만 입력 가능합니다.");
+            return;
+        }
 
         try {
             const res = await fetch(`/api/users/${nickname}`);
@@ -47,6 +56,25 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("중복 확인 중 오류가 발생했습니다.");
         }
     });
+
+
+    // 아이디 입력값 유효 검증
+    function isValidNickname(nickname) {
+        return /^[a-zA-Z0-9]+$/.test(nickname); // 영문 대소문자 + 숫자만 허용도록
+    }
+
+    const usernameError = document.getElementById("usernameError");
+
+    usernameInput.addEventListener("input", function () {
+        const value = usernameInput.value.trim();
+        if (value && !isValidNickname(value)) {
+            usernameError.style.display = "block";
+            usernameInput.classList.remove("valid");
+        } else {
+            usernameError.style.display = "none";
+        }
+    });
+
 
     // 비밀번호 일치 여부 확인
     function checkPasswordMatch() {
