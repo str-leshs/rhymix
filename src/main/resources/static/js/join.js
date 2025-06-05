@@ -22,11 +22,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
     if (!form) return;
 
-    const usernameInput = document.getElementById("username"); // 로그인용 아이디
-    const checkButton = document.querySelector(".check-button");
+    const usernameInput = document.getElementById("username"); // 아이디
+    const emailInput = document.getElementById("email");
     const password = document.getElementById("password");
     const passwordConfirm = document.getElementById("passwordConfirm");
-    const errorText = document.getElementById("passwordError");
+
+    const checkButton = document.querySelector(".check-button");
+
+    const usernameError = document.getElementById("usernameError");
+    const passwordError = document.getElementById("passwordError");
+    const emailError = document.getElementById("emailError");
+
+    // 아이디 유효성 검사
+    function isValidNickname(nickname) {
+        return /^[a-zA-Z0-9]+$/.test(nickname);
+    }
+
+    // 이메일 유효성 검사
+    function isValidEmail(email) {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+    }
 
     // 아이디 중복 확인
     checkButton.addEventListener("click", async function () {
@@ -57,14 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-    // 아이디 입력값 유효 검증
-    function isValidNickname(nickname) {
-        return /^[a-zA-Z0-9]+$/.test(nickname); // 영문 대소문자 + 숫자만 허용도록
-    }
-
-    const usernameError = document.getElementById("usernameError");
-
+    // 아이디 입력 시 유효성 메시지 표시
     usernameInput.addEventListener("input", function () {
         const value = usernameInput.value.trim();
         if (value && !isValidNickname(value)) {
@@ -75,25 +84,39 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // 이메일 입력 시 유효성 메시지 표시
+    emailInput.addEventListener("input", function () {
+        if (emailInput.value.trim() && !isValidEmail(emailInput.value.trim())) {
+            emailError.style.display = "block";
+        } else {
+            emailError.style.display = "none";
+        }
+    });
 
-    // 비밀번호 일치 여부 확인
+    // 비밀번호 일치 확인
     function checkPasswordMatch() {
         if (password.value && passwordConfirm.value) {
-            errorText.style.display = (password.value !== passwordConfirm.value) ? "block" : "none";
+            passwordError.style.display = (password.value !== passwordConfirm.value) ? "block" : "none";
         } else {
-            errorText.style.display = "none";
+            passwordError.style.display = "none";
         }
     }
 
     password.addEventListener("input", checkPasswordMatch);
     passwordConfirm.addEventListener("input", checkPasswordMatch);
 
-    // 폼 제출 시 회원가입 처리
+    // 폼 제출 처리
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         if (!usernameInput.classList.contains("valid")) {
             alert("아이디 중복 확인을 해주세요.");
+            return;
+        }
+
+        if (!isValidEmail(emailInput.value.trim())) {
+            emailError.style.display = "block";
+            alert("이메일 형식을 확인해주세요.");
             return;
         }
 
@@ -103,9 +126,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const data = {
-            username: document.getElementById("name").value,   // 사용자 실명
-            nickname: usernameInput.value,                     // 로그인용 ID
-            email: document.getElementById("email").value,
+            username: document.getElementById("name").value,
+            nickname: usernameInput.value,
+            email: emailInput.value,
             password: password.value,
             confirmPassword: passwordConfirm.value
         };
@@ -118,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             if (res.ok) {
-                alert("환영합니다! 로그인 후 블로그 기본세팅을 진행해주세요(마이페이지 -> 프로필 편집)");
+                alert("환영합니다! 로그인 후 블로그 기본세팅을 진행해주세요(마이페이지 → 프로필 편집)");
                 window.location.href = "/login";
             } else {
                 const message = await res.text();
@@ -130,3 +153,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
