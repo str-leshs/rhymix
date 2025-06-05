@@ -1,5 +1,11 @@
 @import url("main.css"); /* 기존 메인 스타일 재사용 */
 
+/* neighbor-view.css */
+.logo {
+    font-family: 'Modak', cursive;
+    font-size: clamp(2rem, 6vw, 80px);
+}
+
 /* neighbor 페이지 전용 구분선 또는 강조 */
 .neighbor-label {
     font-family: 'Jua', cursive;
