@@ -108,7 +108,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         userMapper.updateFromDto(userDto, user);
+
+        // 장르 정규화 적용
+        if (userDto.getPreferredGenres() != null && !userDto.getPreferredGenres().isEmpty()) {
+            List<String> normalizedGenres = normalizeGenres(userDto.getPreferredGenres());
+            user.setPreferredGenres(normalizedGenres);
+        }
         userRepository.save(user);
+    }
+    //DB 장르 저장 시 정규화
+    private List<String> normalizeGenres(List<String> genres) {
+        return genres.stream()
+                .filter(g -> g != null && !g.isBlank())
+                .map(g -> g.toLowerCase().replace("-", "").replace(" ", ""))
+                .distinct()
+                .toList();
     }
 
     @Override

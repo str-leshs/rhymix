@@ -21,4 +21,14 @@ public class UserDto {
     private String profileImage;
     private List<String> preferredGenres;
     private String selectedTheme;
+
+    //장르 정규화: 모두 소문자화, 공백/하이픈 제거
+    public void normalizeGenres() {
+        if (preferredGenres != null) {
+            preferredGenres = preferredGenres.stream()
+                    .filter(g -> g != null)
+                    .map(g -> g.toLowerCase().replaceAll("[\\s\\-]", ""))
+                    .toList();
+        }
+    }
 }

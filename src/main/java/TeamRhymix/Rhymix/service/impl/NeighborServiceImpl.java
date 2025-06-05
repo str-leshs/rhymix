@@ -103,38 +103,39 @@ public class NeighborServiceImpl implements NeighborService {
         Criteria criteria = new Criteria();
         List<Criteria> conditions = new ArrayList<>();
 
-        // 제외 대상 닉네임
+        // 본인 및 기존 이웃 제외 조건
         conditions.add(Criteria.where("nickname").nin(excludedNicknames));
 
-        // genre가 있을 경우
+        //genre 파라미터 정규화 후 검색 조건 추가
         if (genre != null && !genre.isEmpty()) {
-            conditions.add(Criteria.where("preferredGenres").in(genre));  // ✔️ in으로 변경
+            String normalizedGenre = genre.toLowerCase().replace("-", "").replace(" ", "");
+            conditions.add(Criteria.where("preferredGenres").in(List.of(normalizedGenre)));
         }
 
-
-        // keyword가 있을 경우
+        // 이웃의 아이디로 검색
         if (keyword != null && !keyword.isEmpty()) {
             conditions.add(Criteria.where("nickname").regex(".*" + keyword + ".*", "i"));
         }
 
-        // 모든 조건을 and 연산자로 묶기
+        // 조건 통합
         criteria.andOperator(conditions.toArray(new Criteria[0]));
 
         Query query = new Query(criteria);
-        long total = mongoTemplate.count(query, User.class); // 전체 개수
-
+        long total = mongoTemplate.count(query, User.class);
         query.skip((long) (page - 1) * size).limit(size);
-        List<User> result = mongoTemplate.find(query, User.class);
 
+        List<User> result = mongoTemplate.find(query, User.class);
         List<NeighborDto> dtoList = result.stream()
                 .map(user -> new NeighborDto(
                         user.getNickname(),
                         user.getProfileImage(),
                         user.getPreferredGenres() != null ? user.getPreferredGenres() : List.of()
-                )).toList();
+                ))
+                .toList();
 
         return new PageImpl<>(dtoList, PageRequest.of(page - 1, size), total);
     }
+
 
 
     @Override
@@ -155,16 +156,18 @@ public class NeighborServiceImpl implements NeighborService {
 
         andConditions.add(Criteria.where("nickname").nin(excludedNicknames));
 
+        // genre 파라미터 정규화 후 검색 조건 추가
         if (genre != null && !genre.isBlank()) {
-            andConditions.add(Criteria.where("preferredGenres").in(genre));
+            String normalizedGenre = genre.toLowerCase().replace("-", "").replace(" ", "");
+            andConditions.add(Criteria.where("preferredGenres").in(List.of(normalizedGenre)));
         }
 
+        // 이웃의 아이디로 검색
         if (keyword != null && !keyword.isBlank()) {
             andConditions.add(Criteria.where("nickname").regex(".*" + keyword + ".*", "i"));
         }
 
         criteria.andOperator(andConditions.toArray(new Criteria[0]));
-
         Query countQuery = new Query(criteria);
         return (int) mongoTemplate.count(countQuery, User.class);
     }

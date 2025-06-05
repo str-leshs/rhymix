@@ -54,7 +54,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const phone = `${phone1.value}-${phone2.value}-${phone3.value}`;
         const bio = document.getElementById('bio').value;
         const profileImage = preview.style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
-        const preferredGenres = [genre1.value, genre2.value].filter(g => g !== '선택');
+
+        // 장르 정규화 후 저장
+        const preferredGenres = [genre1.value, genre2.value]
+            .filter(g => g !== '선택')
+            .map(g => g.toLowerCase().replace(/[\s\-]/g, ''));
 
         axios.put(`/api/users/${nickname}`, {
             email, phone, bio, profileImage, preferredGenres
@@ -82,5 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
 });
 

@@ -44,7 +44,9 @@ public class UserController {
             return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
         }
 
+        userDto.normalizeGenres(); // 장르 정제
         User saved = userService.createUser(userMapper.toEntity(userDto));
+
         return ResponseEntity.ok(userMapper.toDto(saved));
     }
 
@@ -75,6 +77,7 @@ public class UserController {
     @PutMapping("/api/users/{nickname}")
     public ResponseEntity<?> updateUserProfile(@PathVariable String nickname, @RequestBody UserDto userDto) {
         try {
+            userDto.normalizeGenres();
             userService.updateUserProfile(nickname, userDto);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
