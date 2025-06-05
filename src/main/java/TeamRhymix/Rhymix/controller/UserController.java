@@ -5,6 +5,7 @@ import TeamRhymix.Rhymix.dto.DiaryDto;
 import TeamRhymix.Rhymix.dto.UserDto;
 import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +29,12 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @ResponseBody
     @PostMapping("/api/users/signup")
-    public ResponseEntity<?> signup(@RequestBody UserDto userDto) {
-        if (userDto.getNickname() == null || userDto.getUsername() == null ||
-                userDto.getEmail() == null || userDto.getPassword() == null ||
-                userDto.getConfirmPassword() == null) {
-            return ResponseEntity.badRequest().body("모든 필수 정보를 입력해주세요.");
+    @ResponseBody
+    public ResponseEntity<?> signup(@Valid @RequestBody UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
+            return ResponseEntity.badRequest().body(errorMessage);
         }
 
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
@@ -44,11 +45,11 @@ public class UserController {
             return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
         }
 
-        userDto.normalizeGenres(); // 장르 정제
+        userDto.normalizeGenres();
         User saved = userService.createUser(userMapper.toEntity(userDto));
-
         return ResponseEntity.ok(userMapper.toDto(saved));
     }
+
 
     @ResponseBody
     @GetMapping("/api/users/me")
