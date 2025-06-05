@@ -202,3 +202,7 @@ function setupNeighborCalendar(nickname) {
     prevBtn.addEventListener('click', () => calendar.prev());
     nextBtn.addEventListener('click', () => calendar.next());
 }
+
+function closeDetailModal() {
+    document.getElementById("trackDetailModal").style.display = "none";
+}
