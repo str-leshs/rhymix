@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 form.action = "/logout";
                 document.body.appendChild(form);
                 form.submit();
-            }, 1500);
+            }, 3000);
         });
     }
 

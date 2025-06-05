@@ -60,25 +60,44 @@ public class NeighborServiceImpl implements NeighborService {
 
     @Override
     public List<NeighborDto> getSuggestedNeighbors(String currentNickname) {
-        // 본인과 이미 추가된 이웃 닉네임 제외
+        // 본인 및 기존 이웃 제외
         Query neighborQuery = new Query(Criteria.where("ownerNickname").is(currentNickname));
         Neighbor neighbor = mongoTemplate.findOne(neighborQuery, Neighbor.class);
+
         List<String> excludedNicknames = new ArrayList<>();
         excludedNicknames.add(currentNickname); // 본인 제외
         if (neighbor != null && neighbor.getNeighbors() != null) {
             excludedNicknames.addAll(neighbor.getNeighbors());
         }
 
-        // 제외 대상이 아닌 사용자만 랜덤 추출
-        Query userQuery = new Query(Criteria.where("nickname").nin(excludedNicknames));
+        // 현재 유저의 선호 장르 조회
+        Query currentUserQuery = new Query(Criteria.where("nickname").is(currentNickname));
+        User currentUser = mongoTemplate.findOne(currentUserQuery, User.class);
+        List<String> myGenres = currentUser != null && currentUser.getPreferredGenres() != null
+                ? currentUser.getPreferredGenres()
+                : List.of();
+
+        if (myGenres.isEmpty()) {
+            return List.of(); // 선호 장르가 없으면 추천 불가
+        }
+
+        // 나와 같은 장르를 가진 유저들 중, 본인과 기존 이웃 제외
+        Criteria criteria = new Criteria().andOperator(
+                Criteria.where("preferredGenres").in(myGenres),
+                Criteria.where("nickname").nin(excludedNicknames)
+        );
+
+        Query userQuery = new Query(criteria);
         List<User> candidates = mongoTemplate.find(userQuery, User.class);
 
-        Collections.shuffle(candidates); // 무작위 순서 섞기
+        // 무작위 5명 추출
+        Collections.shuffle(candidates);
         return candidates.stream()
-                .limit(10)
+                .limit(5)
                 .map(neighborMapper::toDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public void removeNeighbor(String ownerNickname, String targetNickname) {
