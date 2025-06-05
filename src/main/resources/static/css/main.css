@@ -397,9 +397,6 @@ html,body {
     color: var(--font-color);
 }
 
-
-
-
 /* 우측 메뉴 */
 .menu-box {
     width: 100%;
@@ -756,4 +753,29 @@ html,body {
     --border-color:#666666;
     --menu-bg:#dddddd;
     --menu-button-bg:#eeeeee;
+}
+
+.toast {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: whitesmoke;
+    color: #222;
+    padding: 18px 28px;
+    border-radius: 16px;
+    border: 2px solid red;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: 'Jua', sans-serif;
+    font-size: 20px;
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeInOut 3s forwards;
+}
+/*애니메이션*/
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, 20px); }
+    10% { opacity: 1; transform: translate(-50%, 0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -10px); }
 }

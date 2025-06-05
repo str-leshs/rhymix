@@ -1,10 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
     const nickname = document.getElementById('hidden-nickname')?.value;
+    const logoutBtn = document.getElementById("logout-btn");
+
 
     if (!nickname) {
         alert("로그인이 필요합니다.");
         window.location.href = "/login";
         return;
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            showToast("👋 로그아웃 되었습니다.");
+            setTimeout(() => {
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/logout";
+                document.body.appendChild(form);
+                form.submit();
+            }, 1500);
+        });
     }
 
     loadUserProfile();
@@ -14,6 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCalendar(nickname);
     loadDiary();
 });
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
 
 // 사용자 테마 적용 함수
 function applyThemeClass(user) {
