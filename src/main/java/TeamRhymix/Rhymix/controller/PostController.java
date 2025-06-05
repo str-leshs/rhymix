@@ -86,7 +86,6 @@ public class PostController {
     @PostMapping("/{postId}/chat")
     public ResponseEntity<?> addChatToPost(@PathVariable String postId,
                                            @RequestBody Chat chat) {
-        // 현재 시간 추가
         chat.setCreatedAt(LocalDateTime.now());
 
         // 게시글 찾기
