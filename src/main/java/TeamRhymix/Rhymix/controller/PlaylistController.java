@@ -118,6 +118,19 @@ public class PlaylistController {
         return ResponseEntity.ok(dto);
     }
 
+    /**
+     * 이웃 사용자의 최신 월별 플레이리스트 조회
+     */
+    @GetMapping("/monthly")
+    public ResponseEntity<PlaylistDto> getLatestMonthlyPlaylistByNickname(@RequestParam String nickname) {
+        Playlist latest = playlistService.findLatestMonthlyPlaylistByNickname(nickname);
+        if (latest == null) {
+            throw new PlaylistException(ErrorCode.PLAYLIST_NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(playlistService.getPlaylistWithTracks(latest.getId().toString()));
+    }
+
 
 }
 

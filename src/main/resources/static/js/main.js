@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const nickname = document.getElementById('hidden-nickname')?.value;
+    const logoutBtn = document.getElementById("logout-btn");
+
 
     if (!nickname) {
         alert("로그인이 필요합니다.");
@@ -7,21 +9,57 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            showToast("👋 로그아웃 되었습니다.");
+            setTimeout(() => {
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/logout";
+                document.body.appendChild(form);
+                form.submit();
+            }, 3000);
+        });
+    }
+
     loadUserProfile();
-    loadTodayMusic(nickname);
-    loadPlaylist(nickname);
-    loadComments(nickname);
-    setupCommentSubmit(nickname);
+    loadTodayMusicAndComments(nickname);
+    loadPlaylist();
     setupPostModal();
     setupCalendar(nickname);
+    loadDiary();
 });
 
-// 1. 사용자 프로필
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// 사용자 테마 적용 함수
+function applyThemeClass(user) {
+    const existing = [...document.body.classList].find(c => c.startsWith("theme-color"));
+    if (existing) document.body.classList.remove(existing);
+
+    let selected = user.selectedTheme;
+    if (!selected || selected.trim() === "") {
+        console.warn("선택된 테마가 없습니다. 기본 테마 'color1' 적용.");
+        selected = "color1"; // 기본 테마 지정
+    }
+
+    console.log("적용할 테마:", selected);
+    document.body.classList.add(`theme-${selected}`);
+}
+
+
+// 사용자 프로필 로딩 + 테마 반영
 function loadUserProfile() {
-    fetch('/api/auth/me') // Spring Security에서 현재 로그인된 사용자 정보 가져오기
+    fetch('/api/auth/me')
         .then(res => res.json())
         .then(user => {
-            document.getElementById('nickname-box').textContent = user.nickname || '@...';
+            document.getElementById('nickname-box').textContent ='@'+ user.nickname || '@...';
             document.getElementById('profile-image').src = user.profileImage || '/image/placeholder_circle.png';
             document.getElementById('bio-message').textContent = user.bio || '블로그 방문을 환영합니다!';
 
@@ -33,11 +71,14 @@ function loadUserProfile() {
                 span.textContent = `#${tag}`;
                 tagList.appendChild(span);
             });
+
+            applyThemeClass(user); // 테마 적용
         });
 }
 
-// 2. 오늘의 음악
-function loadTodayMusic(userId) {
+
+// 오늘의 음악
+function loadTodayMusicAndComments(nickname) {
     fetch('/api/posts/today')
         .then(res => {
             if (!res.ok) throw new Error("추천곡 없음");
@@ -45,31 +86,22 @@ function loadTodayMusic(userId) {
         })
         .then(post => {
             const musicCard = document.querySelector('.music-card');
-            const placeholder = document.getElementById('no-post-placeholder');
-            musicCard.style.display = "block";
-            if (placeholder) placeholder.style.display = "none";
-
-            document.querySelector('.music-card img').src =
-                post.cover?.trim() || 'image/placeholder_album.png';
-
-            document.querySelector('.music-title-box').textContent =
-                post.title ? `🎵 ${post.title}` : '🎵 music';
-
-            document.querySelector('.music-artist-box').textContent =
-                post.artist ? `🎤 ${post.artist}` : '🎤 artist';
-
-            // mood와 weather는 이모지+텍스트로 저장되어 있으므로 그대로 출력
+            document.querySelector('.music-card img').src = post.cover || '/image/placeholder_album.png';
+            document.querySelector('.music-title-box').textContent = `🎵 ${post.title}`;
+            document.querySelector('.music-artist-box').textContent = `🎤 ${post.artist}`;
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
+            document.getElementById('music-comment').textContent = post.comment || '';
+            musicCard.style.display = "block";
 
+            loadComments(post.id);
+            setupCommentSubmit(post.id, nickname);
         })
-        .catch(err => {
-            // 추천곡이 없을 때 placeholder 표시
+        .catch(() => {
             const musicCard = document.querySelector('.music-card');
+            musicCard.style.display = "none";
+
             const container = document.getElementById('music-pick');
-
-            if (musicCard) musicCard.style.display = "none";
-
             if (!document.getElementById('no-post-placeholder')) {
                 const placeholder = document.createElement('div');
                 placeholder.id = 'no-post-placeholder';
@@ -79,15 +111,13 @@ function loadTodayMusic(userId) {
                 placeholder.style.fontSize = "14px";
                 placeholder.style.color = "#888";
                 container.appendChild(placeholder);
-            } else {
-                document.getElementById('no-post-placeholder').style.display = "block";
             }
         });
 }
 
 
 
-// 3. 플레이리스트
+// 플레이리스트
 function loadPlaylist() {
     fetch(`/api/playlists/me`)
         .then(res => {
@@ -114,68 +144,50 @@ function loadPlaylist() {
         });
 }
 
-
-// 4. 댓글
-function loadComments(userId) {
-    fetch(`/api/posts/today/comments?userId=${userId}`)
+// 댓글
+// 댓글 목록 조회
+function loadComments(postId) {
+    fetch(`/api/posts/${postId}/chats`)
         .then(res => res.json())
-        .then(comments => {
-            const commentList = document.getElementById('comment-list');
-            commentList.innerHTML = '';
-            (comments || []).forEach(c => {
-                const div = document.createElement('div');
-                div.textContent = `${c.userNickname || '익명'}: ${c.text}`;
-                commentList.appendChild(div);
+        .then(chats => {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = '';
+            chats.forEach(chat => {
+                const li = document.createElement('li');
+                li.textContent = `${chat.userNickname || '익명'}: ${chat.text}`;
+                list.appendChild(li);
             });
         });
 }
 
-// 5. 댓글 작성
-function setupCommentSubmit(userId) {
-    document.getElementById('comment-submit-btn').addEventListener('click', () => {
-        const input = document.getElementById('comment-input');
+
+// 댓글 작성
+function setupCommentSubmit(postId, userNickname) {
+    const input = document.getElementById('chat-input');
+    const button = document.getElementById('chat-submit-btn');
+
+    button.addEventListener('click', () => {
         const text = input.value.trim();
         if (!text) return;
 
-        fetch(`/api/posts/today/comments?userId=${userId}`, {
+        fetch(`/api/posts/${postId}/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-        })
-            .then(res => {
-                if (res.ok) {
-                    input.value = '';
-                    loadComments(userId);
-                }
-            });
+            body: JSON.stringify({ text, userNickname })
+        }).then(res => {
+            if (res.ok) {
+                input.value = '';
+                loadComments(postId);
+            }
+        });
     });
 }
 
-// 6. 플레이리스트 저장 예시
-// function savePlaylist(title, description, trackIds) {
-//     fetch('/api/playlists', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ title, description, trackIds })
-//     })
-//         .then(res => res.json())
-//         .then(() => {
-//             alert("플레이리스트 저장 완료!");
-//             loadPlaylist();
-//         });
-// }
 
-// 7. 포스트 상세보기 모달
+// 포스트 상세보기 모달
 function setupPostModal() {}
-function openPostModal(postId) {
-    fetch(`/api/posts/${postId}`)
-        .then(res => res.json())
-        .then(post => {
-            alert(`📌 ${post.title} - ${post.artist}\n기분: ${post.mood}\n메모: ${post.comment}`);
-        });
-}
 
-// 8. 캘린더
+// 캘린더
 function setupCalendar(userId) {
     const calendarEl = document.getElementById('calendar');
     const titleEl = document.getElementById('calendar-title');
@@ -229,13 +241,42 @@ function setupCalendar(userId) {
     nextBtn.addEventListener('click', () => calendar.next());
 }
 
-// 9. 모달 닫기
+//다이어리
+function loadDiary() {
+    fetch("/api/users/me/diary")
+        .then(res => {
+            console.log("다이어리 응답 상태:", res.status);
+            if (!res.ok) throw new Error("다이어리 없음");
+            return res.json();
+        })
+        .then(diary => {
+            console.log("📘 diary 로드:", diary);
+
+            document.getElementById("title-input").value = diary.diaryTitle || "";
+            document.getElementById("content-input").textContent = diary.diaryContent || "";
+
+            if (diary.diaryImage) {
+                const img = document.createElement("img");
+                img.src = diary.diaryImage;
+                img.alt = "다이어리 이미지";
+                img.style.width = "60%";
+                img.style.display = "block";
+                img.style.margin = "20px auto";
+                img.style.borderRadius = "12px";
+                const target = document.querySelector(".today-post-box");
+                target.appendChild(img);
+            }
+
+        })
+        .catch(err => console.error("다이어리 로드 실패:", err));
+}
+
+
+
 function closeDetailModal() {
     document.getElementById("trackDetailModal").style.display = "none";
 }
 
-//10. 로그아웃
-// Spring Security 방식 로그아웃 처리
 document.getElementById("logout-btn").addEventListener("click", () => {
     document.getElementById("logout-form").submit();
 });

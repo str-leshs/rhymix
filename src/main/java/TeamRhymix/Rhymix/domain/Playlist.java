@@ -19,11 +19,11 @@ public class Playlist {
     @Id
     private String id;
 
-    private String userId; // 사용자 ObjectId.toString() 저장
+    private String userId;
 
     private String title;
 
-    private String type; // monthly / mood / weather
+    private String type;
 
     private List<String> trackIds; // Post ID 문자열 리스트
 

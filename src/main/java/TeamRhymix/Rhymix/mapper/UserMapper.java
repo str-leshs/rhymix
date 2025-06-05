@@ -4,6 +4,7 @@ import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.UserDto;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Component
@@ -15,9 +16,20 @@ public class UserMapper {
         user.setNickname(dto.getNickname());
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
+        user.setPhone(dto.getPhone());
+        user.setBio(dto.getBio());
+        user.setProfileImage(dto.getProfileImage());
+
+        // 장르 정규화
+        dto.normalizeGenres();
+        user.setPreferredGenres(dto.getPreferredGenres());
+
+        user.setSelectedTheme(dto.getSelectedTheme() != null ? dto.getSelectedTheme() : "color1");
+        user.setNeighbors(new ArrayList<>());  // 처음 생성 시 빈 리스트
         user.setJoinedAt(new Date());
         return user;
     }
+
 
     public UserDto toDto(User user) {
         UserDto dto = new UserDto();
@@ -29,22 +41,28 @@ public class UserMapper {
         dto.setProfileImage(user.getProfileImage());
         dto.setPreferredGenres(user.getPreferredGenres());
 
-        dto.setPassword(null);          // 비밀번호 노출 방지
-        dto.setConfirmPassword(null);   // 비밀번호 노출 방지
+        dto.setSelectedTheme(user.getSelectedTheme());
+
+        dto.setPassword(null);
+        dto.setConfirmPassword(null);
 
         return dto;
     }
 
+
     public void updateFromDto(UserDto dto, User user) {
-        // 이름, 아이디, 비밀번호는 수정하지 않음
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setBio(dto.getBio());
         user.setProfileImage(dto.getProfileImage());
         user.setPreferredGenres(dto.getPreferredGenres());
+
+        String selectedTheme = dto.getSelectedTheme();
+        if (selectedTheme == null || selectedTheme.trim().isEmpty()) {
+            user.setSelectedTheme("color1");
+        } else {
+            user.setSelectedTheme(selectedTheme.trim());
+        }
     }
 
-
 }
-
-

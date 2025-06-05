@@ -4,7 +4,6 @@ import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostService {
@@ -29,6 +28,5 @@ public interface PostService {
     Post getPostByDate(String userId, LocalDate date);
 
     List<Post> findPostsByUserAndMonth(String userId, LocalDate start, LocalDate end);
-
 
 }

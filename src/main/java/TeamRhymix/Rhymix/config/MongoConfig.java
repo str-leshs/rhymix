@@ -4,8 +4,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
+/**
+ * MongoDB 연결을 위한 설정 클래스입니다.
+ */
 @Configuration
 public class MongoConfig {
 
@@ -16,10 +20,12 @@ public class MongoConfig {
     private String databaseName;
 
     @Bean
+    public MongoClient mongoClient() {
+        return MongoClients.create(mongoUri);
+    }
+
+    @Bean
     public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(
-                MongoClients.create(mongoUri),
-                databaseName
-        );
+        return new MongoTemplate(mongoClient(), databaseName);
     }
 }

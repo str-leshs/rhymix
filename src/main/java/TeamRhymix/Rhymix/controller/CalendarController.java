@@ -41,6 +41,18 @@ public class CalendarController {
             return event;
         }).toList();
     }
+//    @GetMapping("/api/calendar/events")
+//    public List<Map<String, Object>> getUserPostEvents(@RequestParam String nickname) {
+//        List<Post> posts = postService.getPostsByUserId(nickname); // nickname을 userId로 사용 중
+//
+//        return posts.stream().map(post -> {
+//            Map<String, Object> event = new HashMap<>();
+//            event.put("title", post.getTitle());
+//            event.put("start", post.getCreatedAt().toLocalDate().toString());
+//            event.put("cover", post.getCover());
+//            return event;
+//        }).toList();
+//    }
 
     //TODO 앨범 클릭 ->  해당 날짜의 추천곡 상세 정보를 모달창에 표시
     /**
@@ -63,6 +75,17 @@ public class CalendarController {
         }
         return ResponseEntity.ok(postMapper.toDto(post));
     }
+//    @GetMapping("/api/calendar/date")
+//    public ResponseEntity<PostDto> getPostByDate(
+//            @RequestParam String nickname,
+//            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+//    ) {
+//        Post post = postService.getPostByDate(nickname, date);
+//        if (post == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(postMapper.toDto(post));
+//    }
 
 
 }

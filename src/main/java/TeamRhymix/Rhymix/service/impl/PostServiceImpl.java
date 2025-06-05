@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.stereotype.Service;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,9 +25,6 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final MongoTemplate mongoTemplate;
 
-    /**
-     * 오늘 날짜 기준으로 추천곡이 이미 등록되어 있으면 수정, 없으면 새로 저장
-     */
     @Override
     public Post savePost(PostDto dto) {
         String userId = dto.getUserId();
@@ -43,18 +40,18 @@ public class PostServiceImpl implements PostService {
             existing.setMood(dto.getMood());
             existing.setWeather(dto.getWeather());
             existing.setComment(dto.getComment());
+            existing.setChats(dto.getChats());
             existing.setCreatedAt(LocalDateTime.now());
             return postRepository.save(existing);
         } else {
             Post newPost = postMapper.toEntity(dto);
+            newPost.setComment(dto.getComment());
+            newPost.setChats(dto.getChats());
             newPost.setCreatedAt(LocalDateTime.now());
             return postRepository.save(newPost);
         }
     }
 
-    /**
-     * 오늘 날짜 기준으로 특정 사용자의 추천곡을 조회
-     */
     @Override
     public Post getTodayPost(String userId) {
         LocalDateTime start = LocalDate.now().atStartOfDay();
@@ -62,15 +59,11 @@ public class PostServiceImpl implements PostService {
         return postRepository.findTodayPostByUserId(userId, start, end);
     }
 
-
     @Override
     public List<Post> getPostsByUserId(String userId) {
         return postRepository.findByUserId(userId);
     }
 
-    /**
-     * 특정 날짜 기준으로 추천곡을 조회
-     */
     @Override
     public Post getPostByDate(String userId, LocalDate date) {
         return postRepository.findByUserIdAndDate(userId, date);
@@ -84,6 +77,5 @@ public class PostServiceImpl implements PostService {
         query.with(Sort.by(Sort.Direction.ASC, "createdAt"));
         return mongoTemplate.find(query, Post.class);
     }
-
 
 }

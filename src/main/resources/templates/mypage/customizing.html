@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Customizing</title>
+    <link rel="stylesheet" href="/css/customizing.css" />
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+
+</head>
+
+<body>
+<input type="hidden" id="hidden-username" th:value="${username}" />
+<input type="hidden" id="hidden-nickname" th:value="${nickname}" />
+<div class="container">
+    <header class="customizing-header">
+        <img src="/image/logo2.png" alt="로고" class="logo" />
+        <h1 class="title">CUSTOMIZING</h1>
+    </header>
+
+    <section class="section theme">
+        <h2>THEME</h2>
+        <div class="theme-grid">
+            <div class="theme-box color1" data-theme="color1"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color2" data-theme="color2"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color3" data-theme="color3"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color4" data-theme="color4"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color5" data-theme="color5"><div class="top"></div><div class="bottom"></div></div>
+            <div class="theme-box color6" data-theme="color6"><div class="top"></div><div class="bottom"></div></div>
+        </div>
+    </section>
+
+    <section class="section font">
+        <h2>FONT</h2>
+        <div class="font-options">
+            <label class="font-jua"><input type="radio" name="font" value="jua" checked /> RHYMIX 리믹스</label>
+            <label class="font-leferi"><input type="radio" name="font" value="leferi" /> RHYMIX 리믹스</label>
+            <label class="font-noto"><input type="radio" name="font" value="noto" /> RHYMIX 리믹스</label>
+        </div>
+    </section>
+
+    <section class="section write">
+        <h2>WRITE</h2>
+        <input type="text" id="title-input" class="title-input" maxlength="30" placeholder="(제목을 입력하세요.)" />
+        <span class="char-count" id="title-count">(0/30)</span>
+        <div id="content-input" class="content-input" contenteditable="true" style="min-height: 300px;"></div>
+        <span class="char-count" id="content-count">(0/300)</span>
+
+        <div class="image-info">
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+            <label for="imageInput" class="image-upload-btn">📷 이미지 추가</label>
+            <span class="image-filename" id="imageFilename">선택된 파일 없음</span>
+        </div>
+        <div id="imagePreviewContainer" style="margin-top: 2vw;"></div>
+    </section>
+
+    <footer class="footer">
+        <button class="save-btn">💾 SAVE</button>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/customizing.js"></script>
+</body>
+</html>
