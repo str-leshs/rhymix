@@ -23,7 +23,7 @@ public class MainPageController {
             model.addAttribute("nickname", userDetails.getUsername());
         }
 
-        return "main/main"; // 인증된 경우에만 메인 페이지 표시
+        return "main"; // 인증된 경우에만 메인 페이지 표시
     }
 
 }

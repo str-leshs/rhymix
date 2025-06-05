@@ -13,10 +13,10 @@ public class CustomController {
 
     private final UserService userService;
 
-    @GetMapping("/my/customizing")
-    public String showCustomizingPage() {
-        return "my/customizing";
-    }
+//    @GetMapping("my/customizing")
+//    public String showCustomizingPage() {
+//        return "mypage/customizing";
+//    }
 
     //테마 저장
     @PostMapping("/api/theme")

@@ -33,7 +33,7 @@ public class ProfilePageController {
                 "kpop", "r&b", "dance", "ballad", "jazz", "rock",
                 "classic", "트로트", "hiphop", "pop", "jpop", "ost", "라틴", "인디", "band"
         ));
-        return "my/profile";
+        return "mypage/profile";
     }
 }
 

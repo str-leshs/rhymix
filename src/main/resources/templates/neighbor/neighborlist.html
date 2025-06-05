@@ -106,7 +106,7 @@
                     <img th:src="${neighbor.profileImage}"
                          alt="프로필 이미지"
                          onerror="this.onerror=null; this.src='/image/placeholder_circle.png';" />
-                    <a th:href="@{'/mypage/neighbor-view/' + ${neighbor.nickname}}">
+                    <a th:href="@{'/neighbor/neighbor-view/' + ${neighbor.nickname}}">
                         <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
                     </a>
                     <button class="delete-btn" th:data-nickname="${neighbor.nickname}">삭제</button>

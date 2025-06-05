@@ -189,7 +189,7 @@ public class UserController {
         model.addAttribute("nickname", user.getNickname());
         model.addAttribute("username", user.getUsername());
         System.out.println("✅ 사용자 정보 nickname: " + user.getNickname());
-        return "my/customizing";
+        return "mypage/customizing";
     }
 
 

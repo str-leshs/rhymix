@@ -64,11 +64,11 @@ public class NeighborPageController {
         return "neighbor/search";
     }
 
-    @GetMapping("/mypage/neighbor-view/{nickname}")
+    @GetMapping("/neighbor/neighbor-view/{nickname}")
     public String viewNeighborPage(@PathVariable String nickname, Model model) {
         UserDto user = neighborService.getNeighborProfile(nickname);
         model.addAttribute("user", user);
-        return "mypage/neighbor-view";
+        return "neighbor/neighbor-view";
     }
 
 
