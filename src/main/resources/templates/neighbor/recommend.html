@@ -23,7 +23,7 @@
     <!-- 검색 띠 -->
     <div class="search-band">
         <div class="search-box">
-            <input type="text" class="search-input" placeholder="검색어를 입력하세요" />
+            <input type="text" class="search-input" placeholder="돋보기 아이콘을 누르면 검색창으로 이동합니다!" />
             <a th:href="@{/search}"><button class="search-button">🔍</button></a>
         </div>
     </div>
@@ -38,11 +38,11 @@
         </div>
     </div>
 
-    <!-- 추천 친구 전체 박스는 container 밖에 full-width로 배치 -->
+    <!-- 추천 이웃 전체 박스는 container 밖에 full-width로 배치 -->
     <div class="recommend-wrapper">
         <div class="recommend-inner">
             <div class="friend-list" id="friend-list">
-                <!-- 친구 아이템이 JavaScript로 렌더링됨 -->
+                <!-- JavaScript로 렌더링 -->
             </div>
             <div class="friend-actions">
                 <button id="refresh-button">새로고침 🔄</button>
@@ -59,7 +59,6 @@
         </div>
     </div>
 
-    <!-- JavaScript 연결 -->
     <script src="/js/friend.js"></script>
 
 

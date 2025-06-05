@@ -18,13 +18,10 @@ document.getElementById("keywordInput").addEventListener("keydown", function (e)
         fetchNeighbors();
     }
 });
-//장르 검색하고 엔터키 누르면 검색 가능
-document.getElementById("genreSelect").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        currentPage = 1;
-        fetchNeighbors();
-    }
+//장르 선택 시 바로검색됨
+document.getElementById("genreSelect").addEventListener("change", function () {
+    currentPage = 1;
+    fetchNeighbors();
 });
 
 
@@ -69,7 +66,10 @@ function fetchNeighbors() {
             for (let i = 1; i <= data.totalPages; i++) {
                 const pageBtn = document.createElement("button");
                 pageBtn.textContent = i;
-                pageBtn.className = i === data.currentPage ? "active" : "";
+
+                const isCurrent = i === data.currentPage || i === data.currentPage + 1;
+                pageBtn.className = isCurrent ? "active" : "";
+
                 pageBtn.addEventListener("click", () => {
                     currentPage = i;
                     fetchNeighbors();
