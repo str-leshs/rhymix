@@ -94,7 +94,8 @@ html,body {
 }
 .avatar {
     width:clamp(100px,12vw,200px);
-    border-radius:50%; margin-bottom:1vw;
+    border-radius:50%;
+    margin-bottom:1vw;
 }
 .nickname-box {
     display: block;          /* inline → block */
@@ -276,7 +277,6 @@ html,body {
     transition: all 0.2s ease;
 }
 
-
 .mood-caption { margin-top:1vw; font-size:1vw; }
 
 /* 댓글 섹션 */
@@ -332,7 +332,7 @@ html,body {
 
 /* 확인 버튼 */
 #chat-submit-btn {
-    padding: 0.4vw 0.8vw;  /* 더 작게 */
+    padding: 0.4vw 0.8vw;
     font-size: 0.9vw;
     font-family: 'Jua', cursive;
     background-color: var(--highlight);
@@ -340,27 +340,19 @@ html,body {
     border-radius: 0.8vw;
     cursor: pointer;
     transition: background-color 0.3s ease;
-
-    flex-shrink: 0;     /* 줄어들지 않게 */
+    flex-shrink: 0;
 }
 
-/* ✅ 버튼 이모지 */
 #chat-submit-btn::before {
     content: "✅";
 }
 
-
-
-
-
-
 /* 달력 */
 .calendar-section {
-    width: 100%;
+    width: 95%;
     margin: 1vw auto;
     box-sizing: border-box;
     background-color: var(--main-bg);
-    min-height: 40vw;
     border-radius: 1vw;
 }
 

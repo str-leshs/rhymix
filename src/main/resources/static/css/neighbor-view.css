@@ -1,6 +1,4 @@
-@import url("main.css"); /* 기존 메인 스타일 재사용 */
-
-/* neighbor-view.css */
+@import url("main.css");
 .logo {
     font-family: 'Modak', cursive;
     font-size: clamp(2rem, 6vw, 80px);
@@ -38,76 +36,12 @@
     transform: translateY(-2px);
 }
 
-/* 이웃 일기 - 읽기 전용 */
-.readonly-content {
-    white-space: pre-wrap;
-    background-color: var(--menu-bg);
-    padding: 1vw;
-    border-radius: 1vw;
-    font-family: 'Jua', cursive;
-    font-size: 1vw;
-    color: var(--font-color);
+.sidebar.right > .playlist-preview {
+    margin-top: 20px;
+    max-width: 300px;
 }
+.return-box {
+    width: 90%;
+    margin: 0 auto;
 
-/* 댓글 섹션 */
-.comment-section {
-    background-color: var(--menu-bg);
-    padding: 1vw;
-    border-radius: 1vw;
-    margin-top: 1.5vw;
-    min-height: 20vw;
-    box-sizing: border-box;
-    position: relative;
-}
-
-/* 댓글 리스트 */
-.chat-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1vw 0;
-    max-height: 15vw;
-    overflow-y: auto;
-    font-size: 1vw;
-}
-
-.chat-list li {
-    margin-bottom: 0.5vw;
-    padding: 0.6vw 1vw;
-    border-radius: 0.8vw;
-    background-color: var(--main-bg);
-    box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
-    font-family: 'Jua', cursive;
-}
-
-/* 댓글 작성 영역 */
-.chat-input-box {
-    display: flex;
-    gap: 0.5vw;
-    align-items: center;
-    margin-top: 1vw;
-}
-
-#chat-input {
-    flex: 1;
-    padding: 0.6vw;
-    border: 1px solid #ccc;
-    border-radius: 0.8vw;
-    font-size: 1vw;
-    font-family: 'Jua', cursive;
-    background-color: #fff;
-}
-
-#chat-submit-btn {
-    padding: 0.6vw 1.2vw;
-    font-size: 1vw;
-    font-family: 'Jua', cursive;
-    background-color: var(--highlight);
-    border: none;
-    border-radius: 0.8vw;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#chat-submit-btn:hover {
-    background-color: var(--button);
 }

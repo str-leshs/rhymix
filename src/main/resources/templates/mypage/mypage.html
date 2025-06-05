@@ -15,7 +15,6 @@
 <body>
 
 <div class="container">
-
   <!-- 헤더 -->
   <header class="main-header">
     <div class="yellow-box">
@@ -26,20 +25,22 @@
 
   <!-- 본문 -->
   <div class="main-content">
-
     <!-- 좌측 사이드바 -->
     <aside class="sidebar left">
       <div class="profile-card">
-        <div class="nickname-box" id="nickname-box">닉네임</div>
+        <div class="nickname-box" id="nickname-box">닉네임 로딩 중...</div>
         <img class="avatar" id="profile-image" src="/image/placeholder_circle.png" alt="프로필"/>
         <div class="profile-meta">
-          <div class="tag-list" id="tag-list">#장르</div>
-          <div class="bio-message" id="bio-message">한줄소개</div>
+          <div class="tag-list" id="tag-list"></div>
+          <div class="bio-message" id="bio-message"></div>
         </div>
         <div class="profile-buttons">
-          <button id="mypage-btn">메인페이지</button>
+          <a th:href="@{/main}">
+            <button id="mypage-btn">마이페이지</button>
+          </a>
           <button id="logout-btn">로그아웃</button>
         </div>
+        <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
       </div>
     </aside>
 
@@ -83,10 +84,6 @@
           <a th:href="@{/playlist}"><button id="playlist-btn">🎼 PLAYLIST</button></a>
           <a th:href="@{/neighborlist}"><button id="neighbor-btn">🧑‍🤝‍🧑 NEIGHBOR</button></a>
         </nav>
-        <div class="search-box">
-          <input type="text" id="search-input" placeholder="검색어를 입력하세요..." />
-          <span class="search-icon">🔍</span>
-        </div>
       </div>
     </aside>
 
@@ -133,7 +130,7 @@
             })
             .then((data) => {
               // 닉네임
-              document.getElementById("nickname-box").textContent = data.nickname;
+              document.getElementById("nickname-box").textContent = '@'+data.nickname;
 
               // 프로필 이미지
               if (data.profileImage && data.profileImage.trim() !== "") {
@@ -154,6 +151,12 @@
                   tagListEl.appendChild(span);
                 });
               }
+
+              // ✅ 테마 적용 추가
+              const theme = data.selectedTheme || "color1";
+              const existingTheme = [...document.body.classList].find(cls => cls.startsWith("theme-"));
+              if (existingTheme) document.body.classList.remove(existingTheme);
+              document.body.classList.add(`theme-${theme}`);
 
               console.log("✅ 유저 정보:", data);
             })
@@ -185,6 +188,7 @@
     }
   });
 </script>
+
 
 </body>
 </html>

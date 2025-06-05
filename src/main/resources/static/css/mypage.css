@@ -1,120 +1,3 @@
-/* 기본 초기화 */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Jua', sans-serif;
-    background-color: #fff9e6;
-    color: #222;
-}
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;            /* 여러 줄 허용 */
-    justify-content: center;    /* 가운데 정렬 */
-    gap: 0.4rem;
-    margin-top: 1rem;
-}
-
-.tag-list .tag {
-    background-color: #FFE37A;
-    padding: 0.4rem 0.8rem;
-    font-family: 'Jua', sans-serif;
-    font-size: 0.9rem;
-    border-radius: 999px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* 헤더 (로고 + LP 배너 스타일) */
-.main-header {
-    position: relative;
-    overflow: hidden;
-    height: clamp(200px, 26vw, 300px); /* 화면 크기에 따라 반응형 높이 */
-}
-
-.yellow-box {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    width: 100%;
-    height: clamp(120px, 12vw, 180px);
-    background: #FCE38A;
-    display: flex;
-    align-items: center;
-    padding-left: 3vw;
-    z-index: 1;
-}
-
-.logo {
-    font-family: 'Modak', cursive;
-    font-size: clamp(2rem, 6vw, 80px);
-    z-index: 2;
-    color: #000;
-}
-
-.lp-img {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: clamp(180px, 24vw, 280px);
-    object-fit: contain;
-    z-index: 3;
-}
-
-
-/* 메인 콘텐츠 구조 */
-.main-content {
-    display: flex;
-    flex: 1;
-}
-
-/* ===== 좌측 프로필 사이드바 ===== */
-.sidebar.left {
-    width: 20%;
-    padding: 1rem;
-    background-color: #fff3c4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.profile-card {
-    text-align: center;
-}
-
-.nickname-box {
-    font-weight: bold;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #ccc;
-}
-
-.profile-meta {
-    margin: 1rem 0;
-}
-
-.profile-buttons button {
-    margin: 0.3rem;
-    padding: 0.4rem 1rem;
-    border: none;
-    background-color: #ffe066;
-    font-weight: bold;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
 /* ===== 중앙 콘텐츠 영역 ===== */
 .center {
     width: 60%;
@@ -143,7 +26,7 @@ body {
 .manage-card {
     width: 100%;
     max-width: 600px;
-    background-color: #ffe790;
+    background-color: floralwhite;
     border-radius: 15px;
     padding: 1.5rem 2rem;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -163,7 +46,7 @@ body {
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    background-color: white;
+    background-color: ghostwhite;
     padding: 1rem;
     border-radius: 10px;
     color: #111;
@@ -172,7 +55,7 @@ body {
 }
 
 .manage-link:hover {
-    background-color: #fff4cc;
+    background-color: whitesmoke;
 }
 
 .link-left {
@@ -191,94 +74,16 @@ body {
     font-weight: bold;
     color: #111;
 }
-
-/* ===== 우측 메뉴 사이드바 ===== */
-.sidebar.right {
-    width: 20%;
-    padding: 1rem;
-    background-color: #fff3c4;
-}
-
-.menu-box {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 1rem;
-    text-align: center;
-}
-
-.menu h3 {
-    margin-bottom: 1rem;
-}
-
-.menu button,
-.menu a button {
-    display: block;
-    width: 100%;
-    margin-bottom: 0.8rem;
-    padding: 0.8rem;
-    background-color: #ffe066;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.search-box {
-    margin-top: 1rem;
-    position: relative;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
-
-.search-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-/* ===== 푸터 ===== */
-.footer {
-    background-color: #fff3c4;
-    padding: 1.5rem 2rem;
-}
-
-.footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.footer-logo img {
-    width: 100px;
-}
-
-.footer-column {
-    margin: 0 1rem;
-    font-size: 0.95rem;
-}
-
-.footer-column a {
-    text-decoration: none;
-    color: #222;
-}
 .toast {
     position: fixed;
     top: 40px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fff9e6;
+    background-color: whitesmoke;
     color: #222;
     padding: 18px 28px;
     border-radius: 16px;
-    border: 2px solid #f2cc0f;
+    border: 2px solid red;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     font-family: 'Jua', sans-serif;
     font-size: 20px;
@@ -286,49 +91,10 @@ body {
     opacity: 0;
     animation: fadeInOut 3s forwards;
 }
-
-
-/* 애니메이션 */
+/*애니메이션*/
 @keyframes fadeInOut {
     0% { opacity: 0; transform: translate(-50%, 20px); }
     10% { opacity: 1; transform: translate(-50%, 0); }
     90% { opacity: 1; }
     100% { opacity: 0; transform: translate(-50%, -10px); }
 }
-.menu .menu-btn {
-    display: block;
-    width: 100%;
-    margin-bottom: 0.8rem;
-    padding: 1.0rem 0.8rem;
-    background-color: #FFEB99;
-    border: none;
-    border-radius: 999px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 1rem;
-    font-family: 'Jua', sans-serif;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.menu .menu-btn:hover,
-.menu button:hover {
-    background-color: #ffd84b;
-    transform: translateY(-2px);
-}
-
-
-.avatar {
-    width: clamp(80px, 10vw, 120px);
-    height: clamp(80px, 10vw, 120px);
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: #ccc;
-    display: block;
-    margin: 0 auto;
-}
-
-
