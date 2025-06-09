@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.main;
 
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;

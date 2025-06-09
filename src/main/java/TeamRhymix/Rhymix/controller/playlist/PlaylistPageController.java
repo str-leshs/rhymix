@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.playlist;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

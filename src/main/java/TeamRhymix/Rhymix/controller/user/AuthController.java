@@ -1,20 +1,14 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.user;
 
 import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.mapper.UserMapper;
 import TeamRhymix.Rhymix.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * 인증 컨트롤러: 로그인 / 로그아웃 처리

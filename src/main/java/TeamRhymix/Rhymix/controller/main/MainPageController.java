@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.main;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

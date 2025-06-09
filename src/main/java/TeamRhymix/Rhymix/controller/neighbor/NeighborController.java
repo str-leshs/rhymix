@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.neighbor;
 
 import TeamRhymix.Rhymix.dto.NeighborDto;
 import TeamRhymix.Rhymix.service.NeighborService;

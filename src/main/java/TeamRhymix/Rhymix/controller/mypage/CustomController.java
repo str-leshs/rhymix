@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.mypage;
 
 import TeamRhymix.Rhymix.dto.ThemeDto;
 import TeamRhymix.Rhymix.service.UserService;

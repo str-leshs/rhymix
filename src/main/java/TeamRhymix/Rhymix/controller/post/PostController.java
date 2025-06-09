@@ -1,11 +1,10 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.post;
 
 import TeamRhymix.Rhymix.domain.Chat;
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
 import TeamRhymix.Rhymix.service.PostService;
-import TeamRhymix.Rhymix.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;

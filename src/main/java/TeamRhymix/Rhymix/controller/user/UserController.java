@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.user;
 
 import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.dto.DiaryDto;

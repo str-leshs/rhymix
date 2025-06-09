@@ -1,4 +1,4 @@
-package TeamRhymix.Rhymix.controller;
+package TeamRhymix.Rhymix.controller.playlist;
 
 import TeamRhymix.Rhymix.domain.Playlist;
 import TeamRhymix.Rhymix.domain.Post;
