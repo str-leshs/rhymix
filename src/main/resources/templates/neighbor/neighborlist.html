@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이웃 리스트</title>
+    <link rel="stylesheet" th:href="@{/css/neighborlist.css}">
+    <style>
+        .nickname {
+            display: inline-block;
+            max-width: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+        }
+        .delete-btn {
+            margin-left: 10px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            background-color: #f55;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .alert {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* 어두운 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .alert.hidden {
+            display: none;
+        }
+
+        .alert-box {
+            background-color: #fff8cc;
+            padding: 2rem 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 2px solid #f2cc0f;
+        }
+
+        .alert .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .alert .buttons button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #confirm-cancel {
+            background-color: #ccc;
+            border: none;
+        }
+        #confirm-ok {
+            background-color: #f44336;
+            border: none;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="header">
+    <div class="logo-wrap">
+        <a th:href="@{/main}">
+        <img th:src="@{/image/logo2.png}" class="logo" alt="로고" />
+        </a>
+    </div>
+
+    <div class="button-row">
+        <button class="btn active">LIST 📁</button>
+        <a th:href="@{/recommend}"><button class="btn">SEARCH 🔍</button></a>
+    </div>
+</header>
+
+<div class="highlight-band"></div>
+
+<div class="container">
+
+    <!-- 레코드판 이미지 -->
+    <div class="vinyl">
+        <img th:src="@{/image/vinyl.png}" alt="레코드판 이미지" />
+    </div>
+
+    <!-- 이웃 리스트 -->
+    <section class="neighbor-list">
+
+        <!-- 왼쪽 컬럼 -->
+        <div class="neighbor-column">
+            <div class="neighbor-inner-box">
+                <div class="neighbor-item" th:each="neighbor : ${leftList}">
+                    <img th:src="${neighbor.profileImage}"
+                         alt="프로필 이미지"
+                         onerror="this.onerror=null; this.src='/image/placeholder_circle.png';" />
+                    <a th:href="@{'/neighbor/neighbor-view/' + ${neighbor.nickname}}">
+                        <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
+                    </a>
+                    <button class="delete-btn" th:data-nickname="${neighbor.nickname}">삭제</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오른쪽 컬럼 -->
+        <div class="neighbor-column">
+            <div class="neighbor-inner-box">
+                <div class="neighbor-item" th:each="neighbor : ${rightList}">
+                    <img th:src="${neighbor.profileImage}"
+                         alt="프로필 이미지"
+                         onerror="this.onerror=null; this.src='/image/placeholder_circle.png';" />
+                    <a th:href="@{'/neighbor/neighbor-view/' + ${neighbor.nickname}}">
+                        <span th:text="${neighbor.nickname}" class="nickname">닉네임</span>
+                    </a>
+                    <button type="button" class="delete-btn" th:data-nickname="${neighbor.nickname}">삭제</button>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    <div id="confirm-alert" class="alert hidden">
+        <div class="alert-box">
+            <p id="confirm-message"></p>
+            <div class="buttons">
+                <button type="button" id="confirm-cancel">취소</button>
+                <button type="button" id="confirm-ok">삭제</button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let pendingDeleteNickname = null;
+
+    function showConfirmDelete(nickname) {
+        pendingDeleteNickname = nickname;
+        document.getElementById("confirm-message").textContent = `${nickname}님을 이웃목록에서 삭제하시겠습니까?`;
+        document.getElementById("confirm-alert").classList.remove("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // 삭제 버튼에 클릭 이벤트 연결
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const nickname = button.getAttribute("data-nickname");
+                showConfirmDelete(nickname);
+            });
+        });
+
+        // 삭제
+        document.getElementById("confirm-ok").addEventListener("click", async () => {
+            if (!pendingDeleteNickname) return;
+
+            try {
+                await fetch(`/api/neighbors/remove?targetNickname=${pendingDeleteNickname}`, {
+                    method: "DELETE"
+                });
+                location.reload();
+            } catch (error) {
+                console.error("삭제 실패:", error);
+                alert("이웃 삭제에 실패했습니다.");
+            }
+
+            document.getElementById("confirm-alert").classList.add("hidden");
+        });
+
+        // 취소
+        document.getElementById("confirm-cancel").addEventListener("click", () => {
+            document.getElementById("confirm-alert").classList.add("hidden");
+        });
+    });
+</script>
+
+
+</body>
+</html>

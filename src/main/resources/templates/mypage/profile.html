@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 등록</title>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/profile.css">
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>프로필 등록</h1>
+    </div>
+
+    <div class="profile-image-section">
+        <div class="image-circle" id="preview"
+             th:style="${user.profileImage != null} ? 'background-image: url(' + ${user.profileImage} + ')' : ''">
+        </div>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
+        <button type="button" class="set-image-btn" onclick="document.getElementById('imageUpload').click();">
+            이미지 설정
+        </button>
+    </div>
+
+    <form class="profile-form" onsubmit="return false;">
+        <label>이름(수정 불가)</label>
+        <input type="text" id="username" th:value="${user.username}" readonly />
+
+        <label>아이디(수정 불가)</label>
+        <div class="id-wrapper">
+            <span class="at-symbol">@</span>
+            <input type="text" id="userId" th:value="${user.nickname}" readonly />
+        </div>
+
+        <label>전화번호</label>
+        <!-- 전화번호 -->
+        <div class="phone-wrapper">
+            <input type="text" maxlength="3" class="phone-input" id="phone1"
+                   th:value="${user.phone != null and #strings.contains(user.phone, '-') ? #strings.arraySplit(user.phone, '-')[0] : ''}" />
+
+            <input type="text" maxlength="4" class="phone-input" id="phone2"
+                   th:value="${user.phone != null and #strings.contains(user.phone, '-') ? #strings.arraySplit(user.phone, '-')[1] : ''}" />
+
+            <input type="text" maxlength="4" class="phone-input" id="phone3"
+                   th:value="${user.phone != null and #strings.contains(user.phone, '-') ? #strings.arraySplit(user.phone, '-')[2] : ''}" />
+        </div>
+
+
+        <label>이메일 주소</label>
+        <input type="email" id="email" th:value="${user.email}" />
+
+        <label>상태 메시지</label>
+        <input type="text" id="bio" th:value="${user.bio}" />
+
+<!--        <label>블로그 이름</label>-->
+<!--        <input type="text" id="blogName" th:value="${user.username}" readonly />-->
+        <input type="hidden" id="selectedTheme" th:value="${user.selectedTheme}" />
+
+        <label>비밀번호</label>
+        <div class="password-wrapper">
+            <input type="password" id="password" disabled />
+            <button type="button" class="change-btn" onclick="togglePassword()">변경</button>
+        </div>
+
+        <label>선호 장르</label>
+        <div class="genre-select">
+            <select id="genre1">
+                <option disabled selected>선택</option>
+                <option th:each="g : ${genres}"
+                        th:value="${g}"
+                        th:text="${g}"
+                        th:selected="${#lists.size(user.preferredGenres) > 0 and g == user.preferredGenres[0]}">
+                </option>
+            </select>
+
+            <select id="genre2">
+                <option disabled selected>선택</option>
+                <option th:each="g : ${genres}"
+                        th:value="${g}"
+                        th:text="${g}"
+                        th:selected="${#lists.size(user.preferredGenres) > 1 and g == user.preferredGenres[1]}">
+                </option>
+            </select>
+        </div>
+
+        <span id="genre-warning" class="warning-text">⚠ 같은 장르를 중복 선택할 수 없습니다.</span>
+
+        <button type="submit" class="save-btn">저장</button>
+    </form>
+</div>
+
+<!-- 기존 JS 파일 -->
+<script th:src="@{/js/my.js}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이웃 리스트</title>
+    <link rel="stylesheet" href="css/search.css">
+</head>
+<body>
+
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="logo-wrap">
+            <img src="/image/logo2.png" class="logo" alt="로고">
+        </div>
+
+        <div class="button-row">
+            <a th:href="@{/neighborlist}"><button class="btn">LIST 📁</button></a>
+            <a th:href="@{/recommend}"><button class="btn">SEARCH 🔍</button></a>
+        </div>
+    </header>
+
+    <!-- 검색 띠 -->
+    <div class="search-band">
+        <div class="search-box">
+            <div class="select-wrapper">
+                <select class="genre-select" id="genreSelect">
+                    <option value="" disabled selected hidden>검색기준</option>
+                    <option value="kpop">kpop</option>
+                    <option value="r&b">r&b</option>
+                    <option value="dance">dance</option>
+                    <option value="ballad">ballad</option>
+                    <option value="jazz">jazz</option>
+                    <option value="rock">rock</option>
+                    <option value="classic">classic</option>
+                    <option value="트로트">트로트</option>
+                    <option value="hiphop">hiphop</option>
+                    <option value="pop">pop</option>
+                    <option value="jpop">jpop</option>
+                    <option value="ost">ost</option>
+                    <option value="라틴">라틴</option>
+                    <option value="인디">인디</option>
+                    <option value="band">band</option>
+                </select>
+                <span class="select-arrow">🔽</span>
+            </div>
+
+            <input type="text" class="search-input" id="keywordInput" placeholder="검색어를 입력하세요" />
+            <button class="search-button" id="searchButton">🔍</button>
+        </div>
+    </div>
+
+    <div class="recommend-wrapper">
+        <div class="recommend-inner">
+            <div class="friend-actions">
+                <button id="request-button">이웃추가</button>
+            </div>
+            <div class="friend-list" id="friendList"></div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+
+    <div id="custom-alert" class="alert hidden">
+        <div class="alert-box">
+            <p id="alert-message">이웃 추가 완료!</p>
+            <button id="alert-close">확인</button>
+        </div>
+    </div>
+
+    <script src="/js/neighbor-search.js"></script>
+
+
+</body>
+</html>
+

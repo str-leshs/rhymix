@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>월별 플레이리스트</title>
+    <link rel="stylesheet" th:href="@{/css/monthly.css}">
+    <script th:src="@{/js/monthly.js}" defer></script>
+</head>
+<body>
+<div class="container">
+
+    <div class="track-display">
+        <img src="/image/logo.png" alt="로고" class="top-logo" />
+        <p class="track-title" id="display-title"></p>
+        <p class="artist-name" id="display-artist"></p>
+        <img id="display-cover" class="album-cover" />
+    </div>
+
+    <h2 id="current-month-label" class="month-title"></h2>
+
+
+    <div class="track-grid" id="track-grid">
+        <!-- JS가 곡 리스트 동적으로 삽입 -->
+    </div>
+</div>
+</body>
+</html>

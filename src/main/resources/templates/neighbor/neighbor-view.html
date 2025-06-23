@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${user.nickname} + '님의 블로그'">이웃 블로그</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- 폰트 및 스타일 -->
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/neighbor-view.css}" />
+
+    <!-- FullCalendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+</head>
+
+<body>
+<input type="hidden" id="neighbor-nickname" th:value="${user.nickname}" />
+
+<div class="container">
+    <!-- 헤더 -->
+    <header class="main-header">
+        <div class="yellow-box">
+            <div class="logo">RHYMIX</div>
+        </div>
+        <img class="lp-img" src="/image/LP_image.png" alt="LP 디스크" />
+    </header>
+
+    <!-- 본문 -->
+    <div class="main-content">
+        <!-- 좌측 사이드바: 프로필 + 추천곡 -->
+        <aside class="sidebar left">
+            <div class="profile-card">
+                <div class="nickname-box" id="nickname-box">닉네임 로딩 중...</div>
+                <img class="avatar" id="profile-image" src="/image/placeholder_circle.png" alt="프로필 이미지" />
+                <div class="profile-meta">
+                    <div class="tag-list" id="tag-list"></div>
+                    <div class="bio-message" id="bio-message">소개 불러오는 중...</div>
+                </div>
+            </div>
+
+            <div class="music-pick">
+                <div class="music-card">
+                    <img src="/image/placeholder_album.png" alt="앨범 커버"/>
+                    <div class="music-title-box">곡 제목</div>
+                    <div class="music-artist-box">아티스트</div>
+                    <div class="mood-buttons">
+                        <button id="weather-btn"></button>
+                        <button id="mood-btn"></button>
+                    </div>
+                    <p class="mood-caption" id="music-comment"></p>
+
+                </div>
+            </div>
+
+            <div class="comment-section">
+                <ul id="chat-list" class="chat-list"></ul>
+                <div class="chat-input-box">
+                    <input type="text" id="chat-input" placeholder="댓글을 입력하세요..." />
+                    <button id="chat-submit-btn"></button>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- 중앙: 달력 + 일기 -->
+        <main class="center">
+            <div class="calendar-header-wrapper">
+                <button id="prev-btn" class="nav-btn">⏪</button>
+                <div id="calendar-title" class="calendar-title">뮤직 캘린더</div>
+                <button id="next-btn" class="nav-btn">⏩</button>
+            </div>
+
+            <div class="calendar-section">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="diary-section">
+                <div class="today-post-box">
+                    <input type="text" id="title-input" value="" readonly />
+                    <div id="content-input" class="readonly-content">(내용 없음)</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 우측 사이드바: 플레이리스트 + 돌아가기 -->
+        <aside class="sidebar right">
+            <div class="playlist-preview" id="playlist-box">
+                <h4 id="playlist-title">이웃의 플레이리스트</h4>
+                <ul id="playlist-items"></ul>
+            </div>
+
+            <div class="return-box">
+                <a th:href="@{/main}">
+                    <button class="return-btn">🔙 내 블로그로 돌아가기</button>
+                </a>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 모달: 캘린더 곡 상세 -->
+    <div id="trackDetailModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <div class="album-placeholder"></div>
+            <button class="modal-close-btn" onclick="closeDetailModal()">✕</button>
+            <h3>추천곡 상세정보</h3>
+            <img id="modalDetailCover" src="" alt="앨범 커버" />
+            <p><strong>제목:</strong> <span id="modalDetailTitle"></span></p>
+            <p><strong>아티스트:</strong> <span id="modalDetailArtist"></span></p>
+            <p><strong>기분:</strong> <span id="modalDetailMood"></span></p>
+            <p><strong>날씨:</strong> <span id="modalDetailWeather"></span></p>
+            <p><strong>코멘트:</strong> <span id="modalDetailComment"></span></p>
+        </div>
+    </div>
+
+    <script th:src="@{/js/neighbor-view.js}" defer></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+/* ===== 중앙 콘텐츠 영역 ===== */
+.center {
+    width: 60%;
+    padding: 2rem;
+}
+.link-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.emoji {
+    font-size: 1.8rem;
+}
+
+.manage-area {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1rem;
+    flex: 1;
+}
+
+.manage-card {
+    width: 100%;
+    max-width: 600px;
+    background-color: floralwhite;
+    border-radius: 15px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.2s ease;
+}
+
+.manage-card h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    font-family: 'Jua', sans-serif;
+    color: #111;
+}
+
+.manage-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    background-color: ghostwhite;
+    padding: 1rem;
+    border-radius: 10px;
+    color: #111;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.manage-link:hover {
+    background-color: whitesmoke;
+}
+
+.link-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.link-left img {
+    width: 28px;
+    height: 28px;
+}
+
+.link-right {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #111;
+}
+.toast {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: whitesmoke;
+    color: #222;
+    padding: 18px 28px;
+    border-radius: 16px;
+    border: 2px solid red;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: 'Jua', sans-serif;
+    font-size: 20px;
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeInOut 3s forwards;
+}
+/*애니메이션*/
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, 20px); }
+    10% { opacity: 1; transform: translate(-50%, 0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -10px); }
+}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RHYMIX</title>
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Jua&family=Modak&display=swap" rel="stylesheet">
+
+    <!-- 메인 CSS -->
+    <link rel="stylesheet" href="/css/main.css"/>
+
+    <!-- FullCalendar CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+</head>
+
+<body>
+<input type="hidden" id="hidden-nickname" th:value="${nickname}" />
+<input type="hidden" id="hidden-username" th:value="${username}" />
+<div th:if="${nickname == null}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.location.href = "/login";
+        /*]]>*/
+    </script>
+</div>
+
+<div class="container">
+    <!-- 헤더 -->
+    <header class="main-header">
+        <div class="yellow-box">
+            <div class="logo">RHYMIX</div>
+        </div>
+        <img class="lp-img" src="/image/LP_image.png" alt="LP 디스크"/>
+    </header>
+
+    <!-- 본문 -->
+    <div class="main-content">
+        <!-- 좌측 사이드 -->
+        <aside class="sidebar left">
+            <div class="profile-card">
+                <div class="nickname-box" id="nickname-box">닉네임 로딩 중...</div>
+                <img class="avatar" id="profile-image" src="/image/placeholder_circle.png" alt="프로필"/>
+                <div class="profile-meta">
+                    <div class="tag-list" id="tag-list"></div>
+                    <div class="bio-message" id="bio-message"></div>
+                </div>
+                <div class="profile-buttons">
+                    <a th:href="@{/mypage}">
+                    <button id="mypage-btn">마이페이지</button>
+                    </a>
+                    <button id="logout-btn">로그아웃</button>
+                </div>
+                <form id="logout-form" action="/logout" method="POST" style="display: none;"></form>
+            </div>
+
+            <!-- 오늘의 곡 -->
+            <div class="music-pick" id="music-pick">
+                <div class="music-card">
+                    <img src="/image/placeholder_album.png" alt="앨범 커버"/>
+                    <div class="music-title-box"></div>
+                    <div class="music-artist-box"></div>
+                    <div class="mood-buttons">
+                        <button id="weather-btn"></button>
+                        <button id="mood-btn"></button>
+                    </div>
+
+                    <p class="mood-caption" id="music-comment"></p>
+                </div>
+            </div>
+
+            <!-- 댓글 -->
+            <div class="comment-section">
+                <ul id="chat-list" class="chat-list"></ul>
+                <div class="chat-input-box">
+                    <input type="text" id="chat-input" placeholder="댓글을 입력하세요..." />
+                    <button id="chat-submit-btn"></button>
+                </div>
+            </div>
+
+
+        </aside>
+
+        <!-- 중앙 영역 -->
+        <main class="center">
+            <!-- 달력 -->
+            <div class="calendar-header-wrapper">
+                <button id="prev-btn" class="nav-btn">⏪</button>
+                <div id="calendar-title" class="calendar-title">2025년 5월</div>
+                <button id="next-btn" class="nav-btn">⏩</button>
+            </div>
+
+            <div class="calendar-section">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="diary-section" id="diary-container">
+                <div class="today-post-box">
+                    <input type="text" id="title-input" value="" />
+                    <div id="content-input" contenteditable="true">(내용 없음)</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 우측 사이드 -->
+        <aside class="sidebar right">
+            <div class="menu-box">
+                <nav class="menu">
+                    <h3>📂 MENU 📂</h3>
+                    <a th:href="@{/today}"><button id="post-btn">🎵 POST</button></a>
+                    <a th:href="@{/playlist}"><button id="playlist-btn">🎼 PLAYLIST</button></a>
+                    <a th:href="@{/neighborlist}"><button id="neighbor-btn">🧑‍🤝‍🧑 NEIGHBOR</button></a>
+                </nav>
+            </div>
+            <div class="playlist-preview" id="playlist-box">
+                <h4 id="playlist-title">@.mix</h4>
+                <ul id="playlist-items"></ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <img src="/image/logo2.png" alt="로고" />
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <strong>회사</strong><br/>
+                    <a href="#">상세정보</a><br/>
+                    <a href="#">For the ReCord</a>
+                </div>
+                <div class="footer-column">
+                    <strong>멤버</strong><br/>
+                    <a href="#">개인정보 처리방침</a><br/>
+                    <a href="#">안전 및 개인정보 보호센터</a>
+                </div>
+            </div>
+        </div>
+        <p class="credit"></p>
+    </footer>
+
+    <!-- 캘린더 모달 -->
+    <div id="trackDetailModal" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <div class="album-placeholder"></div>
+            <button class="modal-close-btn" onclick="closeDetailModal()">✕</button>
+            <h3>추천곡 상세정보</h3>
+            <img id="modalDetailCover" src="" alt="앨범 커버">
+            <p><strong>제목:</strong> <span id="modalDetailTitle"></span></p>
+            <p><strong>아티스트:</strong> <span id="modalDetailArtist"></span></p>
+            <p><strong>기분:</strong> <span id="modalDetailMood"></span></p>
+            <p><strong>날씨:</strong> <span id="modalDetailWeather"></span></p>
+            <p><strong>코멘트:</strong> <span id="modalDetailComment"></span></p>
+        </div>
+    </div>
+</div>
+
+<script src="/js/main.js"></script>
+
+</body>
+</html>

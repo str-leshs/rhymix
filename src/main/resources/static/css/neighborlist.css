@@ -1,0 +1,160 @@
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #FFFCF3;
+}
+
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-bottom: 100px;
+}
+
+/* Header */
+.header {
+    background: #FCE38A;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;     /* ✅ 위아래로 쌓기 */
+    align-items: flex-start;    /* ✅ 왼쪽 정렬 */
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+/* 로고 + 사이트명 묶음 */
+.logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo {
+    width: clamp(28px, 4.0vw, 52px);
+    height: auto;
+}
+
+.site-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #3E3E3E;
+    margin-top: 5px;
+}
+
+/* 버튼 두 개 가로 정렬 */
+.button-row {
+    display: flex;
+    justify-content: center; /* ✅ 버튼 가로 정렬 중앙으로 */
+    width: 100%;
+    gap: clamp(70px, 10vw, 130px);
+}
+
+/* 버튼 기본 스타일 */
+.btn {
+    width: clamp(180px, 20vw, 280px);
+    font-size: clamp(11px, 1.6vw, 21px);
+    font-weight: bold;
+    padding: clamp(8px, 1.2vw, 16px) clamp(17px, 2.4vw, 31px);
+    border: none;
+    border-radius: 0;
+    background: white;
+    color: #000;
+    cursor: pointer;
+    box-shadow: inset 0 -5px 0 transparent;
+    transition: box-shadow 0.2s, background 0.2s;
+    text-align: center;
+}
+
+.btn.active {
+    background: #FFBF46;
+}
+
+
+/* LP 이미지 위 배경색 바 */
+.highlight-band {
+    width: 100%;
+    height: 150px;  /* 원하는 높이로 조절 */
+    background-color: #FCE38A;
+    margin-top: 50px; /* 버튼 아래 공간 붙이기 (필요시 조절) */
+    box-sizing: border-box;
+}
+
+
+/* Vinyl Image */
+.vinyl {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
+    margin-top: -60px;     /* 헤더와 겹치게 */
+    margin-bottom: -190px;  /* 이웃 박스와도 겹치게 */
+}
+
+.vinyl img {
+    width: clamp(280px, 50vw, 500px);
+    height: auto;
+    max-width: 100%;
+}
+
+
+
+/* Neighbor List */
+.neighbor-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;  /* ✅ 중앙 정렬 */
+    gap: 40px;
+    margin-top: 60px;
+}
+
+
+.neighbor-row {
+    display: flex;
+    gap: 40px;         /* 좌우 칸 간격 */
+}
+
+
+
+.neighbor-column {
+    width: clamp(238px, 34vw, 442px);
+    background: #FCE38A;
+    border-radius: clamp(14px, 2vw, 26px);
+    padding: clamp(28px, 4vw, 52px) clamp(14px, 2vw, 26px) clamp(14px, 2vw, 26px);
+    box-sizing: border-box;
+}
+
+
+.neighbor-inner-box {
+    background: #FFFCF3;
+    padding: 130px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 아이템 - 줄이고 정리 */
+.neighbor-item {
+    background: #FCE38A;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: clamp(4px, 0.6vw, 8px) clamp(8px, 1.2vw, 16px);
+    width: 90%;
+    max-width: clamp(196px, 28vw, 364px);
+}
+
+.neighbor-item img {
+    width: clamp(25px, 3.6vw, 47px);
+    height: clamp(25px, 3.6vw, 47px);
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: clamp(7px, 1vw, 13px);
+}
+
+.neighbor-item .nickname {
+    font-size: 14px;
+    color: #000;
+    font-weight: 500;
+    overflow: hidden;
+}

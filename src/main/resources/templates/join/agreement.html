@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 - 약관동의</title>
+    <link rel="stylesheet" th:href="@{/css/join.css}">
+    <script defer th:src="@{/js/join.js}"></script>
+</head>
+<!-- 약관동의 페이지 -->
+<body id="agreement-page">
+<div class="join-container">
+    <div class="title-box">
+        <h1 class="join-title">회원가입</h1>
+    </div>
+
+    <form id="agreementForm" th:action="@{/join/form}" method="get">
+        <div class="agreement-box short">
+            <img src="/image/logo2.png" alt="Rhymix 로고" class="logo"/>
+
+            <!-- 약관 항목 줄 간격 넓힘 -->
+            <label class="hover-link spaced">
+                <a href="#" class="link-text" target="_blank">
+                    <span class="term-text">개인정보 수집 및 사용</span>
+                    <span class="required">( 필수 )</span>
+                </a>
+                <input type="checkbox" class="required-check">
+            </label>
+
+            <label class="hover-link spaced">
+                <a href="#" class="link-text" target="_blank">
+                    <span class="term-text">Rhymix 사용약관</span>
+                    <span class="required">( 필수 )</span>
+                </a>
+                <input type="checkbox" class="required-check">
+            </label>
+
+            <label class="hover-link spaced">
+                <a href="#" class="link-text" target="_blank">
+                    <span class="term-text">써드 파티 데이터 제공</span>
+                    <span class="required">( 필수 )</span>
+                </a>
+                <input type="checkbox" class="required-check">
+            </label>
+
+            <button type="submit" class="next-button" id="nextButton" disabled>다음</button>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>
+
