@@ -1,18 +1,25 @@
 package TeamRhymix.Rhymix.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Document(collection = "tracks")
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Track {
+
+    @Id
+    private String id;  //몽고디비 ID
+
+    private String trackId; //스포티파이 트랙 ID
     private String title;
     private String artist;
-    private String cover;
-    private String weather;
-    private String mood;
-    private String comment;
+    private String album;
+    private String genre;
+    private String coverImage;
+    private int duration;
 }
 
