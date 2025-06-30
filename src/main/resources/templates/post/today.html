@@ -88,15 +88,17 @@
 <!-- 모달창 -->
 <div id="manualInputModal" class="modal" style="display: none;">
   <div class="modal-content">
-    <h2>곡 정보 입력</h2>
+    <h2>곡 정보 검색</h2>
 
-    <input type="text" id="modalTrackTitle" placeholder="곡 제목">
-    <input type="text" id="modalTrackArtist" placeholder="아티스트명">
-    <input type="url" id="modalTrackCover" placeholder="앨범 커버 이미지 URL">
+    <!-- 검색창 -->
+    <input type="text" id="spotifySearchInput" placeholder="곡 제목 또는 아티스트명 입력">
+    <button id="spotifySearchBtn">검색</button>
+
+    <!-- 검색 결과 리스트 -->
+    <ul id="spotifySearchResults"></ul>
 
     <div class="modal-buttons">
       <button id="cancelTrackBtn">취소</button>
-      <button id="confirmTrackBtn">확인</button>
     </div>
   </div>
 </div>

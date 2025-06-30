@@ -2,9 +2,11 @@ package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
+import TeamRhymix.Rhymix.dto.PostRequestDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
 import TeamRhymix.Rhymix.repository.PostRepository;
 import TeamRhymix.Rhymix.service.PostService;
+import TeamRhymix.Rhymix.service.TrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,35 +24,36 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final PostMapper postMapper;
+    private final TrackService trackService;
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public Post savePost(PostDto dto) {
-        String userId = dto.getUserId();
-        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
-
-        Post existing = postRepository.findTodayPostByUserId(userId, startOfDay, endOfDay);
+    public Post savePost(PostRequestDto requestDto, String userId) {
+        // 오늘 날짜 기준 기존 포스트 존재 여부 확인
+        LocalDateTime start = LocalDate.now().atStartOfDay();
+        LocalDateTime end = start.plusDays(1).minusSeconds(1);
+        Post existing = postRepository.findTodayPostByUserId(userId, start, end);
 
         if (existing != null) {
-            existing.setTitle(dto.getTitle());
-            existing.setArtist(dto.getArtist());
-            existing.setCover(dto.getCover());
-            existing.setMood(dto.getMood());
-            existing.setWeather(dto.getWeather());
-            existing.setComment(dto.getComment());
-            existing.setChats(dto.getChats());
+            existing.setMood(requestDto.getMood());
+            existing.setWeather(requestDto.getWeather());
+            existing.setComment(requestDto.getComment());
             existing.setCreatedAt(LocalDateTime.now());
+            existing.setTrackId(requestDto.getTrackId());
             return postRepository.save(existing);
         } else {
-            Post newPost = postMapper.toEntity(dto);
-            newPost.setComment(dto.getComment());
-            newPost.setChats(dto.getChats());
-            newPost.setCreatedAt(LocalDateTime.now());
+            Post newPost = Post.builder()
+                    .userId(userId)
+                    .mood(requestDto.getMood())
+                    .weather(requestDto.getWeather())
+                    .comment(requestDto.getComment())
+                    .trackId(requestDto.getTrackId())
+                    .createdAt(LocalDateTime.now())
+                    .build();
             return postRepository.save(newPost);
         }
     }
+
 
     @Override
     public Post getTodayPost(String userId) {

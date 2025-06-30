@@ -1,11 +1,18 @@
 package TeamRhymix.Rhymix.controller.post;
 
+import TeamRhymix.Rhymix.domain.User;
 import TeamRhymix.Rhymix.domain.Chat;
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
 import TeamRhymix.Rhymix.service.PostService;
 
+import TeamRhymix.Rhymix.domain.Track;
+import TeamRhymix.Rhymix.dto.PostRequestDto;
+import TeamRhymix.Rhymix.dto.PostResponseDto;
+
+
+import TeamRhymix.Rhymix.service.TrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +27,44 @@ import java.util.List;
 @RequestMapping("api/posts")
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
+    private final TrackService trackService;
     private final PostMapper postMapper;
     private final MongoTemplate mongoTemplate;
 
     /**
      * 오늘의 추천곡 저장 API
-     * - 클라이언트로부터 받은 PostDto를 Post 엔티티로 변환 후 저장합니다.
-     * - 저장된 Post 엔티티를 다시 DTO로 변환해 반환합니다.
-     *
-     * @param postDto 오늘의 추천곡 정보
-     * @return 저장된 추천곡 정보 (PostDto)
      */
     @PostMapping
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
-        Post saved = postService.savePost(postDto);
-        return ResponseEntity.ok(postMapper.toDto(saved));
+    public ResponseEntity<PostResponseDto> createPost(
+            @RequestBody PostRequestDto request,
+            @AuthenticationPrincipal User userDetails
+    ) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        String userId = userDetails.getUsername();
+
+        // 트랙 먼저 저장
+        Track track = trackService.findOrSaveTrack(request.getTrackId());
+
+        // 포스트 저장
+        Post saved = postService.savePost(request, userId);
+
+        PostResponseDto response = PostResponseDto.builder()
+                .postId(saved.getId())
+                .trackTitle(track.getTitle())
+                .trackArtist(track.getArtist())
+                .mood(request.getMood())
+                .weather(request.getWeather())
+                .comment(request.getComment())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/today")
     public ResponseEntity<PostDto> getTodayPost(
@@ -109,7 +137,5 @@ public class PostController {
 
         return ResponseEntity.ok(post.getChats());
     }
-
-
 
 }
