@@ -27,10 +27,11 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
             <strong>${track.title}</strong> - ${track.artist}
             <img src="${track.albumImageUrl}" width="40" style="vertical-align:middle;">
             <button class="select-track-btn" 
-              data-id="${track.trackId}" 
+              data-track-id="${track.trackId}"
               data-title="${track.title}" 
               data-artist="${track.artist}" 
               data-cover="${track.albumImageUrl}">선택</button>
+
           </div>
         `;
             resultList.appendChild(li);
@@ -40,7 +41,9 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
         document.querySelectorAll(".select-track-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const t = e.target.dataset;
-                selectedTrackId = t.id;
+                console.log("🎯 선택된 트랙 정보:", t);         // ✅ 콘솔로 확인
+                console.log("✅ trackId:", t.trackId);         // 반드시 찍혀야 함
+                selectedTrackId = t.trackId;
 
                 document.getElementById("trackTitle").textContent = t.title;
                 document.getElementById("trackArtist").textContent = t.artist;
@@ -59,13 +62,6 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
 // 저장 버튼 클릭
 document.getElementById("saveBtn").addEventListener("click", async () => {
     try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            alert("로그인이 필요합니다.");
-            window.location.href = "/login";
-            return;
-        }
-
         if (!selectedTrackId) {
             alert("🎵 먼저 곡을 검색하고 선택해주세요.");
             return;
@@ -85,19 +81,21 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
             comment: comment
         };
 
-        // 저장 요청
         const response = await fetch("/api/posts", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`  //JWT 포함
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify(postData)
+            body: JSON.stringify(postData),
+            credentials: "include"
         });
 
         if (response.ok) {
             alert("오늘의 추천곡이 등록되었습니다!");
             window.location.href = "/main";
+        } else if (response.status === 401) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/login";
         } else {
             alert("저장에 실패했습니다.");
         }

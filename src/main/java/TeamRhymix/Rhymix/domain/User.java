@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Document(collection = "users")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L; //기본값으로 설정 -> 세션 직렬화 시 사용
+
     @Id
     private String id; // MongoDB 고유 식별자
     private String username; // 사용자 이름 (예: 홍길동)

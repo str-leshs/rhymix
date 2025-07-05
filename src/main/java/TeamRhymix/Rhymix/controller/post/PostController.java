@@ -5,6 +5,7 @@ import TeamRhymix.Rhymix.domain.Chat;
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
+import TeamRhymix.Rhymix.security.CustomUserDetails;
 import TeamRhymix.Rhymix.service.PostService;
 
 import TeamRhymix.Rhymix.domain.Track;
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/posts")
+@RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
 
@@ -39,7 +40,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
             @RequestBody PostRequestDto request,
-            @AuthenticationPrincipal User userDetails
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         if (userDetails == null) {
             return ResponseEntity.status(401).build();

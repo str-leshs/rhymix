@@ -27,17 +27,23 @@ public class CalendarController {
     public List<Map<String, Object>> getUserPostEvents(@RequestParam String userId) {
         List<Post> posts = postService.getPostsByUserId(userId);
 
-        return posts.stream().map(post -> {
-            Map<String, Object> event = new HashMap<>();
-            Track track = trackService.findByTrackId(post.getTrackId());  // Track 정보 조회
+        return posts.stream()
+                .filter(post -> post.getTrackId() != null)  // null 필터링 추가
+                .map(post -> {
+                    Track track = trackService.findByTrackId(post.getTrackId());
+                    if (track == null) return null;  // 트랙이 삭제되었을 경우 방어 로직 추가
 
-            event.put("title", track.getTitle());                         //Post → Track에서
-            event.put("start", post.getCreatedAt().toLocalDate().toString());
-            event.put("cover", track.getCoverImage());
-            event.put("trackId", track.getTrackId());
-            return event;
-        }).toList();
+                    Map<String, Object> event = new HashMap<>();
+                    event.put("title", track.getTitle());
+                    event.put("start", post.getCreatedAt().toLocalDate().toString());
+                    event.put("cover", track.getCoverImage());
+                    event.put("trackId", track.getTrackId());
+                    return event;
+                })
+                .filter(Objects::nonNull)  // map 결과가 null인 경우 제거
+                .toList();
     }
+
 
     @GetMapping("/date")
     public ResponseEntity<PostDto> getPostByDate(

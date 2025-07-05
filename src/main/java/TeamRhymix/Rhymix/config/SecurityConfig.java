@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/image/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password", "/api/users/**", "/api/posts/**").permitAll()
+                        .requestMatchers("/", "/info", "/join/**", "/find-id", "/find-password").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -43,7 +43,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .invalidSessionUrl("/login")
                 )
-                .userDetailsService(customUserDetailsService)
                 .build();
     }
 
