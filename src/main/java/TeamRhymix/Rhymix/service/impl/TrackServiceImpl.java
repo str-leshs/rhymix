@@ -24,9 +24,9 @@ public class TrackServiceImpl implements TrackService {
                             .trackId(dto.getTrackId())
                             .title(dto.getTitle())
                             .artist(dto.getArtist())
-                            .album("Unknown")
+                            .album(dto.getAlbum()) // <- 실제 앨범명
                             .coverImage(dto.getAlbumImageUrl())
-                            .duration(180)
+                            .duration(dto.getDuration()) // <- ms → s 변환 완료 상태
                             .build();
                     return trackRepository.save(newTrack);
                 });
@@ -34,8 +34,13 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public Track findByTrackId(String trackId) {
+        if (trackId == null || trackId.isBlank()) {
+            throw new IllegalArgumentException("trackId는 null일 수 없습니다.");
+        }
+
         return trackRepository.findByTrackId(trackId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 trackId에 대한 Track 정보가 없습니다: " + trackId));
     }
+
 
 }

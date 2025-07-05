@@ -5,6 +5,7 @@ import TeamRhymix.Rhymix.domain.Chat;
 import TeamRhymix.Rhymix.domain.Post;
 import TeamRhymix.Rhymix.dto.PostDto;
 import TeamRhymix.Rhymix.mapper.PostMapper;
+import TeamRhymix.Rhymix.security.CustomUserDetails;
 import TeamRhymix.Rhymix.service.PostService;
 
 import TeamRhymix.Rhymix.domain.Track;
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/posts")
+@RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
 
@@ -39,7 +40,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
             @RequestBody PostRequestDto request,
-            @AuthenticationPrincipal User userDetails
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         if (userDetails == null) {
             return ResponseEntity.status(401).build();
@@ -57,6 +58,9 @@ public class PostController {
                 .postId(saved.getId())
                 .trackTitle(track.getTitle())
                 .trackArtist(track.getArtist())
+                .album(track.getAlbum())
+                .coverImage(track.getCoverImage())
+                .duration(track.getDuration())
                 .mood(request.getMood())
                 .weather(request.getWeather())
                 .comment(request.getComment())
@@ -67,7 +71,7 @@ public class PostController {
 
 
     @GetMapping("/today")
-    public ResponseEntity<PostDto> getTodayPost(
+    public ResponseEntity<PostResponseDto> getTodayPost(
             @RequestParam(required = false) String nickname,
             @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails
     ) {
@@ -75,15 +79,29 @@ public class PostController {
             if (userDetails == null) {
                 return ResponseEntity.status(401).build();
             }
-            nickname = userDetails.getUsername(); // 본인 닉네임
+            nickname = userDetails.getUsername();
         }
 
         Post post = postService.getTodayPost(nickname);
+        if (post == null) return ResponseEntity.notFound().build();
 
-        return post != null
-                ? ResponseEntity.ok(postMapper.toDto(post))
-                : ResponseEntity.notFound().build();
+        Track track = trackService.findByTrackId(post.getTrackId());
+
+        PostResponseDto response = PostResponseDto.builder()
+                .postId(post.getId())
+                .trackTitle(track.getTitle())
+                .trackArtist(track.getArtist())
+                .album(track.getAlbum())
+                .coverImage(track.getCoverImage())
+                .duration(track.getDuration())
+                .mood(post.getMood())
+                .weather(post.getWeather())
+                .comment(post.getComment())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
+
 
 
 

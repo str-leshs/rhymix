@@ -10,10 +10,16 @@ import java.util.List;
 @Setter
 public class PostDto {
     private String id;
-    private String userId;         // 유저 아이디 (사용자와 연결)
+    private String userId;
     private String trackId;
-    private String weather;        // 날씨
-    private String mood;           // 기분
-    private String comment;        // 코멘트
-    private List<Chat> chats;      // 댓글 목록
+    private String trackTitle;
+    private String trackArtist;
+    private String album;
+    private String coverImage;
+    private int duration;
+
+    private String weather;
+    private String mood;
+    private String comment;
+    private List<Chat> chats;
 }
