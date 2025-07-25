@@ -41,8 +41,8 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
         document.querySelectorAll(".select-track-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const t = e.target.dataset;
-                console.log("🎯 선택된 트랙 정보:", t);         // ✅ 콘솔로 확인
-                console.log("✅ trackId:", t.trackId);         // 반드시 찍혀야 함
+                console.log("선택된 트랙 정보:", t);
+                console.log("trackId:", t.trackId);
                 selectedTrackId = t.trackId;
 
                 document.getElementById("trackTitle").textContent = t.title;
@@ -67,6 +67,21 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
             return;
         }
 
+        // 1. 이미 오늘 곡이 등록되었는지 확인
+        const todayResponse = await fetch("/api/posts/today", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (todayResponse.ok) {
+            // 2. 이미 추천곡이 존재함 >> 사용자에게 수정 여부 확인
+            const confirmUpdate = confirm("오늘 이미 추천곡을 등록하셨습니다.\n새로운 곡으로 수정하시겠습니까?");
+            if (!confirmUpdate) {
+                return; // 사용자 취소 선택
+            }
+        }
+
+        // 3. 계속 진행
         const moodSelect = document.getElementById("mood");
         const weatherSelect = document.getElementById("weather");
         const comment = document.getElementById("comment").value;

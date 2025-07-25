@@ -15,6 +15,7 @@ import TeamRhymix.Rhymix.dto.PostResponseDto;
 
 import TeamRhymix.Rhymix.service.TrackService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -43,10 +45,12 @@ public class PostController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         if (userDetails == null) {
+            log.warn("[POST] 인증 실패 - userDetails is null");
             return ResponseEntity.status(401).build();
         }
 
         String userId = userDetails.getUsername();
+        log.debug("[POST] 인증된 사용자 ID: {}", userId);
 
         // 트랙 먼저 저장
         Track track = trackService.findOrSaveTrack(request.getTrackId());
