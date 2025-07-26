@@ -271,6 +271,50 @@ public class PlaylistServiceImpl implements PlaylistService {
         return new PlaylistDto(saved.getId(), title, type, trackInfos);
     }
 
+    @Override
+    public PlaylistDto getThemePlaylistPreview(String nickname, String tag) {
+        List<Post> posts = mongoTemplate.find(
+                Query.query(
+                        Criteria.where("userId").is(nickname)
+                                .orOperator(
+                                        Criteria.where("weather").is(tag),
+                                        Criteria.where("mood").is(tag)
+                                )
+                ), Post.class
+        );
+
+        if (posts.isEmpty()) {
+            return new PlaylistDto(null, tag + " 테마", "theme", List.of());
+        }
+
+        List<String> trackIds = posts.stream()
+                .map(Post::getTrackId)
+                .distinct()
+                .toList();
+
+        List<Track> tracks = mongoTemplate.find(
+                Query.query(Criteria.where("trackId").in(trackIds)), Track.class
+        );
+
+        Map<String, Track> trackMap = tracks.stream()
+                .collect(Collectors.toMap(Track::getTrackId, t -> t));
+
+        List<PlaylistTrackInfo> trackInfos = posts.stream()
+                .map(post -> {
+                    Track track = trackMap.get(post.getTrackId());
+                    if (track == null) return null;
+                    return new PlaylistTrackInfo(
+                            track.getTitle(),
+                            track.getArtist(),
+                            post.getMood(),
+                            post.getWeather()
+                    );
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        return new PlaylistDto(null, tag + " 테마", "theme", trackInfos);
+    }
 
 
 }

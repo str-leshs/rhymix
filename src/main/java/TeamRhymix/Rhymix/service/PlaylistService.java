@@ -11,4 +11,6 @@ public interface PlaylistService {
     Playlist findLatestMonthlyPlaylistByNickname(String nickname);
 
     PlaylistDto generateThemePlaylist(String nickname, String tag);
+
+    PlaylistDto getThemePlaylistPreview(String nickname, String tag);
 }

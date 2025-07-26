@@ -91,8 +91,7 @@ public class PlaylistController {
     }
 
     /**
-     * 로그인한 사용자의 테마 기반 곡 목록 조회 (저장되지 않음)
-     * - 날씨 또는 기분 태그에 해당하는 사용자의 Post들을 조회하여 DTO로 반환
+     * 로그인한 사용자의 테마 플레이스트 조회
      */
     @GetMapping("/theme")
     public ResponseEntity<PlaylistDto> getThemePlaylist(
@@ -100,55 +99,14 @@ public class PlaylistController {
             @AuthenticationPrincipal UserDetails user
     ) {
         if (user == null) {
-            throw new PlaylistException(ErrorCode.UNAUTHORIZED); // 사용자 인증 필요
+            throw new PlaylistException(ErrorCode.UNAUTHORIZED);
         }
 
         String nickname = user.getUsername();
-        List<Post> posts = mongoTemplate.find(
-                Query.query(
-                        Criteria.where("userId").is(nickname)
-                                .orOperator(
-                                        Criteria.where("weather").is(tag),
-                                        Criteria.where("mood").is(tag)
-                                )
-                ),
-                Post.class
-        );
-
-        // 추천곡이 없다면 빈 리스트 반환
-        if (posts.isEmpty()) {
-            return ResponseEntity.ok(new PlaylistDto(null, tag + " 테마", "theme", List.of()));
-        }
-
-        // Post에서 trackId만 뽑아서 Track 목록 조회
-        List<String> trackIds = posts.stream()
-                .map(Post::getTrackId)
-                .toList();
-
-        Map<String, Track> trackMap = mongoTemplate.find(
-                Query.query(Criteria.where("trackId").in(trackIds)), Track.class
-        ).stream().collect(Collectors.toMap(Track::getTrackId, t -> t));
-
-        List<PlaylistTrackInfo> trackInfos = posts.stream()
-                .map(post -> {
-                    Track track = trackMap.get(post.getTrackId());
-                    if (track == null) return null;
-
-                    return new PlaylistTrackInfo(
-                            track.getTitle(),
-                            track.getArtist(),
-                            post.getMood(),
-                            post.getWeather()
-                    );
-                })
-                .filter(Objects::nonNull)
-                .toList();
-
-        PlaylistDto dto = new PlaylistDto(null, tag + " 테마", "theme", trackInfos);
-
-
+        PlaylistDto dto = playlistService.getThemePlaylistPreview(nickname, tag);
         return ResponseEntity.ok(dto);
     }
+
 
 
     /**
