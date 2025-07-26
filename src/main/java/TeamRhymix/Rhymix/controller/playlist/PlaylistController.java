@@ -2,7 +2,9 @@ package TeamRhymix.Rhymix.controller.playlist;
 
 import TeamRhymix.Rhymix.domain.Playlist;
 import TeamRhymix.Rhymix.domain.Post;
+import TeamRhymix.Rhymix.domain.Track;
 import TeamRhymix.Rhymix.dto.PlaylistDto;
+import TeamRhymix.Rhymix.dto.PlaylistTrackInfo;
 import TeamRhymix.Rhymix.exception.ErrorCode;
 import TeamRhymix.Rhymix.exception.PlaylistException;
 import TeamRhymix.Rhymix.service.PlaylistService;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/playlists")
@@ -111,12 +115,41 @@ public class PlaylistController {
                 Post.class
         );
 
-        PlaylistDto dto = new PlaylistDto(
-                null, tag + " 테마", "theme", posts
-        );
+        // 추천곡이 없다면 빈 리스트 반환
+        if (posts.isEmpty()) {
+            return ResponseEntity.ok(new PlaylistDto(null, tag + " 테마", "theme", List.of()));
+        }
+
+        // Post에서 trackId만 뽑아서 Track 목록 조회
+        List<String> trackIds = posts.stream()
+                .map(Post::getTrackId)
+                .toList();
+
+        Map<String, Track> trackMap = mongoTemplate.find(
+                Query.query(Criteria.where("trackId").in(trackIds)), Track.class
+        ).stream().collect(Collectors.toMap(Track::getTrackId, t -> t));
+
+        List<PlaylistTrackInfo> trackInfos = posts.stream()
+                .map(post -> {
+                    Track track = trackMap.get(post.getTrackId());
+                    if (track == null) return null;
+
+                    return new PlaylistTrackInfo(
+                            track.getTitle(),
+                            track.getArtist(),
+                            post.getMood(),
+                            post.getWeather()
+                    );
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        PlaylistDto dto = new PlaylistDto(null, tag + " 테마", "theme", trackInfos);
+
 
         return ResponseEntity.ok(dto);
     }
+
 
     /**
      * 이웃 사용자의 최신 월별 플레이리스트 조회
