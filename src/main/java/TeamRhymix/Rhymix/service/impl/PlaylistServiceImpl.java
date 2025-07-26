@@ -2,6 +2,7 @@ package TeamRhymix.Rhymix.service.impl;
 
 import TeamRhymix.Rhymix.domain.*;
 import TeamRhymix.Rhymix.dto.PlaylistDto;
+import TeamRhymix.Rhymix.dto.PlaylistTrackInfo;
 import TeamRhymix.Rhymix.exception.ErrorCode;
 import TeamRhymix.Rhymix.exception.PlaylistException;
 import TeamRhymix.Rhymix.service.PlaylistService;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -90,7 +94,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .userId(user.getNickname())
                 .title(title)
                 .type("monthly")
-                .trackIds(trackIds)
+                .postIds(posts.stream().map(Post::getId).toList())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -104,35 +108,70 @@ public class PlaylistServiceImpl implements PlaylistService {
     public PlaylistDto getPlaylistWithTracks(String playlistId) {
         log.info("playlistId 요청됨: '{}'", playlistId);
 
-        // 유효성 검사
         if (playlistId == null || playlistId.trim().isEmpty()) {
             throw new PlaylistException(ErrorCode.INVALID_ID_FORMAT);
         }
 
-        ObjectId objectId;  // 문자열을 ObjectId로 변환
+        ObjectId objectId;
         try {
             objectId = new ObjectId(playlistId);
         } catch (IllegalArgumentException e) {
             throw new PlaylistException(ErrorCode.INVALID_ID_FORMAT);
         }
 
-        // 플레이리스트 조회
         Playlist playlist = mongoTemplate.findById(objectId, Playlist.class);
         if (playlist == null) {
             throw new PlaylistException(ErrorCode.PLAYLIST_NOT_FOUND);
         }
 
-        // 포함된 트랙(Post) 정보 조회
-        Query trackQuery = new Query(Criteria.where("_id").in(playlist.getTrackIds()));
-        List<Post> posts = mongoTemplate.find(trackQuery, Post.class);
+        List<String> postIds = playlist.getPostIds(); // 필드명 변경됨
 
-        return new PlaylistDto(   // DTO 형태로 반환
+        // 1. postId 목록으로 Post 조회
+        List<Post> posts = mongoTemplate.find(
+                Query.query(Criteria.where("_id").in(postIds)), Post.class
+        );
+
+        // 2. post에서 trackId 추출 후 Track 조회
+        List<String> trackIds = posts.stream()
+                .map(Post::getTrackId)
+                .distinct()
+                .toList();
+
+        List<Track> tracks = mongoTemplate.find(
+                Query.query(Criteria.where("trackId").in(trackIds)), Track.class
+        );
+
+        // 3. trackId → Track 매핑
+        Map<String, Track> trackMap = tracks.stream()
+                .collect(Collectors.toMap(Track::getTrackId, t -> t));
+
+        // 4. PlaylistTrackInfo 구성
+        List<PlaylistTrackInfo> trackInfoList = posts.stream()
+                .map(post -> {
+                    Track track = trackMap.get(post.getTrackId());
+                    if (track == null) {
+                        log.warn("트랙 정보가 존재하지 않습니다. trackId: {}", post.getTrackId());
+                        return null;
+                    }
+
+                    return new PlaylistTrackInfo(
+                            track.getTitle(),
+                            track.getArtist(),
+                            post.getMood(),
+                            post.getWeather()
+                    );
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        return new PlaylistDto(
                 playlist.getId(),
                 playlist.getTitle(),
                 playlist.getType(),
-                posts
+                trackInfoList
         );
     }
+
 
     /**
      * 최신 월별 플레이리스트 조회
@@ -182,7 +221,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         String title = tag + " 테마";
         String type = "theme";
 
-        // 기존 theme 플레이리스트 있으면 삭제 (한 사용자가 동일 태그로 하나만 유지)
+        // 기존 동일 테마 플레이리스트 삭제
         Query query = Query.query(
                 Criteria.where("userId").is(user.getNickname())
                         .and("type").is(type)
@@ -190,20 +229,96 @@ public class PlaylistServiceImpl implements PlaylistService {
         );
         mongoTemplate.remove(query, Playlist.class);
 
+        // trackId 추출
+        List<String> trackIds = posts.stream()
+                .map(Post::getTrackId)
+                .distinct()
+                .toList();
+
+        List<Track> tracks = mongoTemplate.find(
+                Query.query(Criteria.where("trackId").in(trackIds)),
+                Track.class
+        );
+
+        // trackId → Track 매핑
+        Map<String, Track> trackMap = tracks.stream()
+                .collect(Collectors.toMap(Track::getTrackId, t -> t));
+
+        // PlaylistTrackInfo 구성
+        List<PlaylistTrackInfo> trackInfos = posts.stream()
+                .map(post -> {
+                    Track track = trackMap.get(post.getTrackId());
+                    if (track == null) return null;
+
+                    return new PlaylistTrackInfo(
+                            track.getTitle(),
+                            track.getArtist(),
+                            post.getMood(),
+                            post.getWeather()
+                    );
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        // Playlist 저장 (postIds 저장)
         Playlist playlist = Playlist.builder()
                 .userId(user.getNickname())
                 .title(title)
                 .type(type)
-                .trackIds(posts.stream().map(Post::getId).toList())
+                .postIds(posts.stream().map(Post::getId).toList())
                 .createdAt(LocalDateTime.now())
                 .build();
 
         Playlist saved = mongoTemplate.save(playlist);
 
-        return new PlaylistDto(
-                saved.getId(), title, type, posts
-        );
+        return new PlaylistDto(saved.getId(), title, type, trackInfos);
     }
+
+    @Override
+    public PlaylistDto getThemePlaylistPreview(String nickname, String tag) {
+        List<Post> posts = mongoTemplate.find(
+                Query.query(
+                        Criteria.where("userId").is(nickname)
+                                .orOperator(
+                                        Criteria.where("weather").is(tag),
+                                        Criteria.where("mood").is(tag)
+                                )
+                ), Post.class
+        );
+
+        if (posts.isEmpty()) {
+            return new PlaylistDto(null, tag + " 테마", "theme", List.of());
+        }
+
+        List<String> trackIds = posts.stream()
+                .map(Post::getTrackId)
+                .distinct()
+                .toList();
+
+        List<Track> tracks = mongoTemplate.find(
+                Query.query(Criteria.where("trackId").in(trackIds)), Track.class
+        );
+
+        Map<String, Track> trackMap = tracks.stream()
+                .collect(Collectors.toMap(Track::getTrackId, t -> t));
+
+        List<PlaylistTrackInfo> trackInfos = posts.stream()
+                .map(post -> {
+                    Track track = trackMap.get(post.getTrackId());
+                    if (track == null) return null;
+                    return new PlaylistTrackInfo(
+                            track.getTitle(),
+                            track.getArtist(),
+                            post.getMood(),
+                            post.getWeather()
+                    );
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        return new PlaylistDto(null, tag + " 테마", "theme", trackInfos);
+    }
+
 
 }
 

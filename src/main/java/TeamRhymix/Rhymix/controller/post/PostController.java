@@ -77,14 +77,17 @@ public class PostController {
     @GetMapping("/today")
     public ResponseEntity<PostResponseDto> getTodayPost(
             @RequestParam(required = false) String nickname,
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         if (nickname == null) {
             if (userDetails == null) {
+                log.warn("[GET] 인증 실패 - userDetails is null");
                 return ResponseEntity.status(401).build();
             }
             nickname = userDetails.getUsername();
         }
+
+        log.debug("[GET] 조회할 nickname: {}", nickname);
 
         Post post = postService.getTodayPost(nickname);
         if (post == null) return ResponseEntity.notFound().build();
@@ -111,11 +114,12 @@ public class PostController {
 
     @GetMapping("/monthly")
     public ResponseEntity<List<PostDto>> getMonthlyPosts(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam int year,
             @RequestParam int month
     ) {
         if (userDetails == null) {
+            log.warn("[GET monthly] 인증 실패 - userDetails is null");
             return ResponseEntity.status(401).build();
         }
 

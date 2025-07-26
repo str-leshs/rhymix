@@ -25,7 +25,7 @@ public class Playlist {
 
     private String type;
 
-    private List<String> trackIds; // Post ID 문자열 리스트
+    private List<String> postIds;
 
     private LocalDateTime createdAt;
 }

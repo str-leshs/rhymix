@@ -1,6 +1,6 @@
 package TeamRhymix.Rhymix.dto;
 
-import TeamRhymix.Rhymix.domain.Post;
+import TeamRhymix.Rhymix.domain.Track;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +16,6 @@ public class PlaylistDto {
     private String id;
     private String title;
     private String type;
-    private List<Post> tracks;
+    List<PlaylistTrackInfo> tracks;
 }
 

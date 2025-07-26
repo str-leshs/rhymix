@@ -2,7 +2,9 @@ package TeamRhymix.Rhymix.controller.playlist;
 
 import TeamRhymix.Rhymix.domain.Playlist;
 import TeamRhymix.Rhymix.domain.Post;
+import TeamRhymix.Rhymix.domain.Track;
 import TeamRhymix.Rhymix.dto.PlaylistDto;
+import TeamRhymix.Rhymix.dto.PlaylistTrackInfo;
 import TeamRhymix.Rhymix.exception.ErrorCode;
 import TeamRhymix.Rhymix.exception.PlaylistException;
 import TeamRhymix.Rhymix.service.PlaylistService;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/playlists")
@@ -87,8 +91,7 @@ public class PlaylistController {
     }
 
     /**
-     * 로그인한 사용자의 테마 기반 곡 목록 조회 (저장되지 않음)
-     * - 날씨 또는 기분 태그에 해당하는 사용자의 Post들을 조회하여 DTO로 반환
+     * 로그인한 사용자의 테마 플레이스트 조회
      */
     @GetMapping("/theme")
     public ResponseEntity<PlaylistDto> getThemePlaylist(
@@ -96,27 +99,15 @@ public class PlaylistController {
             @AuthenticationPrincipal UserDetails user
     ) {
         if (user == null) {
-            throw new PlaylistException(ErrorCode.UNAUTHORIZED); // 사용자 인증 필요
+            throw new PlaylistException(ErrorCode.UNAUTHORIZED);
         }
 
         String nickname = user.getUsername();
-        List<Post> posts = mongoTemplate.find(
-                Query.query(
-                        Criteria.where("userId").is(nickname)
-                                .orOperator(
-                                        Criteria.where("weather").is(tag),
-                                        Criteria.where("mood").is(tag)
-                                )
-                ),
-                Post.class
-        );
-
-        PlaylistDto dto = new PlaylistDto(
-                null, tag + " 테마", "theme", posts
-        );
-
+        PlaylistDto dto = playlistService.getThemePlaylistPreview(nickname, tag);
         return ResponseEntity.ok(dto);
     }
+
+
 
     /**
      * 이웃 사용자의 최신 월별 플레이리스트 조회
