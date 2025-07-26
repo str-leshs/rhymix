@@ -29,30 +29,33 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post savePost(PostRequestDto requestDto, String userId) {
-        // 오늘 날짜 기준 기존 포스트 존재 여부 확인
         LocalDateTime start = LocalDate.now().atStartOfDay();
         LocalDateTime end = start.plusDays(1).minusSeconds(1);
+
         Post existing = postRepository.findTodayPostByUserId(userId, start, end);
 
         if (existing != null) {
+            // 기존 포스트 업데이트
             existing.setMood(requestDto.getMood());
             existing.setWeather(requestDto.getWeather());
             existing.setComment(requestDto.getComment());
-            existing.setCreatedAt(LocalDateTime.now());
             existing.setTrackId(requestDto.getTrackId());
+            existing.setCreatedAt(LocalDateTime.now());
             return postRepository.save(existing);
-        } else {
-            Post newPost = Post.builder()
-                    .userId(userId)
-                    .mood(requestDto.getMood())
-                    .weather(requestDto.getWeather())
-                    .comment(requestDto.getComment())
-                    .trackId(requestDto.getTrackId())
-                    .createdAt(LocalDateTime.now())
-                    .build();
-            return postRepository.save(newPost);
         }
+
+        Post newPost = Post.builder()
+                .userId(userId)
+                .mood(requestDto.getMood())
+                .weather(requestDto.getWeather())
+                .comment(requestDto.getComment())
+                .trackId(requestDto.getTrackId())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return postRepository.save(newPost);
     }
+
 
 
     @Override
