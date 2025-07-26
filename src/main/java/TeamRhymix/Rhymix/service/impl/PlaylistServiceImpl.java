@@ -149,7 +149,10 @@ public class PlaylistServiceImpl implements PlaylistService {
         List<PlaylistTrackInfo> trackInfoList = posts.stream()
                 .map(post -> {
                     Track track = trackMap.get(post.getTrackId());
-                    if (track == null) return null;
+                    if (track == null) {
+                        log.warn("트랙 정보가 존재하지 않습니다. trackId: {}", post.getTrackId());
+                        return null;
+                    }
 
                     return new PlaylistTrackInfo(
                             track.getTitle(),
