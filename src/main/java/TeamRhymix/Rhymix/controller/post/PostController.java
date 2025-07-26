@@ -114,11 +114,12 @@ public class PostController {
 
     @GetMapping("/monthly")
     public ResponseEntity<List<PostDto>> getMonthlyPosts(
-            @AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam int year,
             @RequestParam int month
     ) {
         if (userDetails == null) {
+            log.warn("[GET monthly] 인증 실패 - userDetails is null");
             return ResponseEntity.status(401).build();
         }
 
