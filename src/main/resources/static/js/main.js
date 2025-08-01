@@ -79,23 +79,26 @@ function loadUserProfile() {
 
 // 오늘의 음악
 function loadTodayMusicAndComments(nickname) {
-    fetch('/api/posts/today')
+    fetch('/api/posts/today', {
+        method: 'GET',
+        credentials: 'include'
+    })
         .then(res => {
             if (!res.ok) throw new Error("추천곡 없음");
             return res.json();
         })
         .then(post => {
             const musicCard = document.querySelector('.music-card');
-            document.querySelector('.music-card img').src = post.cover || '/image/placeholder_album.png';
-            document.querySelector('.music-title-box').textContent = `🎵 ${post.title}`;
-            document.querySelector('.music-artist-box').textContent = `🎤 ${post.artist}`;
+            document.querySelector('.music-card img').src = post.coverImage || '/image/placeholder_album.png';
+            document.querySelector('.music-title-box').textContent = `🎵 ${post.trackTitle}`;
+            document.querySelector('.music-artist-box').textContent = `🎤 ${post.trackArtist}`;
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
             document.getElementById('music-comment').textContent = post.comment || '';
             musicCard.style.display = "block";
 
-            loadComments(post.id);
-            setupCommentSubmit(post.id, nickname);
+            loadComments(post.postId);
+            setupCommentSubmit(post.postId, nickname);
         })
         .catch(() => {
             const musicCard = document.querySelector('.music-card');
@@ -221,12 +224,12 @@ function setupCalendar(userId) {
                 if (!res.ok) return alert("추천곡을 불러올 수 없습니다.");
                 const data = await res.json();
 
-                document.getElementById("modalDetailTitle").textContent = data.title;
-                document.getElementById("modalDetailArtist").textContent = data.artist;
+                document.getElementById("modalDetailTitle").textContent = data.trackTitle;
+                document.getElementById("modalDetailArtist").textContent = data.trackArtist;
                 document.getElementById("modalDetailMood").textContent = data.mood || "-";
                 document.getElementById("modalDetailWeather").textContent = data.weather || "-";
                 document.getElementById("modalDetailComment").textContent = data.comment || "-";
-                document.getElementById("modalDetailCover").src = data.cover || "/image/default-cover.png";
+                document.getElementById("modalDetailCover").src = data.coverImage || "/image/default-cover.png";
 
                 document.getElementById("trackDetailModal").style.display = "flex";
             } catch (e) {

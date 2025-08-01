@@ -1,4 +1,4 @@
-let selectedTrackId = null;  // ✅ 선택된 Spotify 트랙 ID 저장용
+let selectedTrackId = null;  //선택된 Spotify 트랙 ID 저장 위함
 
 // 모달 열기
 document.getElementById("openModalBtn").addEventListener("click", () => {
@@ -10,7 +10,7 @@ document.getElementById("cancelTrackBtn").addEventListener("click", () => {
     document.getElementById("manualInputModal").style.display = "none";
 });
 
-// Spotify 검색 버튼 클릭
+//곡검색 버튼
 document.getElementById("spotifySearchBtn").addEventListener("click", async () => {
     const query = document.getElementById("spotifySearchInput").value;
     const resultList = document.getElementById("spotifySearchResults");
@@ -27,10 +27,11 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
             <strong>${track.title}</strong> - ${track.artist}
             <img src="${track.albumImageUrl}" width="40" style="vertical-align:middle;">
             <button class="select-track-btn" 
-              data-id="${track.trackId}" 
+              data-track-id="${track.trackId}"
               data-title="${track.title}" 
               data-artist="${track.artist}" 
               data-cover="${track.albumImageUrl}">선택</button>
+
           </div>
         `;
             resultList.appendChild(li);
@@ -40,7 +41,9 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
         document.querySelectorAll(".select-track-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const t = e.target.dataset;
-                selectedTrackId = t.id;
+                console.log("선택된 트랙 정보:", t);
+                console.log("trackId:", t.trackId);
+                selectedTrackId = t.trackId;
 
                 document.getElementById("trackTitle").textContent = t.title;
                 document.getElementById("trackArtist").textContent = t.artist;
@@ -59,20 +62,26 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
 // 저장 버튼 클릭
 document.getElementById("saveBtn").addEventListener("click", async () => {
     try {
-        const userRes = await fetch("/api/auth/me");
-        if (!userRes.ok) {
-            alert("로그인이 필요합니다.");
-            return;
-        }
-
-        const user = await userRes.json();
-        const userId = user.nickname;
-
         if (!selectedTrackId) {
             alert("🎵 먼저 곡을 검색하고 선택해주세요.");
             return;
         }
 
+        // 1. 이미 오늘 곡이 등록되었는지 확인
+        const todayResponse = await fetch("/api/posts/today", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (todayResponse.ok) {
+            // 2. 이미 추천곡이 존재함 >> 사용자에게 수정 여부 확인
+            const confirmUpdate = confirm("오늘 이미 추천곡을 등록하셨습니다.\n새로운 곡으로 수정하시겠습니까?");
+            if (!confirmUpdate) {
+                return; // 사용자 취소 선택
+            }
+        }
+
+        // 3. 계속 진행
         const moodSelect = document.getElementById("mood");
         const weatherSelect = document.getElementById("weather");
         const comment = document.getElementById("comment").value;
@@ -81,30 +90,27 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
         const weather = weatherSelect.options[weatherSelect.selectedIndex].text;
 
         const postData = {
-            userId: userId,
             trackId: selectedTrackId,
             mood: mood,
             weather: weather,
             comment: comment
         };
 
-        // 이미 오늘 등록한 추천곡이 있는지 확인
-        const checkRes = await fetch(`/api/posts/today?userId=${userId}`);
-        if (checkRes.ok) {
-            const confirmUpdate = confirm("오늘의 추천곡이 이미 등록되어 있습니다. 수정하시겠습니까?");
-            if (!confirmUpdate) return;
-        }
-
-        // 저장 요청
         const response = await fetch("/api/posts", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(postData)
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(postData),
+            credentials: "include"
         });
 
         if (response.ok) {
             alert("오늘의 추천곡이 등록되었습니다!");
             window.location.href = "/main";
+        } else if (response.status === 401) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/login";
         } else {
             alert("저장에 실패했습니다.");
         }
