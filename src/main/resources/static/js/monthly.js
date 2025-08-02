@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const showTrack = (track) => {
         titleEl.textContent = track.title;
         artistEl.textContent = track.artist;
-        coverEl.src = track.cover;
+        coverEl.src = track.coverImage;
     };
 
     showTrack(posts[0]);

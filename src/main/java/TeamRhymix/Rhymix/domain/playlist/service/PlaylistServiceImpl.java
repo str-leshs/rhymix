@@ -160,7 +160,8 @@ public class PlaylistServiceImpl implements PlaylistService {
                             track.getTitle(),
                             track.getArtist(),
                             post.getMood(),
-                            post.getWeather()
+                            post.getWeather(),
+                            track.getCoverImage()
                     );
                 })
                 .filter(Objects::nonNull)
@@ -256,7 +257,8 @@ public class PlaylistServiceImpl implements PlaylistService {
                             track.getTitle(),
                             track.getArtist(),
                             post.getMood(),
-                            post.getWeather()
+                            post.getWeather(),
+                            track.getCoverImage()
                     );
                 })
                 .filter(Objects::nonNull)
@@ -312,7 +314,8 @@ public class PlaylistServiceImpl implements PlaylistService {
                             track.getTitle(),
                             track.getArtist(),
                             post.getMood(),
-                            post.getWeather()
+                            post.getWeather(),
+                            track.getCoverImage()
                     );
                 })
                 .filter(Objects::nonNull)
