@@ -20,18 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
         const listEl = document.getElementById("theme-track-list");
         const iconEl = document.getElementById("theme-modal-icon");
 
-        const firstTrack = playlist.tracks[0];
-        const fullTag = firstTrack?.weather || firstTrack?.mood || "🎵"; // 예: "☀ 맑음"
-        const emoji = fullTag.split(" ")[0];
-        const label = fullTag.split(" ")[1];
+        const titleText = playlist.title || "테마 Playlist"; // ex) "😊 행복 테마"
+        const emoji = titleText.split(" ")[0]; // 이모지 추출
+        const label = titleText.substring(2);  // 이모지 이후 텍스트만
 
         iconEl.textContent = emoji;
-        titleEl.textContent = `${label} Playlist`;
+        titleEl.textContent = `${label}`; // label에 이미 "행복 테마" 포함됨
 
         listEl.innerHTML = playlist.tracks.map(t => `${t.title} - ${t.artist}`).join("<br>");
         modal.style.display = "flex";
     }
-
 
 
 

@@ -221,7 +221,7 @@ public class PlaylistServiceImpl implements PlaylistService {
             throw new PlaylistException(ErrorCode.NO_POSTS);
         }
 
-        String title = tag + " 테마";
+        String title = tag + " 플레이리스트";
         String type = "theme";
 
         // 기존 동일 테마 플레이리스트 삭제
