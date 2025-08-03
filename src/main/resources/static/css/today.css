@@ -201,13 +201,13 @@ body {
 }
 
 .select-section select {
-    width: 200px;           /* 너비 키우기 */
-    height: 45px;           /* 높이 키우기 */
-    font-size: 16px;        /* 글씨 키우기 */
-    padding: 8px 12px;      /* 안쪽 여백 */
-    border-radius: 8px;     /* 모서리 둥글게 */
-    border: 1px solid #ccc; /* 경계선 */
-    background-color: #fff; /* 배경색 */
+    width: 200px;
+    height: 45px;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
     cursor: pointer;
 }
 
@@ -222,9 +222,60 @@ body {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    float: right; /* 오른쪽 정렬 */
+    float: right;
 }
 
+/* 검색창 + 검색버튼을 옆으로 배치 */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* 검색 버튼 스타일 */
+.btn-search {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #ffcb4c;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+.btn-search:hover {
+    background-color: #f6b100;
+}
+
+/* 모달 하단의 취소 버튼 컨테이너 */
+.modal-cancel {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* 취소 버튼 스타일 */
+.btn-cancel {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-cancel:hover {
+    background-color: #aaa;
+}
+
+/* 검색창 input 조정 */
+#spotifySearchInput {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
 
 .modal {
     display: none;
@@ -260,7 +311,6 @@ body {
     margin-top: 10px;
 }
 
-/* today.css에 추가 */
 .spotify-result-item {
     display: flex;
     align-items: center;

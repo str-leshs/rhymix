@@ -41,13 +41,10 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
             resultList.appendChild(li);
         });
 
-
-        // 트랙 선택 버튼 클릭 시
+        // 선택 버튼
         document.querySelectorAll(".select-track-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const t = e.target.dataset;
-                console.log("선택된 트랙 정보:", t);
-                console.log("trackId:", t.trackId);
                 selectedTrackId = t.trackId;
 
                 document.getElementById("trackTitle").textContent = t.title;
@@ -60,7 +57,7 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
 
     } catch (err) {
         console.error("검색 실패:", err);
-        alert("검색 중 오류 발생");
+        alert("검색 중 오류가 발생했습니다.");
     }
 });
 
