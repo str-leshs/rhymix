@@ -22,20 +22,25 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
 
         results.forEach(track => {
             const li = document.createElement("li");
-            li.innerHTML = `
-          <div>
-            <strong>${track.title}</strong> - ${track.artist}
-            <img src="${track.albumImageUrl}" width="40" style="vertical-align:middle;">
-            <button class="select-track-btn" 
-              data-track-id="${track.trackId}"
-              data-title="${track.title}" 
-              data-artist="${track.artist}" 
-              data-cover="${track.albumImageUrl}">선택</button>
+            li.className = "spotify-result-item";
 
-          </div>
-        `;
+            li.innerHTML = `
+              <div class="spotify-track-info">
+                <img src="${track.albumImageUrl}" class="spotify-track-cover" alt="커버">
+                <div class="spotify-track-text">
+                  <span class="spotify-track-title">${track.title}</span>
+                  <span class="spotify-track-artist">${track.artist}</span>
+                </div>
+              </div>
+              <button class="select-track-btn" 
+                data-track-id="${track.trackId}"
+                data-title="${track.title}" 
+                data-artist="${track.artist}" 
+                data-cover="${track.albumImageUrl}">선택</button>
+            `;
             resultList.appendChild(li);
         });
+
 
         // 트랙 선택 버튼 클릭 시
         document.querySelectorAll(".select-track-btn").forEach(btn => {

@@ -260,3 +260,59 @@ body {
     margin-top: 10px;
 }
 
+/* today.css에 추가 */
+.spotify-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.2s ease-in-out;
+}
+
+.spotify-result-item:hover {
+    background-color: #f8f8f8;
+}
+
+.spotify-track-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-grow: 1;
+}
+
+.spotify-track-cover {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.spotify-track-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.spotify-track-title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.spotify-track-artist {
+    font-size: 13px;
+    color: #555;
+}
+
+.select-track-btn {
+    padding: 5px 10px;
+    background-color: #ffe184;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.select-track-btn:hover {
+    background-color: #ffcc50;
+}
+
