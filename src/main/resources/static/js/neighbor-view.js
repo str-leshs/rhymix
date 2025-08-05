@@ -59,16 +59,16 @@ function loadNeighborPost(nickname, currentUserNickname) {
     fetch(`/api/posts/today?nickname=${nickname}`)
         .then(res => res.json())
         .then(post => {
-            document.querySelector('.music-card img').src = post.cover || '/image/placeholder_album.png';
-            document.querySelector('.music-title-box').textContent = `🎵 ${post.title}`;
-            document.querySelector('.music-artist-box').textContent = `🎤 ${post.artist}`;
+            document.querySelector('.music-card img').src = post.coverImage || '/image/placeholder_album.png';
+            document.querySelector('.music-title-box').textContent = `🎵 ${post.trackTitle}`;
+            document.querySelector('.music-artist-box').textContent = `🎤 ${post.trackArtist}`;
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
             document.querySelector('.mood-caption').textContent = post.comment || '';
             document.getElementById('music-comment').textContent = post.comment || '';
 
-            loadNeighborChats(post.id);
-            setupChatForm(post.id, currentUserNickname);
+            loadNeighborChats(post.postId);
+            setupChatForm(post.postId, currentUserNickname);
         })
         .catch(() => {
             document.querySelector('.music-card').innerHTML = "<p>아직 오늘의 포스팅을 하지 않으셨어요!</p>";
@@ -183,12 +183,12 @@ function setupNeighborCalendar(nickname) {
                 if (!res.ok) return alert("추천곡을 불러올 수 없습니다.");
                 const data = await res.json();
 
-                document.getElementById("modalDetailTitle").textContent = data.title;
-                document.getElementById("modalDetailArtist").textContent = data.artist;
+                document.getElementById("modalDetailTitle").textContent = data.trackTitle;
+                document.getElementById("modalDetailArtist").textContent = data.trackArtist;
                 document.getElementById("modalDetailMood").textContent = data.mood || "-";
                 document.getElementById("modalDetailWeather").textContent = data.weather || "-";
                 document.getElementById("modalDetailComment").textContent = data.comment || "-";
-                document.getElementById("modalDetailCover").src = data.cover || "/image/default-cover.png";
+                document.getElementById("modalDetailCover").src = data.coverImage || "/image/default-cover.png";
 
                 document.getElementById("trackDetailModal").style.display = "flex";
             } catch (e) {
