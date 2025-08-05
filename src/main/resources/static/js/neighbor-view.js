@@ -67,8 +67,8 @@ function loadNeighborPost(nickname, currentUserNickname) {
             document.querySelector('.mood-caption').textContent = post.comment || '';
             document.getElementById('music-comment').textContent = post.comment || '';
 
-            loadNeighborChats(post.id);
-            setupChatForm(post.id, currentUserNickname);
+            loadNeighborChats(post.postId);
+            setupChatForm(post.postId, currentUserNickname);
         })
         .catch(() => {
             document.querySelector('.music-card').innerHTML = "<p>아직 오늘의 포스팅을 하지 않으셨어요!</p>";
