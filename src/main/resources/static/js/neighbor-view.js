@@ -59,9 +59,9 @@ function loadNeighborPost(nickname, currentUserNickname) {
     fetch(`/api/posts/today?nickname=${nickname}`)
         .then(res => res.json())
         .then(post => {
-            document.querySelector('.music-card img').src = post.cover || '/image/placeholder_album.png';
-            document.querySelector('.music-title-box').textContent = `🎵 ${post.title}`;
-            document.querySelector('.music-artist-box').textContent = `🎤 ${post.artist}`;
+            document.querySelector('.music-card img').src = post.coverImage || '/image/placeholder_album.png';
+            document.querySelector('.music-title-box').textContent = `🎵 ${post.trackTitle}`;
+            document.querySelector('.music-artist-box').textContent = `🎤 ${post.trackArtist}`;
             document.getElementById('weather-btn').textContent = post.weather || '';
             document.getElementById('mood-btn').textContent = post.mood || '';
             document.querySelector('.mood-caption').textContent = post.comment || '';
