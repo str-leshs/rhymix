@@ -363,8 +363,9 @@ html,body {
     margin: 1vw auto;
     box-sizing: border-box;
     background-color: var(--main-bg);
-    min-height: 40vw;
+    min-height: 10vw;
     border-radius: 1vw;
+    padding-bottom: 2vw;
 }
 /* 1) 항상 보이도록 width + 최소 높이 확보 */
 /* 제목 스타일 */
@@ -387,7 +388,7 @@ html,body {
 #content-input {
     display: block;
     width: 100%;
-    min-height: 20vw;
+    min-height: 5vw;
     background-color: var(--main-bg);
     border-radius: 1vw;
     padding: 1vw;
@@ -425,13 +426,13 @@ html,body {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ 마우스 올렸을 때 */
+/* 마우스 올렸을 때 */
 .menu-box .menu button:hover {
     background-color: var(--button);
     transform: translateY(-2px);
 }
 
-/* ✅ 클릭했을 때 */
+/* 클릭했을 때 */
 .menu-box .menu button:active {
     transform: translateY(0);
     box-shadow: none;
