@@ -177,7 +177,7 @@ public class UserController {
 
     @GetMapping("/customizing")
     public String showCustomizingPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername(); // ✅ 로그인 아이디
+        String username = userDetails.getUsername(); //로그인 아이디
         User user = userService.getUserByNickname(username);
 
         if (user == null) {
@@ -216,16 +216,21 @@ public class UserController {
     }
 
     //다이어리 저장
-    @ResponseBody
     @PostMapping("/api/users/me/diary")
     public ResponseEntity<?> updateDiary(@AuthenticationPrincipal UserDetails userDetails,
                                          @RequestBody DiaryDto diaryDto) {
         if (userDetails == null) return ResponseEntity.status(401).body("로그인이 필요합니다.");
-
         String nickname = userDetails.getUsername();
+
+        if (diaryDto.isDeleteImage()) {
+            userService.deleteDiaryImage(nickname); // 이미지 경로 제거 + 파일 삭제
+            diaryDto.setDiaryImage(null);
+        }
+
         userService.updateDiary(nickname, diaryDto);
         return ResponseEntity.ok("다이어리가 저장되었습니다.");
     }
+
 
     //이웃의 다이어리 조회
     @ResponseBody

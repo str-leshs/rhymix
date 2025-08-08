@@ -1,3 +1,5 @@
+let deleteImage = false;
+
 document.addEventListener('DOMContentLoaded', () => {
     initThemeSelection();
     initSaveButton();
@@ -9,11 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById("imageInput").addEventListener("change", handleImageUpload);
 
+    // 이미지 삭제 버튼 이벤트
+    const deleteBtn = document.getElementById("delete-image-btn");
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", () => {
+            document.getElementById("imagePreviewContainer").innerHTML = "";
+            document.getElementById("imageFilename").textContent = "선택된 파일 없음";
+            deleteImage = true;
+        });
+    }
+
     setTimeout(() => {
         loadSavedTheme();
     }, 0);
 });
-
 
 function initThemeSelection() {
     const themeBoxes = document.querySelectorAll('.theme-box');
@@ -62,10 +73,8 @@ function saveTheme(themeName) {
         return;
     }
 
-    // 저장 버튼 비활성화
     saveBtn.disabled = true;
 
-    // 1️⃣ 테마 저장
     fetch('/api/users/me/theme', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,11 +85,11 @@ function saveTheme(themeName) {
             return res.text();
         })
         .then(() => {
-            // 2️⃣ 다이어리 저장
             const diaryDto = {
                 diaryTitle: title || '(제목 없음)',
                 diaryContent: comment || '(내용 없음)',
-                diaryImage: image
+                diaryImage: deleteImage ? null : image,
+                deleteImage: deleteImage
             };
 
             return fetch('/api/users/me/diary', {
@@ -107,41 +116,26 @@ function saveTheme(themeName) {
             Swal.fire({ icon: 'error', title: '저장 실패!', text: err.message || '저장 중 오류가 발생했습니다.' });
         })
         .finally(() => {
-            saveBtn.disabled = false; // 저장 버튼 재활성화
+            saveBtn.disabled = false;
         });
 }
 
 function loadSavedTheme() {
     fetch('/api/auth/me')
-        .then(res => {
-            if (!res.ok) throw new Error('정보 불러오기 실패');
-            return res.json();
-        })
+        .then(res => res.json())
         .then(user => {
             const currentTheme = user.selectedTheme;
             if (!currentTheme) return;
-
-            // ✅ 모든 테마 박스에서 selected 제거
-            document.querySelectorAll('.theme-box').forEach(box => {
-                box.classList.remove('selected');
-            });
-
-            // ✅ 저장된 테마만 selected 추가
+            document.querySelectorAll('.theme-box').forEach(box => box.classList.remove('selected'));
             const currentBox = document.querySelector(`.theme-box[data-theme="${currentTheme}"]`);
             if (currentBox) currentBox.classList.add('selected');
         })
-        .catch(err => {
-            console.warn("불러오기 실패:", err);
-        });
+        .catch(err => console.warn("불러오기 실패:", err));
 }
-
 
 function loadSavedDiary() {
     fetch("/api/users/me/diary")
-        .then(res => {
-            if (!res.ok) throw new Error("다이어리 없음");
-            return res.json();
-        })
+        .then(res => res.json())
         .then(diary => {
             const titleInput = document.getElementById("title-input");
             const contentInput = document.getElementById("content-input");
@@ -151,17 +145,14 @@ function loadSavedDiary() {
             if (titleInput) titleInput.value = diary.diaryTitle || "";
             if (contentInput) contentInput.innerText = diary.diaryContent || "";
 
-            // 이미지 미리보기 반영
             if (diary.diaryImage) {
                 previewContainer.innerHTML = `<img src="${diary.diaryImage}" style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />`;
                 filenameLabel.textContent = "이미 업로드된 이미지";
+                deleteImage = false;
             }
         })
-        .catch(err => {
-            console.warn("📘 다이어리 불러오기 실패:", err);
-        });
+        .catch(err => console.warn("다이어리 불러오기 실패:", err));
 }
-
 
 function handleImageUpload(event) {
     const file = event.target.files[0];
@@ -174,26 +165,24 @@ function handleImageUpload(event) {
         return;
     }
 
-    // 이미지 형식 검사
     if (!file.type.startsWith("image/")) {
         Swal.fire({ icon: 'error', title: '이미지 형식 오류', text: '이미지 파일만 업로드 가능합니다.' });
         event.target.value = "";
         return;
     }
 
-    // 용량 제한 (1MB 이하)
-    const maxSize = 1024 * 1024; // 1MB
+    const maxSize = 1024 * 1024;
     if (file.size > maxSize) {
         Swal.fire({ icon: 'warning', title: '파일 크기 초과', text: '이미지 용량은 1MB 이하만 가능합니다.' });
         event.target.value = "";
         return;
     }
 
-    // 미리보기 및 파일 이름 표시
     const reader = new FileReader();
     reader.onload = (e) => {
         filenameLabel.textContent = file.name;
         previewContainer.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />`;
+        deleteImage = false; // 새로 업로드하면 삭제 플래그 해제
     };
     reader.readAsDataURL(file);
 }

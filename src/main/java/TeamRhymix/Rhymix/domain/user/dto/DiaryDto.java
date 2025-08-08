@@ -12,4 +12,5 @@ public class DiaryDto {
     private String diaryTitle;
     private String diaryContent;
     private String diaryImage;
+    private boolean deleteImage;
 }

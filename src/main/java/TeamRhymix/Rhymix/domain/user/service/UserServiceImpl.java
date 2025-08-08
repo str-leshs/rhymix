@@ -133,7 +133,8 @@ public class UserServiceImpl implements UserService {
                 user.getNickname(),
                 user.getDiaryTitle(),
                 user.getDiaryContent(),
-                user.getDiaryImage()
+                user.getDiaryImage(),
+                false
         );
     }
 
@@ -147,4 +148,12 @@ public class UserServiceImpl implements UserService {
 
         mongoTemplate.updateFirst(query, update, User.class);
     }
+
+    @Override
+    public void deleteDiaryImage(String nickname) {
+        Query query = new Query(Criteria.where("nickname").is(nickname));
+        Update update = new Update().unset("diaryImage");
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+
 }
