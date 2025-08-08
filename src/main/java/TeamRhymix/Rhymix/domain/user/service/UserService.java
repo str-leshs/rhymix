@@ -23,5 +23,6 @@ public interface UserService {
     void updateUserProfile(String nickname, UserDto userDto);
 
 
+    void deleteDiaryImage(String nickname);
 }
 
