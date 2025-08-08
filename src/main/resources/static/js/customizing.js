@@ -17,9 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteBtn.addEventListener("click", () => {
             document.getElementById("imagePreviewContainer").innerHTML = "";
             document.getElementById("imageFilename").textContent = "선택된 파일 없음";
+            document.getElementById("imageInput").value = "";
             deleteImage = true;
+            deleteBtn.style.display = "none";
         });
     }
+
 
     setTimeout(() => {
         loadSavedTheme();
@@ -141,6 +144,7 @@ function loadSavedDiary() {
             const contentInput = document.getElementById("content-input");
             const previewContainer = document.getElementById("imagePreviewContainer");
             const filenameLabel = document.getElementById("imageFilename");
+            const deleteBtn = document.getElementById("delete-image-btn");
 
             if (titleInput) titleInput.value = diary.diaryTitle || "";
             if (contentInput) contentInput.innerText = diary.diaryContent || "";
@@ -149,6 +153,9 @@ function loadSavedDiary() {
                 previewContainer.innerHTML = `<img src="${diary.diaryImage}" style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />`;
                 filenameLabel.textContent = "이미 업로드된 이미지";
                 deleteImage = false;
+                if (deleteBtn) deleteBtn.style.display = "inline-block"; // 버튼 보이기
+            } else {
+                if (deleteBtn) deleteBtn.style.display = "none"; // 버튼 숨기기
             }
         })
         .catch(err => console.warn("다이어리 불러오기 실패:", err));
@@ -158,10 +165,12 @@ function handleImageUpload(event) {
     const file = event.target.files[0];
     const filenameLabel = document.getElementById("imageFilename");
     const previewContainer = document.getElementById("imagePreviewContainer");
+    const deleteBtn = document.getElementById("delete-image-btn");
 
     if (!file) {
         filenameLabel.textContent = "선택된 파일 없음";
         previewContainer.innerHTML = "";
+        if (deleteBtn) deleteBtn.style.display = "none"; // 버튼 숨김
         return;
     }
 
@@ -182,7 +191,9 @@ function handleImageUpload(event) {
     reader.onload = (e) => {
         filenameLabel.textContent = file.name;
         previewContainer.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />`;
-        deleteImage = false; // 새로 업로드하면 삭제 플래그 해제
+        deleteImage = false;
+        if (deleteBtn) deleteBtn.style.display = "inline-block"; // 버튼 보이기
     };
     reader.readAsDataURL(file);
 }
+
