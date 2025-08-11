@@ -1,8 +1,11 @@
-let selectedTrackId = null;  //선택된 Spotify 트랙 ID 저장 위함
+let selectedTrackId = null;  // 선택된 Spotify 트랙 ID 저장
+let isComposing = false;     // 한글/IME 조합 입력 중 여부
 
 // 모달 열기
 document.getElementById("openModalBtn").addEventListener("click", () => {
     document.getElementById("manualInputModal").style.display = "flex";
+    // 모달 열릴 때 검색창에 포커스(선택사항)
+    setTimeout(() => document.getElementById("spotifySearchInput").focus(), 0);
 });
 
 // 모달 닫기 (취소 버튼)
@@ -10,14 +13,18 @@ document.getElementById("cancelTrackBtn").addEventListener("click", () => {
     document.getElementById("manualInputModal").style.display = "none";
 });
 
-//곡검색 버튼
-document.getElementById("spotifySearchBtn").addEventListener("click", async () => {
-    const query = document.getElementById("spotifySearchInput").value;
+// 검색 로직 -> 함수로 분리
+async function spotifySearch() {
+    const queryInput = document.getElementById("spotifySearchInput");
     const resultList = document.getElementById("spotifySearchResults");
+    const query = (queryInput.value || "").trim();
+
     resultList.innerHTML = "";
+    if (!query) return;
 
     try {
         const res = await fetch(`/api/spotify/search?query=${encodeURIComponent(query)}`);
+        if (!res.ok) throw new Error("search failed");
         const results = await res.json();
 
         results.forEach(track => {
@@ -32,19 +39,19 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
                   <span class="spotify-track-artist">${track.artist}</span>
                 </div>
               </div>
-              <button class="select-track-btn" 
+              <button class="select-track-btn"
                 data-track-id="${track.trackId}"
-                data-title="${track.title}" 
-                data-artist="${track.artist}" 
+                data-title="${track.title}"
+                data-artist="${track.artist}"
                 data-cover="${track.albumImageUrl}">선택</button>
             `;
             resultList.appendChild(li);
         });
 
-        // 선택 버튼
+        // 선택 버튼 바인딩
         document.querySelectorAll(".select-track-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
-                const t = e.target.dataset;
+                const t = e.currentTarget.dataset;
                 selectedTrackId = t.trackId;
 
                 document.getElementById("trackTitle").textContent = t.title;
@@ -58,6 +65,20 @@ document.getElementById("spotifySearchBtn").addEventListener("click", async () =
     } catch (err) {
         console.error("검색 실패:", err);
         alert("검색 중 오류가 발생했습니다.");
+    }
+}
+
+// 곡검색 버튼 클릭 -> 검색 실행
+document.getElementById("spotifySearchBtn").addEventListener("click", spotifySearch);
+
+// 입력창: IME 조합 상태 추적 + Enter 검색
+const searchInput = document.getElementById("spotifySearchInput");
+searchInput.addEventListener("compositionstart", () => { isComposing = true; });
+searchInput.addEventListener("compositionend", () => { isComposing = false; });
+searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !isComposing) {
+        e.preventDefault(); // 폼 submit 등 기본 동작 방지
+        spotifySearch();
     }
 });
 
@@ -76,11 +97,9 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
         });
 
         if (todayResponse.ok) {
-            // 2. 이미 추천곡이 존재함 >> 사용자에게 수정 여부 확인
+            // 2. 이미 추천곡이 존재 -> 수정 여부 확인
             const confirmUpdate = confirm("오늘 이미 추천곡을 등록하셨습니다.\n새로운 곡으로 수정하시겠습니까?");
-            if (!confirmUpdate) {
-                return; // 사용자 취소 선택
-            }
+            if (!confirmUpdate) return;
         }
 
         // 3. 계속 진행
@@ -93,16 +112,14 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
 
         const postData = {
             trackId: selectedTrackId,
-            mood: mood,
-            weather: weather,
-            comment: comment
+            mood,
+            weather,
+            comment
         };
 
         const response = await fetch("/api/posts", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(postData),
             credentials: "include"
         });
